@@ -16,7 +16,7 @@ services:
   php:
     container_name: php
     build:
-      context: ./docker/php
+      context: docker/api/php
     ports:
       - '9000:9000'
     volumes:
@@ -27,7 +27,7 @@ services:
   nginx:
     container_name: nginx
     build:
-      context: ./docker/nginx
+      context: docker/api/nginx
     ports:
       - '8080:80'
     volumes:
