@@ -1,28 +1,28 @@
 version: '3.8'
 services:
-  database:
-    container_name: database
-    image: postgres:14.1
-    command: [ "postgres", "-c", "log_statement=all" ]
-    volumes:
-      - ./postgresqldb:/var/lib/postgresql/data
-    ports:
-      - 5599:5432
-    environment:
-      - POSTGRES_DB=testdb
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=1234
 
-  php:
-    container_name: php
+  frontend:
+    container_name: frontend
     build:
-      context: docker/api/php
-    ports:
-      - '9000:9000'
-    volumes:
-      - ./app:/var/www/symfony_docker
+      context: docker/frontend/nginx
     depends_on:
-      - database
+      - node
+
+  node:
+    container_name: node
+    build:
+      context: docker/frontend/node
+    volumes:
+      - ./frontend:/app
+    tty: true
+
+  frontend-cli:
+    container_name: frontend-cli
+    build:
+      context: docker/frontend/cli
+    volumes:
+      - ./frontend:/app
+    tty: true
 
   nginx:
     container_name: nginx
@@ -35,3 +35,37 @@ services:
     depends_on:
       - php
       - database
+
+  php:
+    container_name: php
+    build:
+      context: docker/api/php
+    ports:
+      - '9000:9000'
+    volumes:
+      - ./app:/var/www/symfony_docker
+    depends_on:
+      - database
+
+  api-cli:
+    container_name: api-cli
+    build:
+      context: docker/api/cli
+    volumes:
+      - ./app:/var/www/symfony_docker
+    depends_on:
+      - database
+    tty: true
+
+  database:
+    container_name: database
+    image: postgres:14.1
+    command: [ "postgres", "-c", "log_statement=all" ]
+    volumes:
+      - ./postgresqldb:/var/lib/postgresql/data
+    ports:
+      - 5599:5432
+    environment:
+      - POSTGRES_DB=testdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=1234
