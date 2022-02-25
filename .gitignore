@@ -51,4 +51,11 @@
 # Embedded web-server pid file
 /.web-server-pid
 
+# OS
+.DS_Store
+
+# IDE
+.idea
+
+# APP
 /postgresqldb
