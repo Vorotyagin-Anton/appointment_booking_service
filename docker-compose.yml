@@ -1,6 +1,16 @@
 version: '3.8'
 services:
 
+  gateway:
+    container_name: gateway
+    build:
+      context: docker/gateway
+    ports:
+      - '8080:80'
+    depends_on:
+      - frontend
+      - nginx
+
   frontend:
     container_name: frontend
     build:
@@ -28,8 +38,6 @@ services:
     container_name: nginx
     build:
       context: docker/api/nginx
-    ports:
-      - '8080:80'
     volumes:
       - ./app:/var/www/symfony_docker
     depends_on:
@@ -40,8 +48,6 @@ services:
     container_name: php
     build:
       context: docker/api/php
-    ports:
-      - '9000:9000'
     volumes:
       - ./app:/var/www/symfony_docker
     depends_on:
@@ -64,7 +70,7 @@ services:
     volumes:
       - ./postgresqldb:/var/lib/postgresql/data
     ports:
-      - 5599:5432
+      - '5599:5432'
     environment:
       - POSTGRES_DB=testdb
       - POSTGRES_USER=user
