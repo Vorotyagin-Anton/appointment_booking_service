@@ -9,7 +9,7 @@ services:
       - '8080:80'
     depends_on:
       - frontend
-      - nginx
+      - api
 
   frontend:
     container_name: frontend
@@ -34,12 +34,12 @@ services:
       - ./frontend:/app
     tty: true
 
-  nginx:
-    container_name: nginx
+  api:
+    container_name: api
     build:
       context: docker/api/nginx
     volumes:
-      - ./app:/var/www/symfony_docker
+      - ./api:/var/www/symfony_docker
     depends_on:
       - php
       - database
@@ -49,7 +49,7 @@ services:
     build:
       context: docker/api/php
     volumes:
-      - ./app:/var/www/symfony_docker
+      - ./api:/var/www/symfony_docker
     depends_on:
       - database
 
@@ -58,7 +58,7 @@ services:
     build:
       context: docker/api/cli
     volumes:
-      - ./app:/var/www/symfony_docker
+      - ./api:/var/www/symfony_docker
     depends_on:
       - database
     tty: true
