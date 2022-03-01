@@ -1,6 +1,6 @@
-restart: down up frontend-install frontend-serve
-
 rebuild: down build up frontend-install frontend-serve
+
+start: up frontend-serve
 
 up:
 	docker-compose up -d
