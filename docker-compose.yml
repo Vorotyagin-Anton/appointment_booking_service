@@ -38,6 +38,8 @@ services:
     container_name: api
     build:
       context: docker/api/nginx
+    ports:
+      - '8081:80'
     volumes:
       - ./api:/var/www/symfony_docker
     depends_on:
