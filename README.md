@@ -9,7 +9,8 @@ GB final project
 - `make api-cli` - enter to api command console
 
 ### Development host
-- `http://localhost:8080`
+- `http://localhost:8080` - frontend
+- `http://localhost:8081` - api
 
 ### Api prefix
-- `http://locahost:8080/api`
+- `http://locahost:8080/api` - for requests from the frontend
