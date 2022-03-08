@@ -1,4 +1,4 @@
-rebuild: down build up frontend-install frontend-serve
+rebuild: down build up api-install frontend-install frontend-serve
 
 start: up frontend-serve
 
@@ -15,7 +15,7 @@ api-cli:
 	docker-compose exec api-cli /bin/sh
 
 api-install:
-	docker-compose exec composer install
+	docker-compose exec api-cli composer install
 
 frontend-cli:
 	docker-compose exec frontend-cli /bin/sh
