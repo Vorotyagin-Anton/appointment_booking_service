@@ -14,3 +14,6 @@ GB final project
 
 ### Api prefix
 - `http://locahost:8080/api` - for requests from the frontend
+
+### DB connection
+- `DATABASE_URL="postgresql://root:1234@database:5432/abs?serverVersion=14&charset=utf8"` - create `api/.env.local` and put string there
