@@ -70,10 +70,13 @@ services:
     image: postgres:14.1
     command: [ "postgres", "-c", "log_statement=all" ]
     volumes:
-      - ./postgresqldb:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     ports:
       - '5599:5432'
     environment:
-      - POSTGRES_DB=testdb
-      - POSTGRES_USER=user
+      - POSTGRES_DB=abs
+      - POSTGRES_USER=root
       - POSTGRES_PASSWORD=1234
+
+volumes:
+  db_data:
