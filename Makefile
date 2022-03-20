@@ -27,4 +27,4 @@ frontend-install:
 	docker-compose exec node npm install
 
 frontend-serve:
-	docker-compose exec node npm run serve
+	docker-compose exec node npm run dev
