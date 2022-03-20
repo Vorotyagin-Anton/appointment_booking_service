@@ -20,6 +20,9 @@ api-install:
 api-migrate:
 	docker-compose exec api-cli symfony console doctrine:migrations:migrate -n
 
+api-load-fixtures:
+	docker-compose exec api-cli symfony console doctrine:fixtures:load -n
+
 frontend-cli:
 	docker-compose exec frontend-cli /bin/sh
 
