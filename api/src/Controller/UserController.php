@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
-    #[Route('/api', name: 'app_user')]
+    #[Route('/api/user', name: 'app_user')]
     public function index(UserRepository $userRepository, SerializerInterface $serializer): Response
     {
         $users = $userRepository->findAll();
