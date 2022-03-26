@@ -28,7 +28,7 @@
           </q-tab-panel>
 
           <q-tab-panel class="app-catalog__panel" name="masters">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <masters-list/>
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
@@ -40,11 +40,13 @@
 <script>
 import {defineComponent, ref} from "vue";
 import ServiceList from "components/Catalog/ServiceList";
+import MastersList from "components/Catalog/MastersList";
 
 export default defineComponent({
   name: "CatalogTabs",
 
   components: {
+    MastersList,
     ServiceList,
   },
 
