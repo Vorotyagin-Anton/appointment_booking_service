@@ -6,7 +6,8 @@ RUN apt update \
     && pecl install apcu \
     && docker-php-ext-enable apcu \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip
+    && docker-php-ext-install zip \
+    && pecl install xdebug-3.1.3 && docker-php-ext-enable xdebug
 
 WORKDIR /var/www/symfony_docker
 
