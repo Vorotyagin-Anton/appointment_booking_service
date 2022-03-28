@@ -36,7 +36,7 @@ class User
     private $email;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => 'public/uploads/photo/dummy.jpg'])]
-    private $path_to_photo;
+    private $pathToPhoto;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $story;
@@ -139,12 +139,12 @@ class User
 
     public function getPathToPhoto(): ?string
     {
-        return $this->path_to_photo;
+        return $this->pathToPhoto;
     }
 
-    public function setPathToPhoto(string $path_to_photo): self
+    public function setPathToPhoto(string $pathToPhoto): self
     {
-        $this->path_to_photo = $path_to_photo;
+        $this->pathToPhoto = $pathToPhoto;
 
         return $this;
     }
