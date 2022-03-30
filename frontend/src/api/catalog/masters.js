@@ -46,5 +46,12 @@ export default function (axios) {
     get() {
       return new Promise((resolve) => setTimeout(() => resolve(masters), 1500));
     },
+
+    getById(id) {
+      return new Promise((resolve) => setTimeout(() => {
+        const master = masters.find((item) => item.id === id);
+        resolve(master);
+      }, 1500));
+    },
   };
 }
