@@ -1,10 +1,10 @@
 <template>
   <div class="app-services">
-    <div class="app-services__items" v-if="isServicesLoaded">
+    <div class="app-services__items" v-if="!loading">
       <service-list-item
-        v-for="item in serviceList"
-        :item="item"
-        :key="item.id"
+        v-for="service in services"
+        :item="service"
+        :key="service.id"
       />
     </div>
     <div v-else class="app-services__loading">
@@ -32,10 +32,11 @@ export default defineComponent({
   },
 
   setup() {
-    const {serviceList, isServicesLoaded} = useServiceList();
+    const {loading, services} = useServiceList();
+
     return {
-      serviceList,
-      isServicesLoaded,
+      loading,
+      services,
     }
   }
 })

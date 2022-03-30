@@ -1,10 +1,10 @@
 <template>
   <div class="app-masters">
-    <div class="app-masters__items" v-if="isMastersLoaded">
+    <div class="app-masters__items" v-if="!loading">
       <masters-list-item
-        v-for="item in mastersList"
-        :item="item"
-        :key="item.id"
+        v-for="master in masters"
+        :item="master"
+        :key="master.id"
       />
     </div>
     <div v-else class="app-masters__loading">
@@ -20,10 +20,11 @@
 </template>
 
 <script>
+import {defineComponent} from "vue";
 import MastersListItem from "components/Catalog/MastersListItem";
-import useMastersList from "../../hooks/useMastersList";
+import useMastersList from "src/hooks/useMastersList";
 
-export default {
+export default defineComponent({
   name: "MastersList",
 
   components: {
@@ -31,14 +32,14 @@ export default {
   },
 
   setup() {
-    const {mastersList, isMastersLoaded} = useMastersList();
+    const {loading, masters} = useMastersList();
 
     return {
-      mastersList,
-      isMastersLoaded,
+      masters,
+      loading,
     }
   }
-}
+})
 </script>
 
 <style lang="scss">

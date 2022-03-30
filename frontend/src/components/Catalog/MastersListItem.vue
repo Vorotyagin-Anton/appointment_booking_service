@@ -12,8 +12,9 @@
 
 <script>
 import {toRefs} from "vue";
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
   name: "MastersListItem",
 
   props: {
@@ -27,11 +28,11 @@ export default {
     const {item} = toRefs(props);
 
     return {
-      title: item.value.name,
+      name: item.value.name,
       content: item.value.content,
     }
   }
-}
+})
 </script>
 
 <style lang="scss">
