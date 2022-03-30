@@ -1,25 +1,37 @@
-import {ref, onMounted} from "vue";
+import {computed, onMounted} from "vue";
+import {useStore} from "vuex";
 import {api} from "boot/api";
+import useLoadingStatus from "src/hooks/common/useLoadingStatus";
 
 export default function useMastersList() {
-  const isMastersLoaded = ref(false);
-  const mastersList = ref([]);
+  const store = useStore();
+
+  const {loading, startLoading, finishLoading} = useLoadingStatus();
+
+  const masters = computed(() => store.getters['masters/items']);
 
   const getMastersFromApi = async () => {
     try {
-      mastersList.value = await api.masters.get();
+      startLoading();
+
+      const payload = await api.masters.get();
+      await store.dispatch('masters/putItems', payload);
     } catch (error) {
       console.error(error);
     } finally {
-      isMastersLoaded.value = true;
+      finishLoading()
     }
   };
 
-  onMounted(getMastersFromApi);
+  onMounted(() => {
+    if (masters.value.length === 0) {
+      getMastersFromApi();
+    }
+  });
 
   return {
-    mastersList,
-    isMastersLoaded,
+    loading,
+    masters,
     getMastersFromApi,
   }
 }
