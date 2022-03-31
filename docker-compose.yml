@@ -6,7 +6,8 @@ services:
     build:
       context: docker/gateway
     ports:
-      - '8080:80'
+      - '8080:8080'
+      - '8081:8081'
     depends_on:
       - frontend
       - api
@@ -38,8 +39,6 @@ services:
     container_name: api
     build:
       context: docker/api/nginx
-    ports:
-      - '8081:80'
     volumes:
       - ./api:/var/www/symfony_docker
     depends_on:
