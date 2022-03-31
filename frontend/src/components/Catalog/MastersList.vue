@@ -5,6 +5,7 @@
         v-for="master in masters"
         :item="master"
         :key="master.id"
+        @click="selectMaster(master.id)"
       />
     </div>
     <div v-else class="app-masters__loading">
@@ -21,8 +22,9 @@
 
 <script>
 import {defineComponent} from "vue";
-import MastersListItem from "components/Catalog/MastersListItem";
 import useMastersList from "src/hooks/useMastersList";
+import useOrderModal from "src/hooks/order/useOrderModal";
+import MastersListItem from "components/Catalog/MastersListItem";
 
 export default defineComponent({
   name: "MastersList",
@@ -34,9 +36,16 @@ export default defineComponent({
   setup() {
     const {loading, masters} = useMastersList();
 
+    const {openOrderModule} = useOrderModal();
+
+    const selectMaster = (masterId) => {
+      openOrderModule();
+    };
+
     return {
       masters,
       loading,
+      selectMaster,
     }
   }
 })

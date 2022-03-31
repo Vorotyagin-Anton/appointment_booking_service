@@ -3,6 +3,7 @@ import {createStore} from 'vuex'
 
 import masters from "./modules/masters";
 import services from "src/store/modules/services";
+import order from "src/store/modules/order";
 
 /*
  * If not building with SSR mode, you can
@@ -18,6 +19,7 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       masters,
       services,
+      order,
     },
 
     // enable strict mode (adds overhead!)
