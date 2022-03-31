@@ -7,6 +7,8 @@ GB final project
 - `make down` - stop the project
 - `make frontend-cli` - enter to frontend command console
 - `make api-cli` - enter to api command console
+- `make api-migrate` - apply db changes
+- `make api-load-fixtures` - load test data to db (WARNING - current data will be deleted)
 
 ### Development host
 - `http://localhost:8080` - frontend

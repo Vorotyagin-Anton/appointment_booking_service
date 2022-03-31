@@ -23,14 +23,30 @@ class User
     #[ORM\Column(type: 'string', length: 255)]
     private $middlename;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private $isWorker;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private $isClient;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     private $mobilePhoneNumber;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $email;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => 'public/uploads/photo/dummy.jpg'])]
+    private $pathToPhoto;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $story;
+
+    public function __construct($surname, $name, $middlename)
+    {
+        $this->surname = $surname;
+        $this->name = $name;
+        $this->middlename = $middlename;
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +121,42 @@ class User
     public function setMobilePhoneNumber(?string $mobilePhoneNumber): self
     {
         $this->mobilePhoneNumber = $mobilePhoneNumber;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPathToPhoto(): ?string
+    {
+        return $this->pathToPhoto;
+    }
+
+    public function setPathToPhoto(string $pathToPhoto): self
+    {
+        $this->pathToPhoto = $pathToPhoto;
+
+        return $this;
+    }
+
+    public function getStory(): ?string
+    {
+        return $this->story;
+    }
+
+    public function setStory(?string $story): self
+    {
+        $this->story = $story;
 
         return $this;
     }

@@ -73,4 +73,15 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getWorkersOnlyQueryBuilder()
+    {
+        $builder = $this->createQueryBuilder('u');
+        $builder
+            ->orderBy('u.id', 'ASC')
+            ->andWhere($builder->expr()->eq('u.isWorker', ':isWorker'))
+            ->setParameter('isWorker', true);
+
+        return $builder->getQuery();
+    }
 }
