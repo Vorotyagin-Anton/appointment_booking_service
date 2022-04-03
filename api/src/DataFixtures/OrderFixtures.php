@@ -25,7 +25,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 50; $i++) {
-            $manager->persist($this->getQuote());
+            $manager->persist($this->getOrder());
         }
         $manager->flush();
     }
@@ -37,7 +37,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
-    private function getQuote(): Order
+    private function getOrder(): Order
     {
         $clients = $this->em->getRepository(User::class)->findBy(['isClient' => true]);
         $workers = $this->em->getRepository(User::class)->findBy(['isWorker' => true]);
