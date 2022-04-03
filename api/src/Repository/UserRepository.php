@@ -74,13 +74,16 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
-    public function getWorkersOnlyQueryBuilder()
+    public function getQueryBuilderBy(array $criteria)
     {
+        $criteriaName = array_key_first($criteria);
+        $criteriaValue = $criteria[$criteriaName];
+
         $builder = $this->createQueryBuilder('u');
         $builder
             ->orderBy('u.id', 'ASC')
-            ->andWhere($builder->expr()->eq('u.isWorker', ':isWorker'))
-            ->setParameter('isWorker', true);
+            ->andWhere($builder->expr()->eq("u.$criteriaName", ":$criteriaName"))
+            ->setParameter($criteriaName, $criteriaValue);
 
         return $builder->getQuery();
     }
