@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class OrderController extends AbstractController
 {
-    #[Route('api/order', name: 'app_order')]
+    #[Route(path: 'api/orders', name: 'app_orders', methods: ['GET'])]
     public function index(OrderRepository $orderRepository, SerializerInterface $serializer): Response
     {
         $orders = $orderRepository->findAll();
