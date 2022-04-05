@@ -31,3 +31,21 @@ frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
+frontend/.thumbs.db
+
+# Quasar core related directories
+frontend/.quasar
+
+# Cordova related directories and files
+frontend/src-cordova/node_modules
+frontend/src-cordova/platforms
+frontend/src-cordova/plugins
+frontend/src-cordova/www
+
+# Capacitor related directories and files
+frontend/src-capacitor/www
+frontend/src-capacitor/node_modules
+
+# BEX related directories and files
+frontend/src-bex/www
+frontend/src-bex/js/core

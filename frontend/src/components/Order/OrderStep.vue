@@ -1,0 +1,88 @@
+<template>
+  <q-step
+    :name="stepData.name"
+    :title="stepData.title"
+    icon="settings"
+    :done="stepData.done"
+  >
+    <slot/>
+
+    <q-stepper-navigation>
+      <q-btn
+        color="primary"
+        label="Continue"
+        v-if="!isLastStep"
+        @click="finishStep"
+      />
+
+      <q-btn
+        class="q-ml-sm"
+        color="primary"
+        label="Back"
+        v-if="!isFirstStep"
+        @click="returnStep"
+        flat
+      />
+    </q-stepper-navigation>
+  </q-step>
+</template>
+
+<script>
+import {ref, toRefs} from "vue";
+import useOrderSteps from "src/hooks/order/useOrderSteps";
+
+export default {
+  name: "OrderStepperMaster",
+
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+
+    step: {
+      type: Number,
+      required: true,
+    },
+
+    isFirst: {
+      type: Boolean,
+      default: false,
+    },
+
+    isLast: {
+      type: Boolean,
+      default: false,
+    }
+  },
+
+  emits: ["finished", "return"],
+
+  setup(props, {emit}) {
+    const {data, step, isFirst, isLast} = toRefs(props);
+
+    const {setStatusDone, setStatusProcess} = useOrderSteps();
+
+    const currentStep = ref(step.value);
+
+    const finishStep = () => {
+      emit("finished", currentStep.value);
+      setStatusDone(data.value.name)
+    };
+
+    const returnStep = () => {
+      emit("return", currentStep.value);
+      setStatusProcess(data.value.name);
+    };
+
+    return {
+      stepData: data,
+      currentStep,
+      isFirstStep: isFirst,
+      isLastStep: isLast,
+      finishStep,
+      returnStep,
+    }
+  }
+}
+</script>
