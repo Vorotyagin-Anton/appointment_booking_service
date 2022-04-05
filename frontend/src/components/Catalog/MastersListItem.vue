@@ -39,11 +39,11 @@
     <q-separator/>
 
     <q-card-actions>
-      <q-btn flat round icon="event"/>
-
-      <q-btn flat>
-        About
-      </q-btn>
+      <q-btn
+        flat
+        round
+        icon="event"
+      />
 
       <q-btn
         flat
@@ -52,7 +52,6 @@
       >
         Reserve
       </q-btn>
-
     </q-card-actions>
   </q-card>
 </template>

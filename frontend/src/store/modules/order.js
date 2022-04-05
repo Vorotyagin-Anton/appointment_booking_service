@@ -1,9 +1,55 @@
+import {shallowRef} from "vue";
+import OrderMasterCard from "components/Order/Cards/OrderMasterCard";
+import OrderServiceCard from "components/Order/Cards/OrderServiceCard";
+import OrderTimeCard from "components/Order/Cards/OrderTimeCard";
+import OrderConfirmCard from "components/Order/Cards/OrderConfirmCard";
+
 const state = {
   isModalOpen: false,
+
+  steps: [
+    {
+      component: shallowRef(OrderMasterCard),
+      data: {
+        name: 1,
+        title: 'Select master',
+        icon: 'settings',
+        done: false,
+      },
+    },
+    {
+      component: shallowRef(OrderServiceCard),
+      data: {
+        name: 2,
+        title: 'Select service',
+        icon: 'settings',
+        done: false,
+      },
+    },
+    {
+      component: shallowRef(OrderTimeCard),
+      data: {
+        name: 3,
+        title: 'Select time',
+        icon: 'settings',
+        done: false,
+      },
+    },
+    {
+      component: shallowRef(OrderConfirmCard),
+      data: {
+        name: 4,
+        title: 'Confirm order',
+        icon: 'settings',
+        done: false,
+      },
+    },
+  ],
 
   data: {
     master: null,
     service: null,
+    time: null,
   },
 };
 
@@ -14,6 +60,10 @@ const getters = {
 
   getData(state) {
     return state.data;
+  },
+
+  getSteps(state) {
+    return state.steps;
   },
 };
 
@@ -28,7 +78,15 @@ const actions = {
 
   setService({commit}, payload) {
     commit('setServiceToOrder', payload);
-  }
+  },
+
+  setStepStatusDone({commit}, payload) {
+    commit('setStepStatus', {name: payload, state: true})
+  },
+
+  setStepStatusProcess({commit}, payload) {
+    commit('setStepStatus', {name: payload, state: false})
+  },
 };
 
 const mutations = {
@@ -42,6 +100,11 @@ const mutations = {
 
   setServiceToOrder(state, payload) {
     state.data.service = payload;
+  },
+
+  setStepStatus(state, payload) {
+    const step = state.steps.find(step => step.data.name === payload.name);
+    step.data.done = payload.state;
   },
 };
 

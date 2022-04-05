@@ -1,9 +1,9 @@
 <template>
   <q-step
-    :name="stepName"
-    title="Select campaign settings"
+    :name="stepData.name"
+    :title="stepData.title"
     icon="settings"
-    :done="isDone"
+    :done="stepData.done"
   >
     <slot/>
 
@@ -28,14 +28,15 @@
 </template>
 
 <script>
-import {ref, toRefs, computed} from "vue";
+import {ref, toRefs} from "vue";
+import useOrderSteps from "src/hooks/order/useOrderSteps";
 
 export default {
   name: "OrderStepperMaster",
 
   props: {
-    name: {
-      type: Number,
+    data: {
+      type: Object,
       required: true,
     },
 
@@ -58,20 +59,25 @@ export default {
   emits: ["finished", "return"],
 
   setup(props, {emit}) {
-    const {name, step, isFirst, isLast} = toRefs(props);
+    const {data, step, isFirst, isLast} = toRefs(props);
 
-    const stepName = ref(name.value);
+    const {setStatusDone, setStatusProcess} = useOrderSteps();
+
     const currentStep = ref(step.value);
 
-    const isDone = computed(() => currentStep.value > stepName.value);
+    const finishStep = () => {
+      emit("finished", currentStep.value);
+      setStatusDone(data.value.name)
+    };
 
-    const finishStep = () => emit("finished", currentStep.value);
-    const returnStep = () => emit("return", currentStep.value);
+    const returnStep = () => {
+      emit("return", currentStep.value);
+      setStatusProcess(data.value.name);
+    };
 
     return {
-      stepName,
+      stepData: data,
       currentStep,
-      isDone,
       isFirstStep: isFirst,
       isLastStep: isLast,
       finishStep,

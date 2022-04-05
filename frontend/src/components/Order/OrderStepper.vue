@@ -1,89 +1,50 @@
 <template>
     <q-stepper
       class="order-stepper"
-      v-model="step"
+      v-model="currentStep"
       vertical
-      color="primary"
       animated
+      header-nav
+      color="primary"
+      done-color="positive"
+      active-color="primary"
     >
-
       <order-step
-        :name="1"
-        :step="step"
-        :isFirst="true"
+        v-for="step in steps"
+        :key="step.data.name"
+        :data="step.data"
+        :step="currentStep"
+        :is-first="isFirstStep(step.data.name)"
+        :is-last="isLastStep(step.data.name)"
+        @return="setPrevStep"
         @finished="setNextStep"
       >
-        <order-master-card/>
-      </order-step>
-
-      <order-step
-        :name="2"
-        :step="step"
-        @finished="setNextStep"
-        @return="setPrevStep"
-      >
-        <order-service-card/>
-      </order-step>
-
-      <order-step
-        :name="3"
-        :step="step"
-        @finished="setNextStep"
-        @return="setPrevStep"
-      >
-        <order-time-card/>
-      </order-step>
-
-      <order-step
-        :name="4"
-        :step="step"
-        :isLast="true"
-        @return="setPrevStep"
-      >
-        <order-confirm-card/>
+        <component :is="step.component"/>
       </order-step>
     </q-stepper>
 </template>
 
 <script>
-import {ref} from "vue";
+import useOrderSteps from "src/hooks/order/useOrderSteps";
 import OrderStep from "components/Order/OrderStep";
-import OrderMasterCard from "components/Order/Cards/OrderMasterCard";
-import OrderServiceCard from "components/Order/Cards/OrderServiceCard";
-import OrderTimeCard from "components/Order/Cards/OrderTimeCard";
-import OrderConfirmCard from "components/Order/Cards/OrderConfirmCard";
 
 export default {
   name: "OrderStepper",
 
   components: {
     OrderStep,
-    OrderMasterCard,
-    OrderServiceCard,
-    OrderTimeCard,
-    OrderConfirmCard,
   },
 
   setup() {
-    const stepsCnt = 4;
-    const step = ref(1);
-
-    const setNextStep = (stepNum) => {
-      if (stepNum !== stepsCnt) {
-        step.value += 1;
-      }
-    };
-
-    const setPrevStep = (stepNum) => {
-      if (stepNum !== step.value) {
-        step.value -= 1;
-      }
-    }
+    const {steps, currentStep, setNextStep, setPrevStep, isFirstStep, isLastStep} = useOrderSteps();
 
     return {
-      step,
+      steps,
+      currentStep,
       setNextStep,
       setPrevStep,
+      isFirstStep,
+      isLastStep
     }
   },
 }
