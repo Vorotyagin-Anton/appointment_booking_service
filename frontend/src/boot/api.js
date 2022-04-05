@@ -9,7 +9,7 @@ import createApi from 'src/api';
 // "export default () => {}" function below (which runs individually
 // for each client)
 const instance = axios.create({
-  baseURL: 'https://api.example.com',
+  baseURL: 'http://localhost:8081',
 });
 
 const api = createApi(instance);
