@@ -2,7 +2,7 @@
   <q-dialog
     class="order-modal"
     :model-value="isOrderModalOpen"
-    @hide="closeOrderModule"
+    @hide="closeOrderModal"
   >
     <q-card class="order-modal__card">
       <q-card-section class="row items-center q-pb-none">
@@ -13,7 +13,7 @@
           flat
           round
           dense
-          @click="closeOrderModule"
+          @click="closeOrderModal"
         />
       </q-card-section>
 
@@ -34,11 +34,11 @@ export default {
   },
 
   setup() {
-    const {isOrderModalOpen, closeOrderModule} = useOrderModal();
+    const {isOrderModalOpen, closeOrderModal} = useOrderModal();
 
     return {
       isOrderModalOpen,
-      closeOrderModule,
+      closeOrderModal,
     }
   }
 }
