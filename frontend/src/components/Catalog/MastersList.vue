@@ -1,13 +1,25 @@
 <template>
   <div class="app-masters">
-    <div class="app-masters__items" v-if="!loading">
-      <masters-list-item
-        v-for="master in masters"
-        :item="master"
-        :key="master.id"
-        @click="selectMaster(master.id)"
-      />
+    <div class="app-masters__list" v-if="!loading">
+      <div class="app-masters__items">
+        <masters-list-item
+          v-for="item in items"
+          :item="item"
+          :key="item.id"
+          @selected="selectMaster"
+        />
+      </div>
+
+      <div class="q-pa-lg flex flex-center app-masters__pagination">
+        <q-pagination
+          v-model="page"
+          :max="pages"
+          :max-pages="8"
+          boundary-numbers
+        />
+      </div>
     </div>
+
     <div v-else class="app-masters__loading">
       <q-circular-progress
         reverse
@@ -21,12 +33,11 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
 import useMastersList from "src/hooks/useMastersList";
 import useOrderModal from "src/hooks/order/useOrderModal";
 import MastersListItem from "components/Catalog/MastersListItem";
 
-export default defineComponent({
+export default {
   name: "MastersList",
 
   components: {
@@ -34,21 +45,24 @@ export default defineComponent({
   },
 
   setup() {
-    const {loading, masters} = useMastersList();
+    const {loading, items, pages, page} = useMastersList();
 
-    const {openOrderModule} = useOrderModal();
+    const {openOrderModal} = useOrderModal();
 
-    const selectMaster = (masterId) => {
-      openOrderModule();
+    const selectMaster = (master) => {
+      console.log(master);
+      openOrderModal();
     };
 
     return {
-      masters,
       loading,
+      items,
+      pages,
+      page,
       selectMaster,
     }
   }
-})
+}
 </script>
 
 <style lang="scss">
@@ -58,7 +72,7 @@ export default defineComponent({
 
   &__items {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
   }
 
