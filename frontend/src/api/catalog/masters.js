@@ -1,12 +1,13 @@
 export default function (axios) {
   return  {
-    async get(pageNumber, itemsPerPage) {
+    async get(page, offset) {
       const params = {
-        pageNumber,
-        itemsPerPage,
+        page,
+        offset,
       };
 
-      const response = await axios.get('/api/workers', {params});
+      const response = await axios.get('/api/users/workers', {params});
+
       return JSON.parse(response.data);
     },
   };
