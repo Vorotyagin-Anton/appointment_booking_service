@@ -41,7 +41,7 @@ const menu = [
   },
   {
     name: 'faq',
-    label: 'faq',
+    label: 'FAQ',
     path: '/faq',
   },
 ];
