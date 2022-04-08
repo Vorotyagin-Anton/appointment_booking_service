@@ -3,6 +3,7 @@
     <promo-section/>
     <catalog-tabs/>
     <order-modal/>
+    <faq-component/>
   </q-page>
 </template>
 
@@ -10,6 +11,7 @@
 import PromoSection from "components/Sections/PromoSection";
 import CatalogTabs from "components/Catalog/CatalogTabs";
 import OrderModal from "components/Order/OrderModal";
+import FaqComponent from "components/Sections/FaqSection";
 
 export default {
   name: 'IndexPage',
@@ -18,6 +20,7 @@ export default {
     PromoSection,
     CatalogTabs,
     OrderModal,
+    FaqComponent,
   },
 }
 </script>
