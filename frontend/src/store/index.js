@@ -4,6 +4,7 @@ import {createStore} from 'vuex'
 import masters from "./modules/masters";
 import services from "src/store/modules/services";
 import order from "src/store/modules/order";
+import navigation from "src/store/modules/navigation";
 
 /*
  * If not building with SSR mode, you can
@@ -20,6 +21,7 @@ export default store(function (/* { ssrContext } */) {
       masters,
       services,
       order,
+      navigation,
     },
 
     // enable strict mode (adds overhead!)

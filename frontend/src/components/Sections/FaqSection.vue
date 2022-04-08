@@ -77,14 +77,14 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 150px 0;
+    padding: 100px 0;
   }
 
   &__intro {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 35px;
+    margin-bottom: 75px;
   }
 
   &__title {
