@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import {defineComponent, ref} from "vue";
+import {ref} from "vue";
 
-export default defineComponent({
-  name: "SliderPromo",
+export default {
+  name: "PromoSection",
 
   setup() {
     const slide = ref(1);
@@ -50,7 +50,7 @@ export default defineComponent({
       slide,
     }
   }
-})
+}
 </script>
 
 <style lang="scss">
