@@ -48,6 +48,11 @@ class User
         $this->middlename = $middlename;
     }
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
