@@ -14,7 +14,10 @@
           :to="page.path"
         />
 
-        <q-btn class="main-nav__btn" color="primary" label="Sign up free" />
+        <router-link :to="{name: 'signup'}">
+          <q-btn class="main-nav__btn" color="primary" label="Sign up free" />
+        </router-link>
+
         <q-btn class="main-nav__btn" outline color="primary" label="Connect with us" />
       </q-tabs>
     </q-toolbar>
