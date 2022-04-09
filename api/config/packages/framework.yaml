@@ -16,10 +16,6 @@ framework:
     #fragments: true
     php_errors:
         log: true
-
-    router:
-        default_uri: 'localhost:8081'
-
 when@test:
     framework:
         test: true
