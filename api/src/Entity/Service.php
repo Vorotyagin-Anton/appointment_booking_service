@@ -57,7 +57,7 @@ class Service
         return $this->category;
     }
 
-    public function setCategory(?Collection $category): self
+    public function setCategory(?array $category): self
     {
         $this->category = $category;
 

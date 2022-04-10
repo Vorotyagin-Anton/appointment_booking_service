@@ -185,7 +185,7 @@ class User
         return $this->services;
     }
 
-    public function setServices(?Collection $services): self
+    public function setServices(?array $services): self
     {
         $this->services = $services;
 

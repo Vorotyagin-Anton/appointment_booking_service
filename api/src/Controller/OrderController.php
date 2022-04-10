@@ -14,6 +14,11 @@ class OrderController extends AbstractController
     public function index(OrderRepository $orderRepository, SerializerInterface $serializer): Response
     {
         $orders = $orderRepository->findAll();
-        return $this->json($serializer->serialize($orders, 'json'));
+        return $this->json($serializer->serialize($orders, 'json', ['groups' => [
+            'orderShort',
+            'order_client',
+            'order_worker',
+            'userShort'
+        ]]));
     }
 }

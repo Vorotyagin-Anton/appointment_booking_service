@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -12,35 +13,45 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['orderShort'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'client_user_id', referencedColumnName: 'id', nullable: false)]
+    #[Groups(['order_client'])]
     private $client;
 
     #[ORM\Column(type: 'date', nullable: true)]
+    #[Groups(['orderShort'])]
     private $executionDate;
 
     #[ORM\Column(type: 'time', nullable: true)]
+    #[Groups(['orderShort'])]
     private $executionTime;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['orderShort'])]
     private $serviceType;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['orderShort'])]
     private $workerContactType;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['orderShort'])]
     private $clientContactType;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['orderShort'])]
     private $status;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['orderShort'])]
     private $details;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'worker_user_id', referencedColumnName: 'id', nullable: false)]
+    #[Groups(['order_worker'])]
     private $worker;
 
     public function __construct($client, $worker)
