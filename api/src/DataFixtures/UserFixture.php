@@ -37,7 +37,7 @@ class UserFixture extends Fixture
 
         $user->setIsClient($fakerBoolean);
         $user->setIsWorker(!$fakerBoolean);
-        $user->setPathToPhoto('/public/uploads/photo/dummy.jpg');
+        $user->setPathToPhoto('/uploads/photo/dummy.jpg');
 
         return $user;
     }

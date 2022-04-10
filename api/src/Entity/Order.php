@@ -59,7 +59,7 @@ class Order
         return $this->client;
     }
 
-    public function setClient(int $client): self
+    public function setClient(User $client): self
     {
         $this->client = $client;
 
