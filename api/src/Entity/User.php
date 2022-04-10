@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -12,34 +14,51 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['userShort'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['userShort'])]
     private $surname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['userShort'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['userShort'])]
     private $middlename;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['userShort'])]
     private $isWorker;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(['userShort'])]
     private $isClient;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['userShort'])]
     private $mobilePhoneNumber;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => 'uploads/photo/dummy.jpg'])]
+    #[Groups(['userShort'])]
     private $pathToPhoto;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['userShort'])]
     private $story;
+
+    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: "workers")]
+    #[ORM\JoinTable(name: "users_services")]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "service_id", referencedColumnName: "id")]
+    #[Groups(['user_services'])]
+    private $services;
 
     public function __construct($surname, $name, $middlename)
     {
@@ -157,6 +176,18 @@ class User
     public function setStory(?string $story): self
     {
         $this->story = $story;
+
+        return $this;
+    }
+
+    public function getServices(): ?Collection
+    {
+        return $this->services;
+    }
+
+    public function setServices(?Collection $services): self
+    {
+        $this->services = $services;
 
         return $this;
     }

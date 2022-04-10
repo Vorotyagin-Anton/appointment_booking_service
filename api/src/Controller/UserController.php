@@ -20,7 +20,9 @@ class UserController extends AbstractController
     ): Response
     {
         $users = $userRepository->findAll();
-        return $this->json($serializer->serialize($users, 'json'));
+        return $this->json($serializer->serialize($users, 'json', ['groups' => [
+            'userShort'
+        ]]));
     }
 
     #[Route(path: '/api/users', name: 'app_users_post', methods: ['POST'])]
@@ -97,7 +99,11 @@ class UserController extends AbstractController
     ): Response
     {
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isWorker' => true]));
-        return $this->json($serializer->serialize($result, 'json'));
+        return $this->json($serializer->serialize($result, 'json', ['groups' => [
+            'userShort',
+            'user_services',
+            'serviceShort'
+        ]]));
     }
 
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]
@@ -108,6 +114,8 @@ class UserController extends AbstractController
     ): Response
     {
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isClient' => true]));
-        return $this->json($serializer->serialize($result, 'json'));
+        return $this->json($serializer->serialize($result, 'json', ['groups' => [
+            'userShort',
+        ]]));
     }
 }

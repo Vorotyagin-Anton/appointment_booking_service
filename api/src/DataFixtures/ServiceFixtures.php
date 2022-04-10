@@ -39,13 +39,13 @@ class ServiceFixtures extends Fixture implements DependentFixtureInterface
 
     private function getService(): Service
     {
-        $serviceCategoryFixtures = $this->em->getRepository(ServiceCategory::class)->findAll();
+        $serviceCategory = $this->em->getRepository(ServiceCategory::class)->findAll();
 
         $service = new Service();
 
         $service->setName($this->faker->city());
         $service->setPathToPhoto('/uploads/photo/dummy.jpg');
-        $service->setCategory([$serviceCategoryFixtures[array_rand($serviceCategoryFixtures)]]);
+        $service->setCategory([$serviceCategory[array_rand($serviceCategory)]]);
 
         return $service;
     }
