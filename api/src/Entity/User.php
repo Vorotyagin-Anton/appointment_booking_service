@@ -35,7 +35,7 @@ class User
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $email;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => 'public/uploads/photo/dummy.jpg'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => 'uploads/photo/dummy.jpg'])]
     private $pathToPhoto;
 
     #[ORM\Column(type: 'text', nullable: true)]
