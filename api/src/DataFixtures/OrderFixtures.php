@@ -22,19 +22,19 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         $this->em = $em;
     }
 
+    public function getDependencies(): array
+    {
+        return [
+            UserFixture::class,
+        ];
+    }
+
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 50; $i++) {
             $manager->persist($this->getOrder());
         }
         $manager->flush();
-    }
-
-    public function getDependencies(): array
-    {
-        return [
-            UserFixture::class,
-        ];
     }
 
     private function getOrder(): Order
