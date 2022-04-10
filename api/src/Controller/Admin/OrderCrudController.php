@@ -32,8 +32,8 @@ class OrderCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
 
             FormField::addPanel('Основные сведения'),
-            AssociationField::new('client', 'Заказчик')->autocomplete(),
-            AssociationField::new('worker', 'Исполнитель')->autocomplete(),
+            AssociationField::new('client', 'Заказчик'),
+            AssociationField::new('worker', 'Исполнитель'),
             DateField::new('executionDate', 'Дата выполнения заказа'),
             TimeField::new('executionTime', 'Время выполнения заказа'),
         ];
