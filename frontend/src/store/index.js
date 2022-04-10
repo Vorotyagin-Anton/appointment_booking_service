@@ -5,7 +5,7 @@ import masters from "./modules/masters";
 import services from "src/store/modules/services";
 import order from "src/store/modules/order";
 import navigation from "src/store/modules/navigation";
-
+import authAlert from "src/store/modules/auth/alert";
 /*
  * If not building with SSR mode, you can
  * directly export the Store instantiation;
@@ -22,6 +22,7 @@ export default store(function (/* { ssrContext } */) {
       services,
       order,
       navigation,
+      authAlert,
     },
 
     // enable strict mode (adds overhead!)
