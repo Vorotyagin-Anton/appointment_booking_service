@@ -92,6 +92,7 @@
           color="black"
           label="Reset"
           type="reset"
+          no-caps
         />
 
         <q-btn
@@ -99,12 +100,13 @@
           color="primary"
           label="Submit"
           type="submit"
+          no-caps
         />
       </div>
 
       <div class="signup-form__signin">
         <span class="signup-form__p">Already have a Square account?</span>&nbsp;
-        <router-link class="signup-form__link" to="main">Sign In</router-link>
+        <router-link class="signup-form__link" :to="{name: 'signin'}">Sign In</router-link>
         .
       </div>
     </div>
@@ -126,14 +128,9 @@ export default {
     const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
     const agree = ref(false);
 
-
-
-
     const {register} = useRegistration();
 
-    const onSubmit = () => {
-      register(email, pass, true);
-    };
+    const onSubmit = () => register(email, pass, true);
 
     const onReset = () => {
       email.value = null;

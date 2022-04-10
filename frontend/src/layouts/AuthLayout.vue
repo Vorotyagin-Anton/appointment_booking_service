@@ -1,8 +1,8 @@
 <template>
-  <q-layout class="auth-page">
-    <q-page-container class="auth-page__container">
+  <q-layout class="auth-layout">
+    <q-page-container class="auth-layout__container">
 
-      <auth-header class="auth-page__header"/>
+      <auth-header class="auth-layout__header"/>
 
       <router-view/>
 
@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style lang="scss">
-.auth-page {
+.auth-layout {
   &__header {
     margin-bottom: 50px;
   }

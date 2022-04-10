@@ -8,6 +8,18 @@ export default function (axios) {
       };
 
       const response = await axios.post('/api/users', payload);
+      
+      return JSON.parse(response.data);
+    },
+    
+    async signin(email, password) {
+      const payload = {
+        email,
+        password,
+      };
+
+      const response = await axios.post('/api/users', payload);
+      
       return JSON.parse(response.data);
     },
   };
