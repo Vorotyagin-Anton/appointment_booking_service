@@ -10,7 +10,14 @@
       </div>
 
       <div class="main-header__col">
-        <q-btn class="main-header__signin" flat label="Sign In" />
+        <q-btn class="main-header__signin" flat>
+          <router-link
+            class="main-header__signin"
+            :to="{name: 'signin'}"
+          >
+            Sign In
+          </router-link>
+        </q-btn>
       </div>
     </div>
   </q-header>
@@ -56,9 +63,12 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px;
-    height: 50px;
+    width: 80px;
+    height: 40px;
     text-transform: capitalize;
+    color: $dark;
+    font-size: 16px;
+    font-weight: 500;
   }
 }
 </style>

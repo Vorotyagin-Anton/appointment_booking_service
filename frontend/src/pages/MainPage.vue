@@ -1,24 +1,26 @@
 <template>
   <q-page>
-    <slider-promo/>
+    <promo-section/>
     <catalog-tabs/>
     <order-modal/>
+    <faq-component/>
   </q-page>
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import SliderPromo from "components/SliderPromo";
+import PromoSection from "components/Sections/PromoSection";
 import CatalogTabs from "components/Catalog/CatalogTabs";
 import OrderModal from "components/Order/OrderModal";
+import FaqComponent from "components/Sections/FaqSection";
 
-export default defineComponent({
+export default {
   name: 'IndexPage',
 
   components: {
-    SliderPromo,
+    PromoSection,
     CatalogTabs,
     OrderModal,
+    FaqComponent,
   },
-})
+}
 </script>

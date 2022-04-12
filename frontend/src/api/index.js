@@ -1,9 +1,13 @@
-import servicesModule from './catalog/services';
-import mastersModule from './catalog/masters';
+import authModule from 'src/api/auth';
+import servicesModule from 'src/api/catalog/services';
+import mastersModule from 'src/api/catalog/masters';
 
 export default function index(axios) {
+  const axiosInstance = axios.create({});
+
   return {
-    services: servicesModule(axios),
-    masters: mastersModule(axios),
+    auth: authModule(axiosInstance),
+    services: servicesModule(axiosInstance),
+    masters: mastersModule(axiosInstance),
   }
 }

@@ -5,15 +5,19 @@
   >
     <q-toolbar class="main-nav__row">
       <q-tabs class="main-nav__tabs" align="left">
+
         <q-route-tab
           class="main-nav__tab"
           v-for="page in menu"
-          :to="page.path"
-          :label="page.label"
           :key="page.name"
+          :label="page.label"
+          :to="page.path"
         />
 
-        <q-btn class="main-nav__btn" color="primary" label="Sign up free" />
+        <router-link :to="{name: 'signup'}">
+          <q-btn class="main-nav__btn" color="primary" label="Sign up free" />
+        </router-link>
+
         <q-btn class="main-nav__btn" outline color="primary" label="Connect with us" />
       </q-tabs>
     </q-toolbar>
@@ -41,8 +45,8 @@ const menu = [
   },
   {
     name: 'faq',
-    label: 'faq',
-    path: '/faq',
+    label: 'FAQ',
+    path: {path: '/', hash: '#faq'},
   },
 ];
 

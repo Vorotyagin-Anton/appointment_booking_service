@@ -19,14 +19,16 @@
       <div class="slider-overview__title">
         <h2 class="slider-overview__heading">Booking Service</h2>
         <p class="slider-overview__p">Scheduling that puts time in your hands.</p>
-        <q-btn
-          class="slider-overview__btn"
-          color="primary"
-          label="Sign up free"
-          size="18px"
-          padding="10px 35px"
-          no-caps
-        />
+        <router-link :to="{name: 'signup'}">
+          <q-btn
+            class="slider-overview__btn"
+            color="primary"
+            label="Sign up free"
+            size="18px"
+            padding="10px 35px"
+            no-caps
+          />
+        </router-link>
         <a class="slider-overview__btn" href="#">
           Connect with as
           <span class="material-icons">arrow_right_alt</span>
@@ -38,10 +40,10 @@
 </template>
 
 <script>
-import {defineComponent, ref} from "vue";
+import {ref} from "vue";
 
-export default defineComponent({
-  name: "SliderPromo",
+export default {
+  name: "PromoSection",
 
   setup() {
     const slide = ref(1);
@@ -50,7 +52,7 @@ export default defineComponent({
       slide,
     }
   }
-})
+}
 </script>
 
 <style lang="scss">

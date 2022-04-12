@@ -18,7 +18,7 @@
 <script>
 import {defineComponent} from 'vue'
 import MainHeader from "components/MainHeader";
-import MainFooter from "components/MainFooter";
+import MainFooter from "components/MainFooter/MainFooter";
 import MainNav from "components/MainNav";
 
 export default defineComponent({
