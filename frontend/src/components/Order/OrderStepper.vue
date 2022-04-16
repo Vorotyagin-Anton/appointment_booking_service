@@ -49,3 +49,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.order-stepper {
+  background-color: $white-2;
+}
+</style>

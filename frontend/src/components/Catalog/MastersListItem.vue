@@ -2,38 +2,24 @@
   <q-card class="my-card masters-card" flat bordered>
 
     <q-card-section class="masters-card__header">
-      <div class="text-h6 q-mb-xs">{{ name + ' ' + surname }}</div>
-      <div class="row no-wrap items-center">
-        <q-rating
-          :color="'warning'"
-          size="14px"
-          v-model="rating"
-          :max="5"
-          readonly
-        />
-
-        <span class="text-caption text-grey q-ml-sm">4.2 (551)</span>
-      </div>
+      <master-header
+        :rating="rating"
+        :name="item.name + ' ' + item.surname"
+        :class-name="'masters-card__heading'"
+      />
     </q-card-section>
 
     <q-separator/>
 
     <q-card-section horizontal>
-      <q-card-section class="col-5 justify-center items-center">
-        <q-avatar :size="'6rem'">
-          <img
-            src="https://cdn.quasar.dev/img/boy-avatar.png"
-            alt="img"
-          />
-        </q-avatar>
-      </q-card-section>
-
-      <q-card-section class="q-pt-xs">
-        <div class="text-caption text-grey">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua.
-        </div>
-      </q-card-section>
+      <master-info
+       :name="item.name"
+       image="https://i.pravatar.cc/700"
+       speciality="Lorem ipsum"
+       info="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+       :avatar-size="100"
+       class-name="masters-card__info"
+      />
     </q-card-section>
 
     <q-separator/>
@@ -58,9 +44,16 @@
 
 <script>
 import {ref, toRefs} from "vue";
+import MasterHeader from "components/Master/MasterHeader";
+import MasterInfo from "components/Master/MasterInfo";
 
 export default {
   name: "MastersListItem",
+
+  components: {
+    MasterHeader,
+    MasterInfo,
+  },
 
   props: {
     item: {
@@ -76,12 +69,18 @@ export default {
   setup(props, {emit}) {
     const {item} = toRefs(props);
 
+    const rating = ref({
+      max: 5,
+      score: (Math.random() * 4 + 1).toFixed(1),
+      voices: Math.floor(Math.random() * 200),
+    });
+
     const selectMaster = () => emit('selected', item.value);
 
     return {
       name: item.value.name,
       surname: item.value.surname,
-      rating: ref(4),
+      rating,
       selectMaster,
     }
   }
@@ -102,7 +101,31 @@ export default {
   }
 
   &__header {
+    padding: 15px 15px 10px;
     background-color: $grey-2,
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+
+    .master-header__name {
+      margin-bottom: 7px;
+    }
+  }
+
+  &__info {
+    display: flex;
+    padding: 15px 15px 10px;
+
+    .master-info__avatar {
+      display: flex;
+      align-items: center;
+    }
+
+    .master-info__about {
+      align-items: flex-start;
+    }
   }
 }
 

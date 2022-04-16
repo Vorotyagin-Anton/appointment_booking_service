@@ -2,6 +2,7 @@ import {store} from 'quasar/wrappers'
 import {createStore} from 'vuex'
 
 import masters from "./modules/masters";
+import master from "./modules/master";
 import services from "src/store/modules/services";
 import order from "src/store/modules/order";
 import navigation from "src/store/modules/navigation";
@@ -19,6 +20,7 @@ export default store(function (/* { ssrContext } */) {
   return createStore({
     modules: {
       masters,
+      master,
       services,
       order,
       navigation,
