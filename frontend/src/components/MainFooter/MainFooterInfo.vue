@@ -40,8 +40,7 @@
 
 <script>
 import useApplicationDates from "src/hooks/useApplicationDates";
-import {useStore} from "vuex";
-import {computed} from "vue";
+import useNavigation from "src/hooks/common/useNavigation";
 
 export default {
   name: "MainFooterInfo",
@@ -49,9 +48,9 @@ export default {
   setup() {
     const date = useApplicationDates();
 
-    const store = useStore();
+    const {getGroup} = useNavigation();
 
-    const nav = computed(() => store.getters['navigation/aboutUs']);
+    const nav = getGroup('About Us');
 
     return {
       date,

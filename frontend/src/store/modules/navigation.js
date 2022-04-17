@@ -1,6 +1,56 @@
 const state = {
   items: [
     {
+      group: 'Menu',
+      links: [
+        {
+          title: 'overview',
+          route: 'main',
+        },
+        {
+          title: 'catalog',
+          label: 'Catalog',
+          children: [
+            {
+              title: 'categories',
+              route: 'main',
+            },
+            {
+              title: 'services',
+              route: 'main',
+            },
+            {
+              title: 'masters',
+              route: 'main',
+            },
+          ],
+          groups: [
+            'Payments',
+            'Hardware',
+            'Square',
+            'Developers',
+            'Resources',
+            'Business Types',
+            'Points of Sale',
+            'Tools',
+          ],
+        },
+        {
+          title: 'features',
+          route: 'main',
+        },
+        {
+          title: 'pricing',
+          route: 'main',
+        },
+        {
+          title: 'faq',
+          label: 'FAQ',
+          route: {path: '/', hash: '#faq'},
+        },
+      ],
+    },
+    {
       group: 'Payments',
       links: [
         {
@@ -100,7 +150,7 @@ const state = {
       ],
     },
     {
-      group: 'More Tools',
+      group: 'Tools',
       links: [
         {
           title: 'Online Store',
@@ -357,12 +407,8 @@ const state = {
 };
 
 const getters = {
-  services(state) {
-    return state.items.filter((item) => item.group !== 'About Us');
-  },
-
-  aboutUs(state) {
-    return state.items.find((item) => item.group === 'About Us');
+  all(state) {
+    return state.items;
   },
 };
 
