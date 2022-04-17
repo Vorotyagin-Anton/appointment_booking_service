@@ -14,13 +14,16 @@
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
         "symfony/flex": "^2",
+        "symfony/form": "6.0.*",
         "symfony/framework-bundle": "6.0.*",
         "symfony/property-access": "6.0.*",
         "symfony/proxy-manager-bridge": "6.0.*",
         "symfony/runtime": "6.0.*",
         "symfony/security-bundle": "6.0.*",
         "symfony/serializer": "6.0.*",
-        "symfony/yaml": "6.0.*"
+        "symfony/validator": "6.0.*",
+        "symfony/yaml": "6.0.*",
+        "symfonycasts/verify-email-bundle": "^1.10"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
