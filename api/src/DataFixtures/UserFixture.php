@@ -52,6 +52,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setIsClient($fakerBoolean);
         $user->setIsWorker(!$fakerBoolean);
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');
+        $user->setStory($this->faker->text());
 
         $user->setServices([
             $service[array_rand($service)],
