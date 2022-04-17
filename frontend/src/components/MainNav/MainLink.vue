@@ -1,6 +1,6 @@
 <template>
   <div class="main-link">
-    <main-nav-link-dropdown
+    <main-link-dropdown
       v-if="link.children || link.groups"
       :link="link"
     />
@@ -10,19 +10,18 @@
       class="main-link__tab"
       :label="link.label ?? link.title"
       :to="{name: link.route}"
-      no-caps
     />
   </div>
 </template>
 
 <script>
-import MainNavLinkDropdown from "components/MainNav/MainLinkDropdown";
+import MainLinkDropdown from "components/MainNav/MainLinkDropdown";
 
 export default {
-  name: "MainNavLink",
+  name: "MainLink",
 
   components: {
-    MainNavLinkDropdown,
+    MainLinkDropdown,
   },
 
   props: {
@@ -33,3 +32,11 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.main-link {
+  &__tab {
+    text-transform: capitalize;
+  }
+}
+</style>
