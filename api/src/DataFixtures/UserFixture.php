@@ -47,11 +47,11 @@ class UserFixture extends Fixture implements DependentFixtureInterface
     {
         $service = $this->em->getRepository(Service::class)->findAll();
 
-        $user = new User(
-            $this->faker->lastName(),
-            $this->faker->firstName(),
-            $this->faker->firstName()
-        );
+        $user = new User();
+
+        $user->setSurname($this->faker->lastName());
+        $user->setName($this->faker->firstName());
+        $user->setMiddlename($this->faker->firstName());
 
         $fakerBoolean = $this->faker->boolean();
 

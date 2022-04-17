@@ -73,13 +73,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    public function __construct($surname, $name, $middlename)
-    {
-        $this->surname = $surname;
-        $this->name = $name;
-        $this->middlename = $middlename;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
