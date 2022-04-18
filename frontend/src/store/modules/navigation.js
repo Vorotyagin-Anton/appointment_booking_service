@@ -27,7 +27,6 @@ const state = {
           groups: [
             'Payments',
             'Hardware',
-            'Square',
             'Developers',
             'Resources',
             'Business Types',

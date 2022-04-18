@@ -1,15 +1,11 @@
 <template>
-  <div class="link-dropdown">
-    <div ref="dropdown">
-      <q-btn
-        class="link-dropdown__btn"
-        no-caps
-        flat
-        @click="toggleDropdown"
-      >
-        {{ link.label ?? link.title }}
-      </q-btn>
-    </div>
+  <div class="link-dropdown" ref="elementRef">
+    <q-route-tab
+      class="link-dropdown__btn"
+      :label="link.label ?? link.title"
+      :to="{name: link.route}"
+      no-caps
+    />
 
     <transition
       appear
@@ -18,12 +14,13 @@
     >
       <div
         class="container link-dropdown__container"
-        v-show="isDropdownOpen"
+        ref="dropdown"
+        v-show="isFocused"
       >
         <div class="link-dropdown__content">
           <div
             v-if="link.children"
-            class="link-dropdown__children"
+            class="link-dropdown__menu"
           >
             <div class="link-dropdown__title">
               Menu
@@ -38,26 +35,27 @@
               {{ child.label ?? child.title }}
             </router-link>
           </div>
-        </div>
 
-        <div class="link-dropdown__groups">
-          <div
-            class="link-dropdown__group"
-            v-for="(item, key) in groups"
-            :key="key"
-          >
-            <div class="link-dropdown__title">
-              {{ item.group }}
-            </div>
 
-            <router-link
-              class="link-dropdown__link"
-              v-for="link in item.links"
-              :key="link.title"
-              :to="{name: link.route}"
+          <div class="link-dropdown__groups">
+            <div
+              class="link-dropdown__group"
+              v-for="(item, key) in groups"
+              :key="key"
             >
-              {{ link.label ?? link.title }}
-            </router-link>
+              <div class="link-dropdown__title">
+                {{ item.group }}
+              </div>
+
+              <router-link
+                class="link-dropdown__link"
+                v-for="link in item.links"
+                :key="link.title"
+                :to="{name: link.route}"
+              >
+                {{ link.label ?? link.title }}
+              </router-link>
+            </div>
           </div>
         </div>
 
@@ -67,8 +65,9 @@
 </template>
 
 <script>
-import {computed, ref, toRef} from "vue";
+import {computed, toRef} from "vue";
 import useNavigation from "src/hooks/common/useNavigation";
+import useFocusObserver from "src/hooks/common/useFocusObserver";
 
 export default {
   name: "MainLinkDropdown",
@@ -81,26 +80,18 @@ export default {
   },
 
   setup(props) {
-    const dropdown = ref(null);
-    const isDropdownOpen = ref(false);
-
-    const toggleDropdown = () => isDropdownOpen.value = !isDropdownOpen.value;
+    const {elementRef, isFocused} = useFocusObserver(300);
 
     const link = toRef(props, 'link');
 
     const {getGroups} = useNavigation();
 
-    const groups = computed(() => {
-      return link.value.groups
-        ? getGroups(...link.value.groups)
-        : [];
-    });
+    const groups = computed(() => link.value.groups ? getGroups(...link.value.groups) : []);
 
     return {
       groups,
-      dropdown,
-      isDropdownOpen,
-      toggleDropdown,
+      elementRef,
+      isFocused,
     }
   }
 }
@@ -117,7 +108,6 @@ export default {
   &__container {
     position: fixed;
     right: 0;
-    display: flex;
     padding-top: 20px;
     padding-bottom: 20px;
     background-color: $white;
@@ -125,10 +115,15 @@ export default {
     border-top: .5px solid $grey;
   }
 
-  &__children {
+  &__content {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__menu {
     display: flex;
     flex-direction: column;
-    padding: 10px 40px;
+    padding: 10px 30px;
   }
 
   &__groups {
