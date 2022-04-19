@@ -25,6 +25,11 @@ const routes = [
         name: 'main',
         path: '',
         component: () => import('pages/MainPage.vue'),
+      },
+      {
+        name: 'masters',
+        path: 'masters',
+        component: () => import('pages/MastersPage.vue'),
       }
     ]
   },

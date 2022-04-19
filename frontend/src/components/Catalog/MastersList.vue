@@ -50,7 +50,6 @@ export default {
     const {openOrderModal} = useOrderModal();
 
     const selectMaster = (master) => {
-      console.log(master);
       openOrderModal();
     };
 

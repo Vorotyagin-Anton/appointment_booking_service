@@ -1,18 +1,14 @@
 <template>
-  <div class="main-link">
-    <q-route-tab
-      class="main-link__tab"
-      :label="label"
-      :to="path"
-    />
-  </div>
+  <router-link :to="path">
+    {{ label }}
+  </router-link>
 </template>
 
 <script>
 import useLink from "src/hooks/common/useLink";
 
 export default {
-  name: "MainLink",
+  name: "CommonLink",
 
   props: {
     link: {
@@ -29,13 +25,6 @@ export default {
       path,
     }
   }
+
 }
 </script>
-
-<style lang="scss">
-.main-link {
-  &__tab {
-    text-transform: capitalize;
-  }
-}
-</style>

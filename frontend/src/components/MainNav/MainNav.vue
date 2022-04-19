@@ -6,11 +6,25 @@
     <q-toolbar class="main-nav__row">
       <q-tabs class="main-nav__tabs" align="left">
 
-        <main-link
+        <div
           v-for="link in menu.links"
           :key="link.title"
-          :link="link"
-        />
+        >
+          <main-link-dropdown
+            v-if="link.groups"
+            :link="link"
+          />
+
+          <main-link-select
+            v-else-if="link.select"
+            :link="link"
+          />
+
+          <main-link
+            v-else
+            :link="link"
+          />
+        </div>
 
         <router-link :to="{name: 'signup'}">
           <q-btn
@@ -34,12 +48,16 @@
 <script>
 import useNavigation from "src/hooks/common/useNavigation";
 import MainLink from "components/MainNav/MainLink";
+import MainLinkSelect from "components/MainNav/MainLinkSelect";
+import MainLinkDropdown from "components/MainNav/MainLinkDropdown";
 
 export default {
   name: 'MainNav',
 
   components: {
     MainLink,
+    MainLinkSelect,
+    MainLinkDropdown,
   },
 
   setup() {

@@ -1,10 +1,8 @@
 <template>
   <div class="link-dropdown" ref="elementRef">
-    <q-route-tab
+    <main-link
       class="link-dropdown__btn"
-      :label="link.label ?? link.title"
-      :to="{name: link.route}"
-      no-caps
+      :link="link"
     />
 
     <transition
@@ -14,29 +12,9 @@
     >
       <div
         class="container link-dropdown__container"
-        ref="dropdown"
         v-show="isFocused"
       >
         <div class="link-dropdown__content">
-          <div
-            v-if="link.children"
-            class="link-dropdown__menu"
-          >
-            <div class="link-dropdown__title">
-              Menu
-            </div>
-
-            <router-link
-              class="link-dropdown__link"
-              v-for="child in link.children"
-              :key="child.title"
-              :to="{name: link.route}"
-            >
-              {{ child.label ?? child.title }}
-            </router-link>
-          </div>
-
-
           <div class="link-dropdown__groups">
             <div
               class="link-dropdown__group"
@@ -47,14 +25,12 @@
                 {{ item.group }}
               </div>
 
-              <router-link
+              <common-link
                 class="link-dropdown__link"
                 v-for="link in item.links"
                 :key="link.title"
-                :to="{name: link.route}"
-              >
-                {{ link.label ?? link.title }}
-              </router-link>
+                :link="link"
+              />
             </div>
           </div>
         </div>
@@ -68,9 +44,16 @@
 import {computed, toRef} from "vue";
 import useNavigation from "src/hooks/common/useNavigation";
 import useFocusObserver from "src/hooks/common/useFocusObserver";
+import MainLink from "components/MainNav/MainLink";
+import CommonLink from "components/Common/CommonLink";
 
 export default {
   name: "MainLinkDropdown",
+
+  components: {
+    MainLink,
+    CommonLink,
+  },
 
   props: {
     link: {
@@ -99,12 +82,6 @@ export default {
 
 <style lang="scss">
 .link-dropdown {
-
-  &__btn {
-    padding: 0 16px;
-    min-height: 48px;
-  }
-
   &__container {
     position: fixed;
     right: 0;
@@ -120,10 +97,22 @@ export default {
     justify-content: center;
   }
 
-  &__menu {
+  &__children {
     display: flex;
     flex-direction: column;
     padding: 10px 30px;
+  }
+
+  &__child {
+    color: $grey-8;
+    font-weight: 500;
+    font-size: 15px;
+    padding-bottom: 6px;
+    text-transform: capitalize;
+
+    &:hover {
+      color: $dark
+    }
   }
 
   &__groups {
@@ -131,7 +120,6 @@ export default {
     flex-wrap: wrap;
     justify-content: flex-start;
     padding: 0 15px;
-    border-left: 1px solid $grey-4;
   }
 
   &__group {
