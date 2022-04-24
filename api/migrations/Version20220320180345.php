@@ -20,7 +20,7 @@ final class Version20220320180345 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE "user" ADD email VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE "user" ADD email VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE "user" ADD path_to_photo VARCHAR(255) DEFAULT \'uploads/photo/dummy.jpg\'');
         $this->addSql('ALTER TABLE "user" ADD story TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE "user" ALTER is_worker SET DEFAULT false');
