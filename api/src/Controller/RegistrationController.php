@@ -6,13 +6,12 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -25,12 +24,18 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    #[Route('/api/register', name: 'app_register', methods: ['POST', 'GET'])]
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer
+    ): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+
+        $form = $this->createForm(RegistrationFormType::class, $user, ['csrf_protection' => false]);
+        $form->submit($request->request->all());
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
@@ -54,12 +59,12 @@ class RegistrationController extends AbstractController
             );*/
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_orders');
+            return $this->json($serializer->serialize($user, 'json', ['groups' => [
+                'userShort'
+            ]]));
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        return $this->json($serializer->serialize($form, 'json'));
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

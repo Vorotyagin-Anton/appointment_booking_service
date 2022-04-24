@@ -21,15 +21,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['userShort'])]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $surname;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $middlename;
 
@@ -45,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['userShort'])]
     private $mobilePhoneNumber;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Groups(['userShort'])]
     private $email;
 
@@ -65,9 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $services;
 
     #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['userShort'])]
     private $roles = [];
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userPassword'])]
     private $password;
 
     #[ORM\Column(type: 'boolean')]
