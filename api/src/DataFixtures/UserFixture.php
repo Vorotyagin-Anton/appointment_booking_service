@@ -49,6 +49,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
         $user = new User();
 
+        $user->setEmail($this->faker->email());
         $user->setSurname($this->faker->lastName());
         $user->setName($this->faker->firstName());
         $user->setMiddlename($this->faker->firstName());
@@ -73,12 +74,11 @@ class UserFixture extends Fixture implements DependentFixtureInterface
     {
         $service = $this->em->getRepository(Service::class)->findAll();
 
-        $user = new User(
-            $this->faker->lastName(),
-            $this->faker->firstName(),
-            $this->faker->firstName()
-        );
+        $user = new User();
 
+        $user->setSurname($this->faker->lastName());
+        $user->setName($this->faker->firstName());
+        $user->setMiddlename($this->faker->firstName());
         $user->setIsClient(false);
         $user->setIsWorker(true);
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');

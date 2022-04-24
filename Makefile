@@ -1,4 +1,4 @@
-rebuild: down build up api-install api-migrate frontend-install frontend-serve
+rebuild: down build up api-install api-migrate-up frontend-install frontend-serve
 
 start: up frontend-serve
 
@@ -17,8 +17,13 @@ api-cli:
 api-install:
 	docker-compose exec api-cli composer install
 
-api-migrate:
+api-migrate-up:
 	docker-compose exec api-cli symfony console doctrine:migrations:migrate -n
+
+api-migrate-down:
+	docker-compose exec api-cli symfony console doctrine:migrations:migrate 0 -n
+
+api-migrations-reload: api-migrate-down api-migrate-up
 
 api-load-fixtures:
 	docker-compose exec api-cli symfony console doctrine:fixtures:load -n
