@@ -1,6 +1,21 @@
 <template>
   <div class="masters">
     <breadcrumbs-section :breadcrumbs="breadcrumbs"/>
+
+    <div class="masters__sidebar">
+      <div class="masters-filter">
+        <div class="masters-filter__categories"></div>
+        <div class="masters-filter__services"></div>
+        <div class="masters-filter__date"></div>
+      </div>
+    </div>
+
+    <div class="masters__content">
+      <div class="masters-sorting"></div>
+      <div class="masters-list">
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -14,12 +29,12 @@ export default {
   components: {
     BreadcrumbsSection,
   },
-  
+
   setup() {
     const {getByName} = useBreadcrumbs();
 
     const breadcrumbs = getByName('masters');
-    
+
     return {
       breadcrumbs,
     }
@@ -29,6 +44,6 @@ export default {
 
 <style lang="scss">
 .masters {
-  
+
 }
 </style>
