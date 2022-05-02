@@ -134,6 +134,8 @@ class UserController extends AbstractController
         Paginator $paginator
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isClient' => true]));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',

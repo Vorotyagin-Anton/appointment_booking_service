@@ -61,6 +61,21 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');
         $user->setStory($this->faker->text());
 
+        if ($user->getIsClient()) {
+            $user->setRoles(['ROLE_CLIENT']);
+        }
+
+        if ($user->getIsWorker()) {
+            $user->setRoles(['ROLE_WORKER']);
+        }
+
+        $user->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user,
+                '123'
+            )
+        );
+
         $user->setServices([
             $service[array_rand($service)],
             $service[array_rand($service)],
@@ -83,6 +98,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setIsWorker(true);
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');
         $user->setStory($this->faker->text());
+        $user->setRoles(['ROLE_ADMIN']);
 
         $user->setServices([
             $service[array_rand($service)],
