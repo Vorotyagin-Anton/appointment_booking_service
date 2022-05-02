@@ -27,7 +27,7 @@ class UserController extends AbstractController
         ]]));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_user_get', methods: ['GET'])]
+    #[Route(path: '/api/users/{id}', name: 'app_user_get', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneUser(
         int $id,
         UserRepository $userRepository,
@@ -64,7 +64,7 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($form, 'json'));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_users_delete', methods: ['DELETE'])]
+    #[Route(path: '/api/users/{id}', name: 'app_users_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function deleteUser(
         int $id,
         UserRepository $userRepository,
@@ -82,7 +82,7 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize(['result' => 'ok'], 'json'));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_users_patch', methods: ['PATCH'])]
+    #[Route(path: '/api/users/{id}', name: 'app_users_patch', requirements: ['id' => '\d+'], methods: ['PATCH'])]
     public function updateUser(
         int $id,
         EntityManagerInterface $entityManager,
