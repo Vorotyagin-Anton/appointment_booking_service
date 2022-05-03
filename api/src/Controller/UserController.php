@@ -129,6 +129,27 @@ class UserController extends AbstractController
         ]]));
     }
 
+    #[Route(path: '/api/users/workers/{id}', name: 'app_users_worker_get', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getOneWorker(
+        int $id,
+        UserRepository $userRepository,
+        SerializerInterface $serializer
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+        // TODO: remove default user response after tests
+        if (!$user) {
+            $user = $userRepository->findOneBy(['isWorker' => true]);
+        }
+        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            'userShort',
+            'user_services',
+            'serviceShort',
+            'user_workerAvailableTimes',
+            'workerAvailableTimeShort'
+        ]]));
+    }
+
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]
     public function getClientsOnlyByPages(
         UserRepository $userRepository,
