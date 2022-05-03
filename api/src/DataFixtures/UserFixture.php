@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Service;
 use App\Entity\User;
+use App\Entity\WorkerAvailableTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,8 +46,6 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
     private function getUser(): User
     {
-        $service = $this->em->getRepository(Service::class)->findAll();
-
         $user = new User();
 
         $user->setEmail($this->faker->email());
@@ -65,8 +64,23 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $user->setRoles(['ROLE_CLIENT']);
         }
 
+        $service = $this->em->getRepository(Service::class)->findAll();
+        $workerAvailableTimeVariants = [540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080];
         if ($user->getIsWorker()) {
             $user->setRoles(['ROLE_WORKER']);
+
+            $user->setServices([
+                $service[array_rand($service)],
+                $service[array_rand($service)],
+                $service[array_rand($service)],
+            ]);
+
+            foreach ($workerAvailableTimeVariants as $availableTime) {
+                $workerAvailableTime = new WorkerAvailableTime();
+                $workerAvailableTime->setExactTimeInMinutes($availableTime);
+                $workerAvailableTime->setIsTimeFree(true);
+                $user->addWorkerAvailableTime($workerAvailableTime);
+            }
         }
 
         $user->setPassword(
@@ -75,12 +89,6 @@ class UserFixture extends Fixture implements DependentFixtureInterface
                 '123'
             )
         );
-
-        $user->setServices([
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-        ]);
 
         return $user;
     }
