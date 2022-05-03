@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ServiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -34,6 +35,11 @@ class Service
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "services")]
     #[Groups(['service_workers'])]
     private $workers;
+
+    public function __construct()
+    {
+        $this->workers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,14 +82,27 @@ class Service
         return $this;
     }
 
-    public function getWorkers(): ?Collection
+    /**
+     * @return Collection<int, User>
+     */
+    public function getWorkers(): Collection
     {
         return $this->workers;
     }
 
-    public function setWorkers(?Collection $workers): self
+    public function addWorker(User $worker): self
     {
-        $this->workers = $workers;
+        if (!$this->workers->contains($worker)) {
+            $this->workers[] = $worker;
+            $worker->addService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorker(User $worker): self
+    {
+        $this->workers->removeElement($worker);
 
         return $this;
     }

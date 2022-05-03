@@ -39,7 +39,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $manager->persist($this->getUser());
         }
 
-        $manager->persist($this->getWorkerWithCredentials());
+        $manager->persist($this->getAdmin());
 
         $manager->flush();
     }
@@ -69,11 +69,9 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         if ($user->getIsWorker()) {
             $user->setRoles(['ROLE_WORKER']);
 
-            $user->setServices([
-                $service[array_rand($service)],
-                $service[array_rand($service)],
-                $service[array_rand($service)],
-            ]);
+            $user->addService($service[array_rand($service)]);
+            $user->addService($service[array_rand($service)]);
+            $user->addService($service[array_rand($service)]);
 
             foreach ($workerAvailableTimeVariants as $availableTime) {
                 $workerAvailableTime = new WorkerAvailableTime();
@@ -93,7 +91,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         return $user;
     }
 
-    private function getWorkerWithCredentials(): User
+    private function getAdmin(): User
     {
         $service = $this->em->getRepository(Service::class)->findAll();
 
@@ -103,16 +101,9 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setName($this->faker->firstName());
         $user->setMiddlename($this->faker->firstName());
         $user->setIsClient(false);
-        $user->setIsWorker(true);
+        $user->setIsWorker(false);
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');
-        $user->setStory($this->faker->text());
         $user->setRoles(['ROLE_ADMIN']);
-
-        $user->setServices([
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-        ]);
 
         $user->setEmail('test@test.com');
         $password = 'test';
