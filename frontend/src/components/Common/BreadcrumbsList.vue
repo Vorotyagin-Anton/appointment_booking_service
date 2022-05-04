@@ -29,7 +29,7 @@ export default {
 
   setup(props) {
     const items = toRef(props, 'breadcrumbs');
-    
+
     const isMainCrumb = (title) => title === items.value[items.value.length - 1].title;
 
     return {
@@ -53,7 +53,6 @@ export default {
     text-transform: uppercase;
 
     &_active {
-      color: $dark;
       font-weight: 600;
     }
   }

@@ -6,9 +6,9 @@ export default function useBreadcrumbs() {
 
   const breadcrumbs = computed(() => store.getters['breadcrumbs/data']);
 
-  const getByName = (name) => breadcrumbs.value.find(item => item.name === name);
+  const getByRoute = (name) => breadcrumbs.value.find(item => item.name === name);
 
   return {
-    getByName,
+    getByRoute,
   };
 }

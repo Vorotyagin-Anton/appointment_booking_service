@@ -29,7 +29,7 @@ export default {
 <style lang="scss">
 .main-breadcrumbs {
   height: 150px;
-  background-color: $grey-3;
+  background-color: $primary;
 
   &__content {
     height: 100%;
@@ -37,13 +37,13 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 0 27px;
+    color: $white;
   }
 
   &__title {
     font-size: 24px;
     font-weight: 900;
     text-transform: uppercase;
-    color: $dark;
   }
 }
 </style>

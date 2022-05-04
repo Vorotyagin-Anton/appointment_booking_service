@@ -64,20 +64,24 @@ const master = {
 
 export default function (axios) {
   return {
-    async get(page, offset) {
-      const params = {
-        page,
-        offset,
-      };
-
-      const response = await axios.get('/api/users/workers', {params});
-
+    async get(options) {
+      const response = await axios.get('/api/users/workers', {params: options});
       return JSON.parse(response.data);
     },
-    
-    getBuId(id) {
+
+    getById(id) {
       return new Promise((resolve) => {
         setTimeout(() => resolve(master), 500);
+      });
+    },
+
+    getByName(name) {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve({
+          items: [master],
+          totalPages: 1,
+          currentPage: 1,
+        }), 500);
       });
     },
   };

@@ -1,13 +1,15 @@
 import {store} from 'quasar/wrappers'
 import {createStore} from 'vuex'
 
-import masters from "./modules/masters";
-import master from "./modules/master";
+import masters from "src/store/modules/masters";
+import master from "src/store/modules/master";
 import services from "src/store/modules/services";
 import order from "src/store/modules/order";
 import navigation from "src/store/modules/navigation";
 import authAlert from "src/store/modules/auth/alert";
 import breadcrumbs from "src/store/modules/breadcrumbs";
+import categories from "src/store/modules/categories";
+
 /*
  * If not building with SSR mode, you can
  * directly export the Store instantiation;
@@ -27,6 +29,7 @@ export default store(function (/* { ssrContext } */) {
       navigation,
       authAlert,
       breadcrumbs,
+      categories,
     },
 
     // enable strict mode (adds overhead!)

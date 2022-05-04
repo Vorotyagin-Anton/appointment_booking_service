@@ -27,18 +27,18 @@ class UserController extends AbstractController
         ]]));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_user_get', methods: ['GET'])]
-    public function getOneUser(
-        int $id,
-        UserRepository $userRepository,
-        SerializerInterface $serializer
-    ): Response
-    {
-        $user = $userRepository->find($id);
-        return $this->json($serializer->serialize($user, 'json', ['groups' => [
-            'userShort'
-        ]]));
-    }
+//    #[Route(path: '/api/users/{id}', name: 'app_user_get', methods: ['GET'])]
+//    public function getOneUser(
+//        int $id,
+//        UserRepository $userRepository,
+//        SerializerInterface $serializer
+//    ): Response
+//    {
+//        $user = $userRepository->find($id);
+//        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+//            'userShort'
+//        ]]));
+//    }
 
     #[Route(path: '/api/users', name: 'app_users_post', methods: ['POST'])]
     public function addUser(

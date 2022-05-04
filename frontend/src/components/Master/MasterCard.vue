@@ -3,9 +3,9 @@
 
     <q-card-section class="masters-card__header">
       <master-header
+        class="masters-card__heading"
         :rating="rating"
-        :name="item.name + ' ' + item.surname"
-        :class-name="'masters-card__heading'"
+        :name="master.name + ' ' + master.surname"
       />
     </q-card-section>
 
@@ -13,12 +13,12 @@
 
     <q-card-section horizontal>
       <master-info
-       :name="item.name"
-       image="https://i.pravatar.cc/700"
-       speciality="Lorem ipsum"
-       info="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-       :avatar-size="100"
-       class-name="masters-card__info"
+        class="masters-card__info"
+        :name="master.name"
+        :image="generateSourceUrl()"
+        speciality="Lorem ipsum"
+        info="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+        :avatar-size="100"
       />
     </q-card-section>
 
@@ -34,7 +34,7 @@
       <q-btn
         flat
         color="primary"
-        @click="selectMaster"
+        @click="() => selectMaster(master.id)"
       >
         Reserve
       </q-btn>
@@ -43,12 +43,13 @@
 </template>
 
 <script>
-import {ref, toRefs} from "vue";
+import {ref} from "vue";
+import useRandomAvatar from "src/hooks/common/useRandomAvatar";
 import MasterHeader from "components/Master/MasterHeader";
 import MasterInfo from "components/Master/MasterInfo";
 
 export default {
-  name: "MastersListItem",
+  name: "MasterCard",
 
   components: {
     MasterHeader,
@@ -56,7 +57,7 @@ export default {
   },
 
   props: {
-    item: {
+    master: {
       type: Object,
       required: true,
     },
@@ -67,21 +68,20 @@ export default {
   ],
 
   setup(props, {emit}) {
-    const {item} = toRefs(props);
-
     const rating = ref({
       max: 5,
-      score: (Math.random() * 4 + 1).toFixed(1),
+      score: Number((Math.random() * 4 + 1).toFixed(1)),
       voices: Math.floor(Math.random() * 200),
     });
 
-    const selectMaster = () => emit('selected', item.value);
+    const selectMaster = (id) => emit('selected', id);
+
+    const {generateSourceUrl} = useRandomAvatar();
 
     return {
-      name: item.value.name,
-      surname: item.value.surname,
       rating,
       selectMaster,
+      generateSourceUrl,
     }
   }
 }
@@ -91,12 +91,11 @@ export default {
 .masters-card {
   width: 100%;
   max-width: 280px;
-  margin-bottom: 35px;
-  margin-right: 35px;
+  margin-bottom: 25px;
   transition: 0.3s ease-in-out;
 
   &:hover {
-    transform: scale(1.04);
+    transform: scale(1.03);
     cursor: pointer;
   }
 

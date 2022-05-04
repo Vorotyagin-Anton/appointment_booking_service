@@ -3,35 +3,35 @@ import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 
-export default function useServiceList() {
+export default function useCategoryList() {
   const store = useStore();
 
   const {loading, startLoading, finishLoading} = useLoading();
 
-  const services = computed(() => store.getters['services/items']);
+  const categories = computed(() => store.getters['categories/items']);
 
-  const getServicesFromApi = async () => {
+  const getCategoriesFromApi = async () => {
     try {
       startLoading();
 
-      const payload = await api.services.get();
-      await store.dispatch('services/putItems', payload);
+      const response = await api.categories.get();
+      await store.dispatch('categories/putItems', response);
     } catch (error) {
-      console.error(error);
+      console.dir(error);
     } finally {
       finishLoading();
     }
   };
 
   onMounted(async () => {
-    if (services.value.length === 0) {
-      await getServicesFromApi();
+    if (categories.value.length === 0) {
+      await getCategoriesFromApi();
     }
   });
 
   return {
     loading,
-    services,
-    getServicesFromApi,
+    categories,
+    getCategoriesFromApi,
   }
 }

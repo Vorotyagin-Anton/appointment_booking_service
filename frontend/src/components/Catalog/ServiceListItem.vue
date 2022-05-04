@@ -2,16 +2,16 @@
   <q-card class="service-card">
     <q-img src="https://cdn.quasar.dev/img/parallax2.jpg">
       <div class="absolute-bottom text-h6">
-        {{ title }}
+        {{ item.name }}
       </div>
     </q-img>
 
-    <q-card-section>{{ content }}</q-card-section>
+    <q-card-section>{{ item.content }}</q-card-section>
   </q-card>
 </template>
 
 <script>
-import {defineComponent, toRefs} from "vue";
+import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "ServiceListItem",
@@ -22,15 +22,6 @@ export default defineComponent({
       required: true,
     },
   },
-
-  setup(props) {
-    const { item } = toRefs(props);
-
-    return {
-      title: item.value.title,
-      content: item.value.content,
-    }
-  }
 })
 </script>
 

@@ -1,6 +1,6 @@
 import {api} from "boot/api";
-import {computed, onMounted} from "vue";
 import {useStore} from "vuex";
+import {computed, onMounted} from "vue";
 
 export default function useMaster() {
   const store = useStore();
@@ -14,7 +14,7 @@ export default function useMaster() {
 
   const setMaster = async (id) => {
     try {
-      const payload = await api.masters.getBuId(id);
+      const payload = await api.masters.getById(id);
       await store.dispatch('master/setId', payload.id);
       await store.dispatch('master/setMaster', payload);
     } catch (error) {
