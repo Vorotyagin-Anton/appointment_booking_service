@@ -71,8 +71,8 @@ export default {
       const normalizedData = {};
 
       for (let prop in data) {
-        if (data.prop != null && data.prop !== [] && data.prop !== '') {
-          normalizedData.prop = data.prop;
+        if (data[prop] != null && data[prop] !== [] && data[prop] !== '') {
+          normalizedData[prop] = data[prop];
         }
       }
 
