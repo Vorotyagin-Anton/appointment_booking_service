@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Service;
 use App\Entity\User;
+use App\Entity\WorkerAvailableTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,15 +39,13 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $manager->persist($this->getUser());
         }
 
-        $manager->persist($this->getWorkerWithCredentials());
+        $manager->persist($this->getAdmin());
 
         $manager->flush();
     }
 
     private function getUser(): User
     {
-        $service = $this->em->getRepository(Service::class)->findAll();
-
         $user = new User();
 
         $user->setEmail($this->faker->email());
@@ -61,16 +60,38 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');
         $user->setStory($this->faker->text());
 
-        $user->setServices([
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-        ]);
+        if ($user->getIsClient()) {
+            $user->setRoles(['ROLE_CLIENT']);
+        }
+
+        $service = $this->em->getRepository(Service::class)->findAll();
+        $workerAvailableTimeVariants = [540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080];
+        if ($user->getIsWorker()) {
+            $user->setRoles(['ROLE_WORKER']);
+
+            $user->addService($service[array_rand($service)]);
+            $user->addService($service[array_rand($service)]);
+            $user->addService($service[array_rand($service)]);
+
+            foreach ($workerAvailableTimeVariants as $availableTime) {
+                $workerAvailableTime = new WorkerAvailableTime();
+                $workerAvailableTime->setExactTimeInMinutes($availableTime);
+                $workerAvailableTime->setIsTimeFree(true);
+                $user->addWorkerAvailableTime($workerAvailableTime);
+            }
+        }
+
+        $user->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user,
+                '123'
+            )
+        );
 
         return $user;
     }
 
-    private function getWorkerWithCredentials(): User
+    private function getAdmin(): User
     {
         $service = $this->em->getRepository(Service::class)->findAll();
 
@@ -80,15 +101,9 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setName($this->faker->firstName());
         $user->setMiddlename($this->faker->firstName());
         $user->setIsClient(false);
-        $user->setIsWorker(true);
+        $user->setIsWorker(false);
         $user->setPathToPhoto('/uploads/photo/dummy.jpg');
-        $user->setStory($this->faker->text());
-
-        $user->setServices([
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-            $service[array_rand($service)],
-        ]);
+        $user->setRoles(['ROLE_ADMIN']);
 
         $user->setEmail('test@test.com');
         $password = 'test';

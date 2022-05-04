@@ -27,18 +27,18 @@ class UserController extends AbstractController
         ]]));
     }
 
-//    #[Route(path: '/api/users/{id}', name: 'app_user_get', methods: ['GET'])]
-//    public function getOneUser(
-//        int $id,
-//        UserRepository $userRepository,
-//        SerializerInterface $serializer
-//    ): Response
-//    {
-//        $user = $userRepository->find($id);
-//        return $this->json($serializer->serialize($user, 'json', ['groups' => [
-//            'userShort'
-//        ]]));
-//    }
+    #[Route(path: '/api/users/{id}', name: 'app_user_get', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getOneUser(
+        int $id,
+        UserRepository $userRepository,
+        SerializerInterface $serializer
+    ): Response
+    {
+        $user = $userRepository->find($id);
+        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            'userShort'
+        ]]));
+    }
 
     #[Route(path: '/api/users', name: 'app_users_post', methods: ['POST'])]
     public function addUser(
@@ -64,7 +64,7 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($form, 'json'));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_users_delete', methods: ['DELETE'])]
+    #[Route(path: '/api/users/{id}', name: 'app_users_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function deleteUser(
         int $id,
         UserRepository $userRepository,
@@ -82,7 +82,7 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize(['result' => 'ok'], 'json'));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_users_patch', methods: ['PATCH'])]
+    #[Route(path: '/api/users/{id}', name: 'app_users_patch', requirements: ['id' => '\d+'], methods: ['PATCH'])]
     public function updateUser(
         int $id,
         EntityManagerInterface $entityManager,
@@ -123,7 +123,30 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
             'user_services',
-            'serviceShort'
+            'serviceShort',
+            'user_workerAvailableTimes',
+            'workerAvailableTimeShort'
+        ]]));
+    }
+
+    #[Route(path: '/api/users/workers/{id}', name: 'app_users_worker_get', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getOneWorker(
+        int $id,
+        UserRepository $userRepository,
+        SerializerInterface $serializer
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+        // TODO: remove default user response after tests
+        if (!$user) {
+            $user = $userRepository->findOneBy(['isWorker' => true]);
+        }
+        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            'userShort',
+            'user_services',
+            'serviceShort',
+            'user_workerAvailableTimes',
+            'workerAvailableTimeShort'
         ]]));
     }
 
@@ -134,6 +157,8 @@ class UserController extends AbstractController
         Paginator $paginator
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isClient' => true]));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
