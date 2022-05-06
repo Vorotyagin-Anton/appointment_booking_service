@@ -60,7 +60,7 @@ export default {
 
     const params = toRef(props, 'params');
 
-    const {items, pages, page, switchPage, getFromApi, flushItems} = useList();
+    const {items, pages, page, getFromApi, flushItems} = useList();
 
     const {openOrderModal} = useOrderModal();
 
@@ -87,7 +87,6 @@ export default {
       pages,
       page,
       selectMaster,
-      switchPage,
     }
   }
 }

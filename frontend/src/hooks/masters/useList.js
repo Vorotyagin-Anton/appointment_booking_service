@@ -7,42 +7,48 @@ import useLoading from "src/hooks/masters/useLoading";
 export default function useList() {
   const store = useStore();
 
-  const log = useLog();
-
-  const {startLoading, stopLoading} = useLoading();
-
   const page = ref(1);
 
   const pages = computed(() => store.getters['masters/pages']);
 
   const items = computed(() => {
     const masters = store.getters['masters/items'];
+
     const slice = masters.find(slice => slice.page === page.value);
+
     return slice ? slice.items : [];
   });
 
-  const putItems = async (items, pages, page) => {
-    await store.dispatch('masters/putItems', {items, page});
+  const putItems = async (items, pages) => {
     await store.dispatch('masters/setPages', pages);
+
+    await store.dispatch('masters/putItems', {
+      items,
+      page: page.value,
+    });
   }
 
   const flushItems = () => store.dispatch('masters/flush');
+
+  const log = useLog();
+
+  const {startLoading, stopLoading} = useLoading();
 
   const getFromApi = async (params) => {
     try {
       await startLoading();
 
-      const query = {
+      const queryParams = {
         page: page.value,
         ...params
       };
 
-      const {items, totalPages, currentPage} = await api.masters.get(query);
+      const {items, totalPages} = await api.masters.get(queryParams);
 
-      await putItems(items, totalPages, currentPage);
+      await putItems(items, totalPages);
     } catch (error) {
       log(error);
-    }finally {
+    } finally {
       await stopLoading();
     }
   };

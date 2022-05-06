@@ -92,10 +92,10 @@ export default {
   width: 100%;
   max-width: 280px;
   margin-bottom: 25px;
-  transition: 0.3s ease-in-out;
+  //transition: 0.3s ease-in-out;
 
   &:hover {
-    transform: scale(1.03);
+    //transform: scale(1.03);
     cursor: pointer;
   }
 

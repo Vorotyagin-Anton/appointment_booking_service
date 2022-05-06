@@ -1,6 +1,7 @@
 const state = {
   pages: 0,
   items: [],
+  featured: [],
   loading: false,
 };
 
@@ -13,6 +14,10 @@ const getters = {
     return state.items;
   },
 
+  featured(state) {
+    return state.featured;
+  },
+
   loading(state) {
     return state.loading;
   },
@@ -21,6 +26,10 @@ const getters = {
 const actions = {
   putItems({commit}, payload) {
     commit('putMastersToState', payload);
+  },
+
+  putFeatured({commit}, payload) {
+    commit('putMastersToFeatured', payload);
   },
 
   setPages({commit}, payload) {
@@ -43,6 +52,10 @@ const actions = {
 const mutations = {
   putMastersToState(state, payload) {
     state.items.push(payload);
+  },
+
+  putMastersToFeatured(state, payload) {
+    state.featured = payload;
   },
 
   setPagesCount(state, payload) {
