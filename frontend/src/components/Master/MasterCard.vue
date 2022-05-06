@@ -1,5 +1,10 @@
 <template>
-  <q-card class="my-card masters-card" flat bordered>
+  <q-card
+    class="my-card masters-card"
+    @click="selectMaster"
+    flat
+    bordered
+  >
 
     <q-card-section class="masters-card__header">
       <master-header
@@ -34,7 +39,7 @@
       <q-btn
         flat
         color="primary"
-        @click="() => selectMaster(master.id)"
+        @click.stop="reserveMaster"
       >
         Reserve
       </q-btn>
@@ -65,6 +70,7 @@ export default {
 
   emits: [
     'selected',
+    'reserved',
   ],
 
   setup(props, {emit}) {
@@ -74,13 +80,16 @@ export default {
       voices: Math.floor(Math.random() * 200),
     });
 
-    const selectMaster = (id) => emit('selected', id);
+    const selectMaster = () => emit('selected', props.master.id);
+
+    const reserveMaster = () => emit('reserved', props.master.id);
 
     const {generateSourceUrl} = useRandomAvatar();
 
     return {
       rating,
       selectMaster,
+      reserveMaster,
       generateSourceUrl,
     }
   }

@@ -15,7 +15,8 @@
           v-for="item in items"
           :key="item.id"
           :master="item"
-          @selected="selectMaster(item.id)"
+          @selected="selectMaster"
+          @reserved="reserveMaster"
         />
       </div>
     </div>
@@ -49,11 +50,11 @@
 
 <script>
 import {ref} from "vue";
+import useFeatured from "src/hooks/masters/useFeatured";
+import useMaster from "src/hooks/useMaster";
 import AppSection from "components/Common/AppSection";
 import AppSectionHeader from "components/Common/AppSectionHeader";
 import MasterCard from "components/Master/MasterCard";
-import useFeatured from "src/hooks/masters/useFeatured";
-import useOrderModal from "src/hooks/order/useOrderModal";
 
 export default {
   name: "FeaturedMasters",
@@ -69,8 +70,7 @@ export default {
 
     initOnMountedHandler();
 
-    const {openOrderModal} = useOrderModal();
-    const selectMaster = (id) => openOrderModal();
+    const {selectMaster, reserveMaster} = useMaster();
 
     const showArrow = ref(false);
     const toggleArrow = () => showArrow.value = !showArrow.value;
@@ -79,6 +79,7 @@ export default {
       items,
       showArrow,
       selectMaster,
+      reserveMaster,
       toggleArrow,
     }
   }
@@ -125,12 +126,9 @@ export default {
   }
 }
 
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
+.slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all .4s;
 }
 
 .slide-fade-enter-from,

@@ -6,7 +6,8 @@
           v-for="item in items"
           :key="item.id"
           :master="item"
-          @selected="selectMaster(item.id)"
+          @selected="selectMaster"
+          @reserved="reserveMaster"
         />
       </div>
 
@@ -37,10 +38,10 @@
 
 <script>
 import {onMounted, toRef, watch} from "vue";
-import useOrderModal from "src/hooks/order/useOrderModal";
 import useList from "src/hooks/masters/useList";
 import useLoading from "src/hooks/masters/useLoading";
 import MasterCard from "components/Master/MasterCard";
+import useMaster from "src/hooks/useMaster";
 
 export default {
   name: "MastersList",
@@ -62,7 +63,7 @@ export default {
 
     const {items, pages, page, getFromApi, flushItems} = useList();
 
-    const {openOrderModal} = useOrderModal();
+    const {selectMaster, reserveMaster} = useMaster();
 
     onMounted(() => getFromApi(params.value));
 
@@ -77,16 +78,13 @@ export default {
       }
     });
 
-    const selectMaster = (id) => {
-      openOrderModal();
-    };
-
     return {
       loading,
       items,
       pages,
       page,
       selectMaster,
+      reserveMaster,
     }
   }
 }

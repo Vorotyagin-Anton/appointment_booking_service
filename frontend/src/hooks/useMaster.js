@@ -1,6 +1,7 @@
 import {api} from "boot/api";
 import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
+import useOrderModal from "src/hooks/order/useOrderModal";
 
 export default function useMaster() {
   const store = useStore();
@@ -30,10 +31,26 @@ export default function useMaster() {
     });
   };
 
+  const selectMaster = (id) => {
+    console.log('selected', id);
+  };
+
+  const {openOrderModal} = useOrderModal();
+
+  const reserveMaster = (id) => {
+    console.log('reserved', id);
+
+    openOrderModal({
+      master: id,
+    });
+  }
+
   return {
     master,
     setMasterId,
     setMaster,
     mountMaster,
+    selectMaster,
+    reserveMaster,
   }
 }
