@@ -4,6 +4,7 @@
     <catalog-tabs/>
     <featured-masters/>
     <sign-up-invitation/>
+    <connect-section/>
     <faq-component/>
   </q-page>
 </template>
@@ -13,6 +14,7 @@ import PromoSection from "components/Sections/PromoSection";
 import CatalogTabs from "components/Catalog/CatalogTabs";
 import FeaturedMasters from "components/Sections/FeaturedMasters";
 import SignUpInvitation from "components/Sections/SignUpInvitation";
+import ConnectSection from "components/Sections/ConnectSection";
 import FaqComponent from "components/Sections/FaqSection";
 
 export default {
@@ -23,6 +25,7 @@ export default {
     CatalogTabs,
     FeaturedMasters,
     SignUpInvitation,
+    ConnectSection,
     FaqComponent,
   },
 }
