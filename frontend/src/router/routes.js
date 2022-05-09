@@ -1,5 +1,7 @@
+import authGuard from "src/router/guards/authGuard";
+import guestGuard from "src/router/guards/guestGuard";
 
-const routes = [
+export default [
   {
     path: '/authorize',
     component: () => import('layouts/AuthLayout.vue'),
@@ -9,12 +11,14 @@ const routes = [
         path: '',
         component: () => import('pages/SignInPage.vue'),
       },
+      
       {
         name: 'signup',
         path: '/signup',
         component: () => import('pages/SignUpPage.vue'),
-      }
+      },
     ],
+    beforeEnter: [guestGuard],
   },
 
   {
@@ -26,10 +30,18 @@ const routes = [
         path: '',
         component: () => import('pages/MainPage.vue'),
       },
+      
       {
         name: 'masters',
         path: 'masters',
         component: () => import('pages/MastersPage.vue'),
+      },
+      
+      {
+        name: 'profile',
+        path: 'profile',
+        component: () => import('pages/ProfilePage.vue'),
+        beforeEnter: [authGuard],
       }
     ]
   },
@@ -41,5 +53,3 @@ const routes = [
     component: () => import('pages/ErrorNotFound.vue')
   }
 ]
-
-export default routes

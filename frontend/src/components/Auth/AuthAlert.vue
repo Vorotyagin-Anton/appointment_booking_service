@@ -19,18 +19,26 @@
 </template>
 
 <script>
-import useAlertMessage from "src/hooks/auth/useAlertMessage";
+
+import useMessage from "src/hooks/auth/useMessage";
 
 export default {
   name: "AlertAlert",
-  
+
   setup() {
-    const {isVisible, message, lifetime, hide, makeClassByType, callLifetimeWatcher} = useAlertMessage();
+    const {
+      isVisible,
+      message,
+      lifetime,
+      hide,
+      makeClassByType,
+      callLifetimeWatcher,
+    } = useMessage();
 
     const type = makeClassByType('auth-alert__');
-    
+
     callLifetimeWatcher();
-    
+
     return {
       isVisible,
       type,

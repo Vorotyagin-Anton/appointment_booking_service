@@ -100,14 +100,20 @@
           color="primary"
           label="Submit"
           type="submit"
+          :disable="isRequested"
           no-caps
         />
       </div>
 
       <div class="signup-form__signin">
         <span class="signup-form__p">Already have a Square account?</span>&nbsp;
-        <router-link class="signup-form__link" :to="{name: 'signin'}">Sign In</router-link>
-        .
+
+        <router-link
+          class="signup-form__link"
+          :to="{name: 'signin'}"
+        >
+          Sign In
+        </router-link>
       </div>
     </div>
 
@@ -116,9 +122,9 @@
 
 <script>
 import {ref} from "vue";
+import useAuth from "src/hooks/auth/useAuth";
 import useEmailInput from "src/hooks/form/useEmailInput";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
-import useRegistration from "src/hooks/auth/useRegistration";
 
 export default {
   name: "SignUpForm",
@@ -126,18 +132,19 @@ export default {
   setup() {
     const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
     const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
+
     const agree = ref(false);
 
-    const {register} = useRegistration();
+    const {isRequested, register} = useAuth();
 
-    const onSubmit = () => register(email, pass, true);
+    const onSubmit = () => register(email.value, pass.value, true);
 
     const onReset = () => {
-      email.value = null;
-      emailConfirmation.value = null;
-      pass.value = null;
-      passConfirmation.value = null;
       agree.value = false;
+      email.value = null;
+      pass.value = null;
+      emailConfirmation.value = null;
+      passConfirmation.value = null;
     };
 
     return {
@@ -150,6 +157,7 @@ export default {
       passConfirmation,
       passConfirmationRules,
       agree,
+      isRequested,
       onSubmit,
       onReset,
     }
