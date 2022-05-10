@@ -69,10 +69,9 @@ export default function (axios) {
       return JSON.parse(response.data);
     },
 
-    getById(id) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(master), 500);
-      });
+    async getById(id) {
+      const response = await axios.get(`/api/users/workers/${id}`);
+      return JSON.parse(response.data);
     },
 
     getByName(name) {
