@@ -26,16 +26,26 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
-import {computed} from "vue";
+import useNavigation from "src/hooks/common/useNavigation";
+
+const groups = [
+  'Payments',
+  'Point of Sale',
+  'Hardware',
+  'Tools',
+  'Developers',
+  'Resources',
+  'Business Types',
+  'Square',
+];
 
 export default {
   name: "MainFooterNav",
 
   setup() {
-    const store = useStore();
+    const {getGroups} = useNavigation();
 
-    const nav = computed(() => store.getters['navigation/services']);
+    const nav = getGroups(...groups);
 
     return {
       nav,

@@ -1,6 +1,55 @@
 const state = {
   items: [
     {
+      group: 'Menu',
+      links: [
+        {
+          title: 'overview',
+          route: 'main',
+        },
+        {
+          title: 'catalog',
+          select: [
+            {
+              title: 'categories',
+              route: 'main',
+            },
+            {
+              title: 'services',
+              route: 'main',
+            },
+            {
+              title: 'masters',
+              route: 'masters',
+            },
+          ],
+        },
+        {
+          title: 'features',
+          route: 'main',
+          groups: [
+            'Catalog',
+            'Payments',
+            'Hardware',
+            'Developers',
+            'Resources',
+            'Business Types',
+            'Points of Sale',
+            'Tools',
+          ],
+        },
+        {
+          title: 'pricing',
+          route: 'main',
+        },
+        {
+          title: 'faq',
+          label: 'FAQ',
+          route: {path: '/', hash: '#faq'},
+        },
+      ],
+    },
+    {
       group: 'Payments',
       links: [
         {
@@ -46,23 +95,23 @@ const state = {
       links: [
         {
           title: 'Point of Sale Overview',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Square Point of Sale',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Square for Restaurants',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Square for Retail',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Square Appointments',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
@@ -71,100 +120,84 @@ const state = {
       links: [
         {
           title: 'Reader for Magstripe',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Contactless (NFC) & Chip Reader',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Terminal',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Stand',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Register',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'By in Store',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Compare Hardware',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
     {
-      group: 'More Tools',
+      group: 'Tools',
       links: [
         {
           title: 'Online Store',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Online Checkout',
-          name: 'main',
-        },
-        {
-          title: 'Checking',
-          name: 'main',
-        },
-        {
-          title: 'Loans',
-          name: 'main',
-        },
-        {
-          title: 'Savings',
-          name: 'main',
-        },
-        {
-          title: 'Payroll',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Team Management',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Marketing',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'SMS Marketing',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Messages',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Loyalty',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Dashboard',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Gift Cards',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Customer Directory',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Inventory Management',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Photo Studio',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
@@ -173,27 +206,27 @@ const state = {
       links: [
         {
           title: 'Developer Platform',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Reader SDK',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'In-App Payments SDK',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Online Payments APIs',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Documentation',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Developer Dashboard',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
@@ -202,43 +235,43 @@ const state = {
       links: [
         {
           title: 'Pricing',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Contact Sales',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Support Center',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'App Marketplace',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Small Business Development',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Blog',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Guides',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Seller Community',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Event',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Service Status',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
@@ -247,47 +280,47 @@ const state = {
       links: [
         {
           title: 'Large businesses',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Retail',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'CBD Retail',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Coffee Shops',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Quick Service',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Full Service',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Bars & Breweries',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Beauty Professionals',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Health & Fitness',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Home & Repair Services',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Professional Services',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
@@ -296,39 +329,39 @@ const state = {
       links: [
         {
           title: 'Home',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'About',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Press and Media',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Investor Relations',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Affiliate Program',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Partner with Square',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Careers',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Developers',
-          name: 'main',
+          route: 'main',
         },
         {
           title: 'Employment Verification',
-          name: 'main',
+          route: 'main',
         },
       ],
     },
@@ -357,12 +390,8 @@ const state = {
 };
 
 const getters = {
-  services(state) {
-    return state.items.filter((item) => item.group !== 'About Us');
-  },
-
-  aboutUs(state) {
-    return state.items.find((item) => item.group === 'About Us');
+  all(state) {
+    return state.items;
   },
 };
 

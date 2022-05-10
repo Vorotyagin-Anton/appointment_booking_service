@@ -45,9 +45,11 @@ export default {
 
 <style lang="scss">
 .order-modal {
+
   &__card {
-    width: 900px !important;
-    max-width: 900px !important;
+    width: 1000px !important;
+    max-width: 1000px !important;
+    background-color: $white-2;
   }
 }
 </style>

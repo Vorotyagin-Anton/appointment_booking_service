@@ -8,6 +8,7 @@
         <router-view/>
       </div>
       <main-nav/>
+      <order-modal/>
     </q-page-container>
 
     <MainFooter/>
@@ -16,20 +17,21 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
 import MainHeader from "components/MainHeader";
 import MainFooter from "components/MainFooter/MainFooter";
-import MainNav from "components/MainNav";
+import MainNav from "components/MainNav/MainNav";
+import OrderModal from "components/Order/OrderModal";
 
-export default defineComponent({
+export default {
   name: 'MainLayout',
 
   components: {
     MainFooter,
     MainHeader,
     MainNav,
+    OrderModal,
   },
-})
+}
 </script>
 
 <style lang="scss">
