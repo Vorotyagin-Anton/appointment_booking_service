@@ -29,7 +29,6 @@ final class Version20220327195548 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE "order" ALTER execution_date TYPE VARCHAR(255) USING execution_date::varchar');
         $this->addSql('ALTER TABLE "order" ALTER execution_date DROP DEFAULT');
         $this->addSql('ALTER TABLE "order" ALTER execution_time TYPE VARCHAR(255) USING execution_time::varchar');

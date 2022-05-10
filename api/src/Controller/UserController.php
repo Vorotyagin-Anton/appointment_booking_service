@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Service\Paginator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,31 +27,44 @@ class UserController extends AbstractController
         ]]));
     }
 
+    #[Route(path: '/api/users/{id}', name: 'app_user_get', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getOneUser(
+        int $id,
+        UserRepository $userRepository,
+        SerializerInterface $serializer
+    ): Response
+    {
+        $user = $userRepository->find($id);
+        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            'userShort'
+        ]]));
+    }
+
     #[Route(path: '/api/users', name: 'app_users_post', methods: ['POST'])]
     public function addUser(
-        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
         Request $request
     ): Response
     {
-        $postData = $request->request->all();
+        $user = new User();
 
-        $user = new User(
-            $postData['surname'],
-            $postData['name'],
-            $postData['middlename']
-        );
+        $form = $this->createForm(UserFormType::class, $user, ['csrf_protection' => false]);
+        $form->submit($request->request->all());
 
-        $user->setIsClient($postData['isClient'] ?? false);
-        $user->setIsWorker($postData['isWorker'] ?? false);
-        $user->setPathToPhoto($postData['pathToPhoto'] ?? '/public/uploads/photo/dummy.jpg');
+        if ($form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-        $userRepository->add($user);
+            return $this->json($serializer->serialize($user, 'json', ['groups' => [
+                'userShort'
+            ]]));
+        }
 
-        return $this->json($serializer->serialize(['result' => 'ok'], 'json'));
+        return $this->json($serializer->serialize($form, 'json'));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_users_delete', methods: ['DELETE'])]
+    #[Route(path: '/api/users/{id}', name: 'app_users_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function deleteUser(
         int $id,
         UserRepository $userRepository,
@@ -59,7 +74,7 @@ class UserController extends AbstractController
         $user = $userRepository->find($id);
 
         if (!isset($user)) {
-            return $this->json($serializer->serialize(['result' => 'user not found'], 'json'));
+            return $this->json($serializer->serialize(['error' => 'user not found'], 'json'));
         }
 
         $userRepository->remove($user);
@@ -67,28 +82,34 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize(['result' => 'ok'], 'json'));
     }
 
-    #[Route(path: '/api/users/{id}', name: 'app_users_patch', methods: ['PATCH'])]
+    #[Route(path: '/api/users/{id}', name: 'app_users_patch', requirements: ['id' => '\d+'], methods: ['PATCH'])]
     public function updateUser(
         int $id,
+        EntityManagerInterface $entityManager,
         UserRepository $userRepository,
         SerializerInterface $serializer,
         Request $request
     ): Response
     {
-        $postData = $request->toArray();
         $user = $userRepository->find($id);
 
-        if (!isset($user)) {
-            return $this->json($serializer->serialize(['result' => 'user not found'], 'json'));
+        if (!$user) {
+            return $this->json($serializer->serialize(['error' => 'user not found'], 'json'));
         }
 
-        $user->setName($postData['name']);
-        $user->setSurname($postData['surname']);
-        $user->setMiddlename($postData['middlename']);
+        $form = $this->createForm(UserFormType::class, $user, ['csrf_protection' => false]);
+        $form->submit($request->toArray(), false);
 
-        $userRepository->add($user);
+        if ($form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-        return $this->json($serializer->serialize(['result' => 'ok'], 'json'));
+            return $this->json($serializer->serialize($user, 'json', ['groups' => [
+                'userShort'
+            ]]));
+        }
+
+        return $this->json($serializer->serialize($form, 'json'));
     }
 
     #[Route('/api/users/workers', name: 'app_users_workers', methods: ['GET'])]
@@ -102,7 +123,30 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
             'user_services',
-            'serviceShort'
+            'serviceShort',
+            'user_workerAvailableTimes',
+            'workerAvailableTimeShort'
+        ]]));
+    }
+
+    #[Route(path: '/api/users/workers/{id}', name: 'app_users_worker_get', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getOneWorker(
+        int $id,
+        UserRepository $userRepository,
+        SerializerInterface $serializer
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+        // TODO: remove default user response after tests
+        if (!$user) {
+            $user = $userRepository->findOneBy(['isWorker' => true]);
+        }
+        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            'userShort',
+            'user_services',
+            'serviceShort',
+            'user_workerAvailableTimes',
+            'workerAvailableTimeShort'
         ]]));
     }
 
@@ -113,6 +157,8 @@ class UserController extends AbstractController
         Paginator $paginator
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isClient' => true]));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',

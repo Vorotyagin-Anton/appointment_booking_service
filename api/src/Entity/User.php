@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,15 +22,15 @@ class User
     #[Groups(['userShort'])]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $surname;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $middlename;
 
@@ -41,7 +46,7 @@ class User
     #[Groups(['userShort'])]
     private $mobilePhoneNumber;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Groups(['userShort'])]
     private $email;
 
@@ -60,11 +65,25 @@ class User
     #[Groups(['user_services'])]
     private $services;
 
-    public function __construct($surname, $name, $middlename)
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['userShort'])]
+    private $roles = [];
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userPassword'])]
+    private $password;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: WorkerAvailableTime::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['user_workerAvailableTimes'])]
+    private $workerAvailableTimes;
+
+    public function __construct()
     {
-        $this->surname = $surname;
-        $this->name = $name;
-        $this->middlename = $middlename;
+        $this->workerAvailableTimes = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,14 +199,130 @@ class User
         return $this;
     }
 
-    public function getServices(): ?Collection
+    /**
+     * @return Collection<int, Service>
+     */
+    public function getServices(): Collection
     {
         return $this->services;
     }
 
-    public function setServices(?array $services): self
+    public function addService(Service $service): self
     {
-        $this->services = $services;
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->addWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): self
+    {
+        if ($this->services->removeElement($service)) {
+            $service->removeWorker($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.)
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkerAvailableTime>
+     */
+    public function getWorkerAvailableTimes(): Collection
+    {
+        return $this->workerAvailableTimes;
+    }
+
+    public function addWorkerAvailableTime(WorkerAvailableTime $workerAvailableTime): self
+    {
+        if (!$this->workerAvailableTimes->contains($workerAvailableTime)) {
+            $this->workerAvailableTimes[] = $workerAvailableTime;
+            $workerAvailableTime->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkerAvailableTime(WorkerAvailableTime $workerAvailableTime): self
+    {
+        $this->workerAvailableTimes->removeElement($workerAvailableTime);
 
         return $this;
     }

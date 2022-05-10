@@ -10,24 +10,24 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220313182649 extends AbstractMigration
+final class Version20220417153314 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'add new props for security bundle';
     }
 
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SEQUENCE "user_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE "user" (id INT NOT NULL, surname VARCHAR(255), name VARCHAR(255), middlename VARCHAR(255), is_worker BOOLEAN NOT NULL, is_client BOOLEAN NOT NULL, mobile_phone_number VARCHAR(20) DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('ALTER TABLE "user" ADD roles JSON DEFAULT NULL');
+        $this->addSql('ALTER TABLE "user" ADD password VARCHAR(255) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP SEQUENCE "user_id_seq" CASCADE');
-        $this->addSql('DROP TABLE "user"');
+        $this->addSql('ALTER TABLE "user" DROP roles');
+        $this->addSql('ALTER TABLE "user" DROP password');
     }
 }
