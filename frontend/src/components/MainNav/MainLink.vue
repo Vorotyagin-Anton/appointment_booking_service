@@ -2,33 +2,30 @@
   <div class="main-link">
     <q-route-tab
       class="main-link__tab"
-      :label="label"
-      :to="path"
-    />
+      :name="title"
+      :label="title"
+      :to="to"
+    >
+      <slot/>
+    </q-route-tab>
   </div>
 </template>
 
 <script>
-import useLink from "src/hooks/common/useLink";
-
 export default {
   name: "MainLink",
 
   props: {
-    link: {
-      type: Object,
+    title: {
+      type: String,
       required: true,
     },
-  },
 
-  setup(props) {
-    const {label, path} = useLink(props);
-
-    return {
-      label,
-      path,
+    to: {
+      type: Object,
+      default: () => ({path: '#'})
     }
-  }
+  },
 }
 </script>
 

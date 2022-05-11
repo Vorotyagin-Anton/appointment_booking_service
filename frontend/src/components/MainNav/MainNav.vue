@@ -4,27 +4,33 @@
     class="container main-nav"
   >
     <q-toolbar class="main-nav__row">
-      <q-tabs class="main-nav__tabs" align="left">
+      <q-tabs
+        class="main-nav__tabs"
+        align="left"
+        v-model="tab"
+      >
+        <main-link
+          title="Overview"
+          :to="{name: 'main'}"
+        />
 
-        <div
-          v-for="link in menu.links"
-          :key="link.title"
-        >
-          <main-link-dropdown
-            v-if="link.groups"
-            :link="link"
-          />
+        <main-link title="Catalog">
+          <dropdown-catalog/>
+        </main-link>
 
-          <main-link-select
-            v-else-if="link.select"
-            :link="link"
-          />
+        <main-link title="Features">
+          <dropdown-features/>
+        </main-link>
 
-          <main-link
-            v-else
-            :link="link"
-          />
-        </div>
+        <main-link
+          title="Pricing"
+          :to="{name: 'main'}"
+        />
+
+        <main-link
+          title="FAQ"
+          :to="{path: '/', hash: '#faq'}"
+        />
 
         <router-link :to="{name: 'signup'}">
           <q-btn
@@ -46,29 +52,27 @@
 </template>
 
 <script>
-import useNavigation from "src/hooks/common/useNavigation";
+import {ref} from "vue";
 import MainLink from "components/MainNav/MainLink";
-import MainLinkSelect from "components/MainNav/MainLinkSelect";
-import MainLinkDropdown from "components/MainNav/MainLinkDropdown";
+import DropdownFeatures from "components/MainNav/DropdownFeatures";
+import DropdownCatalog from "components/MainNav/DropdownCatalog";
 
 export default {
   name: 'MainNav',
 
   components: {
     MainLink,
-    MainLinkSelect,
-    MainLinkDropdown,
+    DropdownFeatures,
+    DropdownCatalog,
   },
 
   setup() {
-    const {getGroup} = useNavigation();
-
-    const menu = getGroup('Menu');
+    const tab = ref('Overview');
 
     return {
-      menu,
+      tab,
     }
-  }
+  },
 }
 </script>
 
