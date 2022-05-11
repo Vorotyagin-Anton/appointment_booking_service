@@ -25,6 +25,8 @@
 <script>
 import useMaster from "src/hooks/useMaster";
 import MasterProfile from "components/Master/MasterProfile";
+import {useStore} from "vuex";
+import {computed} from "vue";
 
 export default {
   name: "OrderStepperMaster",
@@ -34,7 +36,7 @@ export default {
   },
 
   setup() {
-    const {loading, master, mountMaster} = useMaster(1);
+    const {loading, master, mountMaster} = useMaster();
 
     mountMaster();
 
