@@ -21,20 +21,22 @@
           @select="selectTab"
         />
 
-        <router-link :to="{name: 'signup'}">
+        <div v-if="!isAuthorized">
+          <router-link :to="{name: 'signup'}">
+            <q-btn
+              class="main-nav__btn"
+              color="primary"
+              label="Sign up free"
+            />
+          </router-link>
+
           <q-btn
             class="main-nav__btn"
             color="primary"
-            label="Sign up free"
+            label="Connect with us"
+            outline
           />
-        </router-link>
-
-        <q-btn
-          class="main-nav__btn"
-          color="primary"
-          label="Connect with us"
-          outline
-        />
+        </div>
       </q-tabs>
     </q-toolbar>
   </q-page-sticky>
@@ -46,6 +48,7 @@ import {useRoute} from "vue-router";
 import MainNavTab from "components/MainNav/MainNavTab";
 import DropdownCatalog from "components/MainNav/DropdownCatalog";
 import DropdownFeatures from "components/MainNav/DropdownFeatures";
+import useAuth from "src/hooks/auth/useAuth";
 
 const tabs = [
   {
@@ -86,6 +89,8 @@ export default {
   },
 
   setup() {
+    const {isAuthorized} = useAuth();
+
     const route = useRoute();
 
     const selectedTab = ref('overview');
@@ -95,7 +100,13 @@ export default {
     const isTabSelected = (name) => selectedTab.value === name;
 
     const selectTabByRoute = (route) => {
-      const tab = tabs.find(tab => tab.routes.includes(route.name));
+      const tab = tabs.find(tab => {
+        if (!tab.routes) {
+          return false;
+        }
+
+        return tab.routes.includes(route.name);
+      });
 
       if (route.hash === '#' + selectedTab.value) {
         return;
@@ -115,6 +126,7 @@ export default {
     });
 
     return {
+      isAuthorized,
       tabs,
       selectedTab,
       selectTab,
