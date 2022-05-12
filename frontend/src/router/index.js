@@ -23,7 +23,10 @@ export default route(function ({store, ssrContext}) {
           behavior: 'smooth',
         }
       } else {
-        return {x: 0, y: 0}
+        return {
+          top: 0,
+          behavior: 'smooth',
+        }
       }
     },
 

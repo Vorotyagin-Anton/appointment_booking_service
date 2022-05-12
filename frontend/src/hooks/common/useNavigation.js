@@ -1,6 +1,6 @@
 import {useStore} from "vuex";
 
-export default function useFeaturesLinks() {
+export default function useNavigation() {
   const store = useStore();
 
   const getGroup = (group) => {

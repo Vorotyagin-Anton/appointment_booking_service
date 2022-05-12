@@ -95,7 +95,7 @@ export default {
   &__link {
     padding: 5px 0;
     color: $dark;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   &__category {

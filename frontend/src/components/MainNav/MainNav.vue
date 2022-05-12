@@ -7,29 +7,18 @@
       <q-tabs
         class="main-nav__tabs"
         align="left"
-        v-model="tab"
+        indicator-color="transparent"
       >
-        <main-link
-          title="Overview"
-          :to="{name: 'main'}"
-        />
-
-        <main-link title="Catalog">
-          <dropdown-catalog/>
-        </main-link>
-
-        <main-link title="Features">
-          <dropdown-features/>
-        </main-link>
-
-        <main-link
-          title="Pricing"
-          :to="{name: 'main'}"
-        />
-
-        <main-link
-          title="FAQ"
-          :to="{path: '/', hash: '#faq'}"
+        <main-nav-tab
+          v-for="tab in tabs"
+          :key="tab.name"
+          :name="tab.name"
+          :title="tab.title"
+          :to="tab.to"
+          :child="tab.child"
+          :selectable="tab.selectable"
+          :isSelected="isTabSelected(tab.name)"
+          @select="selectTab"
         />
 
         <router-link :to="{name: 'signup'}">
@@ -52,25 +41,84 @@
 </template>
 
 <script>
-import {ref} from "vue";
-import MainLink from "components/MainNav/MainLink";
-import DropdownFeatures from "components/MainNav/DropdownFeatures";
+import {onMounted, ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import MainNavTab from "components/MainNav/MainNavTab";
 import DropdownCatalog from "components/MainNav/DropdownCatalog";
+import DropdownFeatures from "components/MainNav/DropdownFeatures";
+
+const tabs = [
+  {
+    name: 'overview',
+    title: 'Overview',
+    routes: ['main'],
+    to: {name: 'main'},
+  },
+  {
+    name: 'catalog',
+    title: 'Catalog',
+    routes: ['masters'],
+    selectable: false,
+    child: DropdownCatalog,
+  },
+  {
+    name: 'features',
+    title: 'Features',
+    selectable: false,
+    child: DropdownFeatures,
+  },
+  {
+    name: 'pricing',
+    title: 'Pricing',
+  },
+  {
+    name: 'faq',
+    title: 'FAQ',
+    to: {path: '/', hash: '#faq'},
+  }
+];
 
 export default {
   name: 'MainNav',
 
   components: {
-    MainLink,
-    DropdownFeatures,
-    DropdownCatalog,
+    MainNavTab,
   },
 
   setup() {
-    const tab = ref('Overview');
+    const route = useRoute();
+
+    const selectedTab = ref('overview');
+
+    const selectTab = (name) => selectedTab.value = name;
+
+    const isTabSelected = (name) => selectedTab.value === name;
+
+    const selectTabByRoute = (route) => {
+      const tab = tabs.find(tab => tab.routes.includes(route.name));
+
+      if (route.hash === '#' + selectedTab.value) {
+        return;
+      }
+
+      if (tab) {
+        selectedTab.value = tab.name;
+      }
+    }
+
+    watch(route, () => {
+      selectTabByRoute(route);
+    });
+
+    onMounted(() => {
+      selectTabByRoute(route);
+    });
 
     return {
-      tab,
+      tabs,
+      selectedTab,
+      selectTab,
+      isTabSelected,
     }
   },
 }

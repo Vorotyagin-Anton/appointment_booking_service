@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import useFeaturesLinks from "src/hooks/common/useFeaturesLinks";
+import useNavigation from "src/hooks/common/useNavigation";
 
 export default {
   name: "MainFooterNav",
 
   setup() {
-    const {getGroups} = useFeaturesLinks();
+    const {getGroups} = useNavigation();
 
     const groups = getGroups([
       'Payments',
