@@ -24,25 +24,32 @@
             <q-list style="min-width: 100px">
               <q-item clickable v-close-popup dense>
                 <q-item-section>
-                  <router-link class="main-header__link" :to="{name: 'profile'}">Profile</router-link>
+                  <router-link
+                    class="main-header__link"
+                    :to="{name: 'cabinet'}"
+                  >
+                    Cabinet
+                  </router-link>
                 </q-item-section>
               </q-item>
 
               <q-item clickable v-close-popup dense>
                 <q-item-section>
-                  <router-link class="main-header__link" to="/">Dashboard</router-link>
+                  <router-link
+                    class="main-header__link"
+                    to="/"
+                  >
+                    Support
+                  </router-link>
                 </q-item-section>
               </q-item>
 
               <q-item clickable v-close-popup dense>
-                <q-item-section>
-                  <router-link class="main-header__link" to="/">Support</router-link>
-                </q-item-section>
-              </q-item>
-
-              <q-item clickable v-close-popup dense>
-                <q-item-section>
-                  <router-link class="main-header__link" to="/">Sign Out</router-link>
+                <q-item-section
+                  class="main-header__link"
+                  @click="logout"
+                >
+                  Sign Out
                 </q-item-section>
               </q-item>
             </q-list>
@@ -69,10 +76,11 @@ export default {
   name: "MainHeader",
 
   setup() {
-    const {isAuthorized} = useAuth();
+    const {isAuthorized, logout} = useAuth();
 
     return {
       isAuthorized,
+      logout,
     }
   },
 }
@@ -129,7 +137,7 @@ export default {
   }
 
   &__dropdown {
-    width: 250px;
+    min-width: 200px;
     padding: 15px 0;
   }
 

@@ -1,13 +1,14 @@
 import {api} from "boot/api";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import useMessage from "src/hooks/auth/useMessage";
 import useLog from "src/hooks/common/useLog";
 
 export default function useAuth() {
   const store = useStore();
   const router = useRouter();
+  const route = useRoute();
 
   const log = useLog();
 
@@ -18,13 +19,17 @@ export default function useAuth() {
 
   const isRequested = ref(false);
 
-  const makeRequest = async (callback) => {
+  const register = async (email, password, isMaster) => {
     try {
       isRequested.value = true;
-      await callback();
+
+      const response = await api.auth.register(email, password, isMaster);
+
+      await store.dispatch('auth/login', response.user);
+      await router.push({name: 'cabinet'});
     } catch (error) {
-      console.log(error)
       log(error);
+
       const message = getMessageFromError(error);
       await showError(message);
     } finally {
@@ -32,27 +37,36 @@ export default function useAuth() {
     }
   };
 
-  const register = async (email, password, isMaster) => {
-    await makeRequest(async () => {
-      const response = await api.auth.register(email, password, isMaster);
-      await login(response.user);
-    })
-  };
+  const login = async (email, password) => {
+    try {
+      isRequested.value = true;
 
-  const authorize = async (email, password) => {
-    await makeRequest(async () => {
       const response = await api.auth.login(email, password);
-      await login(response.user);
-    });
-  };
 
-  const login = async (user) => {
-    await store.dispatch('auth/login', user);
-    await router.push({name: 'profile'});
+      await store.dispatch('auth/login', response.user);
+      await router.push({name: 'cabinet'});
+    } catch (error) {
+      log(error);
+
+      const message = getMessageFromError(error);
+      await showError(message);
+    } finally {
+      isRequested.value = false;
+    }
   };
 
   const logout = async () => {
-    await store.dispatch('auth/logout');
+    try {
+      await store.dispatch('auth/logout');
+
+      if (route.matched.some(record => record?.meta?.requiredAuth)) {
+        await router.push({name: 'main'});
+      }
+
+      await api.auth.logout();
+    } catch (error) {
+      log(error)
+    }
   };
 
   return {
@@ -60,7 +74,6 @@ export default function useAuth() {
     isRequested,
     isAuthorized,
     register,
-    authorize,
     login,
     logout,
   }

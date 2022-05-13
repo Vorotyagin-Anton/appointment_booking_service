@@ -64,9 +64,9 @@ export default {
     const {email, emailRules} = useEmailInput();
     const {pass, passRules} = usePasswordInput();
 
-    const {isRequested, authorize} = useAuth();
+    const {isRequested, login} = useAuth();
 
-    const onSubmit = () => authorize(email.value, pass.value);
+    const onSubmit = () => login(email.value, pass.value);
 
     return {
       email,

@@ -11,7 +11,7 @@ export default [
         path: '',
         component: () => import('pages/SignInPage.vue'),
       },
-      
+
       {
         name: 'signup',
         path: '/signup',
@@ -30,18 +30,21 @@ export default [
         path: '',
         component: () => import('pages/MainPage.vue'),
       },
-      
+
       {
         name: 'masters',
         path: 'masters',
         component: () => import('pages/MastersPage.vue'),
       },
-      
+
       {
-        name: 'profile',
-        path: 'profile',
-        component: () => import('pages/ProfilePage.vue'),
+        name: 'cabinet',
+        path: 'cabinet',
+        component: () => import('pages/CabinetPage.vue'),
         beforeEnter: [authGuard],
+        meta: {
+          requiredAuth: true,
+        },
       }
     ]
   },

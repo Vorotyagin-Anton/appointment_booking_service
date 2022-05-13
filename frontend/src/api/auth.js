@@ -28,5 +28,9 @@ export default function (axios) {
 
       return response.data;
     },
+
+    async logout() {
+      await axios.get('/api/logout');
+    },
   };
 }
