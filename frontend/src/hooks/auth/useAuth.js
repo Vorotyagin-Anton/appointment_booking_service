@@ -26,6 +26,8 @@ export default function useAuth() {
       const response = await api.auth.register(email, password, isMaster);
 
       await store.dispatch('auth/login', response.user);
+      window.localStorage.setItem('user', JSON.stringify(response));
+
       await router.push({name: 'cabinet'});
     } catch (error) {
       log(error);
@@ -44,6 +46,8 @@ export default function useAuth() {
       const response = await api.auth.login(email, password);
 
       await store.dispatch('auth/login', response.user);
+      window.localStorage.setItem('user', JSON.stringify(response));
+
       await router.push({name: 'cabinet'});
     } catch (error) {
       log(error);
@@ -55,9 +59,18 @@ export default function useAuth() {
     }
   };
 
+  const authorize = async () => {
+    const user = window.localStorage.getItem('user');
+
+    if (user) {
+      await store.dispatch('auth/login', user.user);
+    }
+  };
+
   const logout = async () => {
     try {
       await store.dispatch('auth/logout');
+      window.localStorage.removeItem('user');
 
       if (route.matched.some(record => record?.meta?.requiredAuth)) {
         await router.push({name: 'main'});
@@ -75,6 +88,7 @@ export default function useAuth() {
     isAuthorized,
     register,
     login,
+    authorize,
     logout,
   }
 }
