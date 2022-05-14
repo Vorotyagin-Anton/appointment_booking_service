@@ -101,7 +101,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setPassword(
             $this->passwordHasher->hashPassword(
                 $user,
-                '123'
+                '123123123'
             )
         );
 
