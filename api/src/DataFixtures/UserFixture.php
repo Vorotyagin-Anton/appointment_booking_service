@@ -11,19 +11,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixture extends Fixture implements DependentFixtureInterface
 {
     private Generator $faker;
-    private EntityManagerInterface $em;
-    private UserPasswordHasherInterface $passwordHasher;
+    private array $fakeImagePaths;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(
+        private EntityManagerInterface $em,
+        private UserPasswordHasherInterface $passwordHasher,
+        private ParameterBagInterface $parameterBag
+    )
     {
         $this->faker = Factory::create();
-        $this->em = $em;
-        $this->passwordHasher = $passwordHasher;
+        $this->fillFakeImagePaths();
     }
 
     public function getDependencies(): array
@@ -44,6 +48,19 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
+    private function fillFakeImagePaths(): void
+    {
+        $finder = new Finder();
+        $relativePathToFakeImage = '/uploads/photo/fake_image';
+        $absolutePathToFakeImage = $this->parameterBag->get('kernel.project_dir') . '/public' . $relativePathToFakeImage;
+        $finder->files()->in($absolutePathToFakeImage);
+        if ($finder->hasResults()) {
+            foreach ($finder as $file) {
+                $this->fakeImagePaths[] = $relativePathToFakeImage . '/' . $file->getRelativePathname();
+            }
+        }
+    }
+
     private function getUser(): User
     {
         $user = new User();
@@ -57,7 +74,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
         $user->setIsClient($fakerBoolean);
         $user->setIsWorker(!$fakerBoolean);
-        $user->setPathToPhoto('/uploads/photo/dummy.jpg');
+        $user->setPathToPhoto(\array_pop($this->fakeImagePaths));
         $user->setStory($this->faker->text());
 
         if ($user->getIsClient()) {
@@ -102,7 +119,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setMiddlename($this->faker->firstName());
         $user->setIsClient(false);
         $user->setIsWorker(false);
-        $user->setPathToPhoto('/uploads/photo/dummy.jpg');
+        $user->setPathToPhoto(\array_pop($this->fakeImagePaths));
         $user->setRoles(['ROLE_ADMIN']);
 
         $user->setEmail('test@test.com');
