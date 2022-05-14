@@ -64,8 +64,20 @@
       </div>
     </div>
 
-    <div class="signup-form__agree">
-      <label class="signup-form__checkbox">
+    <div class="signup-form__checkboxes">
+      <label class="signup-form__checkbox signup-form__checkbox_master">
+        <q-checkbox
+          v-model="isMaster"
+          name="isMaster"
+          :dense="true"
+        />
+
+        <div class="signup-form__agrees">
+          Register as a master for commercial activities
+        </div>
+      </label>
+
+      <label class="signup-form__checkbox signup-form__checkbox_agree">
         <q-checkbox
           v-model="agree"
           name="agree"
@@ -134,10 +146,11 @@ export default {
     const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
 
     const agree = ref(false);
+    const isMaster = ref(false);
 
     const {isRequested, register} = useAuth();
 
-    const onSubmit = () => register(email.value, pass.value, true);
+    const onSubmit = () => register(email.value, pass.value, isMaster.value);
 
     const onReset = () => {
       agree.value = false;
@@ -157,6 +170,7 @@ export default {
       passConfirmation,
       passConfirmationRules,
       agree,
+      isMaster,
       isRequested,
       onSubmit,
       onReset,
@@ -201,9 +215,18 @@ export default {
     width: 350px;
   }
 
+  &__checkboxes {
+    padding: 25px 15px;
+    border-bottom: .4px solid $grey-5;
+  }
+
   &__checkbox {
     display: flex;
     align-items: center;
+
+    &_master {
+      margin-bottom: 10px;
+    }
   }
 
   &__agrees {
@@ -211,11 +234,7 @@ export default {
     font-size: 11px;
     font-weight: 400;
     color: $grey-7;
-  }
-
-  &__agree {
-    padding: 35px 15px;
-    border-bottom: .4px solid $grey-5;
+    cursor: pointer;
   }
 
   &__link {
