@@ -23,7 +23,7 @@
         </q-item-section>
       </q-item>
 
-      <q-separator/>
+      <q-separator class="cabinet-header-menu__separator"/>
 
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
         <q-item-section>
@@ -58,7 +58,7 @@
         </q-item-section>
       </q-item>
 
-      <q-separator/>
+      <q-separator class="cabinet-header-menu__separator"/>
 
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
         <q-item-section>
@@ -111,7 +111,7 @@ export default {
 
 <style lang="scss">
 .cabinet-header-menu {
-  min-width: 230px;
+  min-width: 250px;
   padding: 25px 0 15px;
 
   &__item {
@@ -128,6 +128,10 @@ export default {
 
   &__link {
     color: $primary;
+  }
+
+  &__separator {
+    margin: 10px 0;
   }
 }
 </style>
