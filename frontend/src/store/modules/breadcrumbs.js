@@ -3,8 +3,8 @@ const state = {
     {
       name: 'masters',
       items: [
-        {title: 'main', path: 'main'},
-        {title: 'masters', path: 'masters'},
+        {title: 'main', path: {name: 'main'}},
+        {title: 'masters', path: {name: 'masters'}},
       ],
     },
   ],
