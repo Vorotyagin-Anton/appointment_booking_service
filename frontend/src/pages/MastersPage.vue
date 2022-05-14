@@ -41,7 +41,7 @@ import useSearch from "src/hooks/masters/useSearch";
 import useBreadcrumbs from "src/hooks/common/useBreadcrumbs";
 import BreadcrumbsSection from "components/Sections/BreadcrumbsSection";
 import MastersSorting from "components/Catalog/Masters/MastersSorting";
-import MastersList from "components/Catalog/MastersList";
+import MastersList from "components/Catalog/Masters/MastersList";
 import MastersFilter from "components/Catalog/Masters/MastersFilter";
 import SearchInput from "components/Common/SearchInput";
 
@@ -84,9 +84,9 @@ export default {
     return {
       breadcrumbs,
       params,
+      search,
       applySort,
       applyFilters,
-      search,
     }
   }
 }
