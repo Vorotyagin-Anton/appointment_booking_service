@@ -19,7 +19,6 @@
         class="login-form__input"
         placeholder="Email address"
         v-model="email"
-        :rules="emailRules"
         outlined
       />
 
@@ -28,7 +27,6 @@
         placeholder="Password"
         type="password"
         v-model="pass"
-        :rules="passRules"
         outlined
       />
     </div>
@@ -61,8 +59,8 @@ export default {
   name: "LoginForm",
 
   setup() {
-    const {email, emailRules} = useEmailInput();
-    const {pass, passRules} = usePasswordInput();
+    const {email} = useEmailInput();
+    const {pass} = usePasswordInput();
 
     const {isRequested, login} = useAuth();
 
@@ -70,9 +68,7 @@ export default {
 
     return {
       email,
-      emailRules,
       pass,
-      passRules,
       isRequested,
       onSubmit,
     }

@@ -2,7 +2,10 @@ import {computed, ref} from "vue";
 
 export default function () {
   const pass = ref(null);
-  const passRules = [value => value && value.length >= 4 || 'Please type your password!',];
+  const passRules = [
+    value => value.length !== 0 || 'Please type your password!',
+    value => value.length >= 6 || 'Password must have a minimum 6 characters',
+  ];
 
   const passConfirmation = ref(null);
   const isPassConfirmed = computed(() => pass.value === passConfirmation.value);
