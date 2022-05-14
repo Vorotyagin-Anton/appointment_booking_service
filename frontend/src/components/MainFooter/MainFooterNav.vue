@@ -3,19 +3,19 @@
 
     <div
       class="main-footer-nav__group"
-      v-for="item in nav"
-      :key="item.group"
+      v-for="group in groups"
+      :key="group.name"
     >
       <div class="main-footer-nav__intro">
-        <h6 class="main-footer-nav__title">{{ item.group }}</h6>
+        <h6 class="main-footer-nav__title">{{ group.name }}</h6>
         <span class="material-icons main-footer-nav__icon">expand_more</span>
       </div>
 
       <router-link
         class="main-footer-nav__link"
-        v-for="link in item.links"
+        v-for="link in group.links"
         :key="link.title"
-        :to="{name: link.route}"
+        :to="link.to"
       >
         {{ link.title }}
       </router-link>
@@ -28,27 +28,25 @@
 <script>
 import useNavigation from "src/hooks/common/useNavigation";
 
-const groups = [
-  'Payments',
-  'Point of Sale',
-  'Hardware',
-  'Tools',
-  'Developers',
-  'Resources',
-  'Business Types',
-  'Square',
-];
-
 export default {
   name: "MainFooterNav",
 
   setup() {
     const {getGroups} = useNavigation();
 
-    const nav = getGroups(...groups);
+    const groups = getGroups([
+      'Payments',
+      'Point of Sale',
+      'Hardware',
+      'Tools',
+      'Developers',
+      'Resources',
+      'Business Types',
+      'Square',
+    ]);
 
     return {
-      nav,
+      groups,
     }
   }
 }

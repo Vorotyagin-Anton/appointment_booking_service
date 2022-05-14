@@ -4,11 +4,15 @@
     <MainHeader/>
 
     <q-page-container>
+
       <div class="main">
         <router-view/>
       </div>
+
       <main-nav/>
+
       <order-modal/>
+
     </q-page-container>
 
     <MainFooter/>
@@ -17,7 +21,7 @@
 </template>
 
 <script>
-import MainHeader from "components/MainHeader";
+import MainHeader from "components/MainHeader/MainHeader";
 import MainFooter from "components/MainFooter/MainFooter";
 import MainNav from "components/MainNav/MainNav";
 import OrderModal from "components/Order/OrderModal";

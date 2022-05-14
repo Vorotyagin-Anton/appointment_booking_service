@@ -1,5 +1,7 @@
+import authGuard from "src/router/guards/authGuard";
+import guestGuard from "src/router/guards/guestGuard";
 
-const routes = [
+export default [
   {
     path: '/authorize',
     component: () => import('layouts/AuthLayout.vue'),
@@ -9,12 +11,30 @@ const routes = [
         path: '',
         component: () => import('pages/SignInPage.vue'),
       },
+
       {
         name: 'signup',
         path: '/signup',
         component: () => import('pages/SignUpPage.vue'),
-      }
+      },
     ],
+    beforeEnter: [guestGuard],
+  },
+
+  {
+    path: '/cabinet',
+    component: () => import('layouts/CabinetLayout.vue'),
+    children: [
+      {
+        name: 'cabinet',
+        path: '/cabinet',
+        component: () => import('pages/CabinetPage.vue'),
+      },
+    ],
+    beforeEnter: [authGuard],
+    meta: {
+      requiredAuth: true,
+    },
   },
 
   {
@@ -23,15 +43,16 @@ const routes = [
     children: [
       {
         name: 'main',
-        path: '',
+        path: '/',
         component: () => import('pages/MainPage.vue'),
       },
+
       {
         name: 'masters',
-        path: 'masters',
+        path: '/masters',
         component: () => import('pages/MastersPage.vue'),
-      }
-    ]
+      },
+    ],
   },
 
   // Always leave this as last one,
@@ -41,5 +62,3 @@ const routes = [
     component: () => import('pages/ErrorNotFound.vue')
   }
 ]
-
-export default routes

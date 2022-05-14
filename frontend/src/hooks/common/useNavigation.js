@@ -1,17 +1,16 @@
 import {useStore} from "vuex";
-import {computed} from "vue";
 
 export default function useNavigation() {
   const store = useStore();
 
-  const navigation = computed(() => store.getters['navigation/all']);
-
   const getGroup = (group) => {
-    return navigation.value.find((item) => item.group === group);
+    return store.getters['navigation/getGroup'](group);
   };
 
-  const getGroups = (...groups) => {
-    return navigation.value.filter((item) => groups.includes(item.group));
+  const getGroups = (groups) => {
+    return store
+      .getters['navigation/groups']
+      .filter((item) => groups.includes(item.name));
   };
 
   return {

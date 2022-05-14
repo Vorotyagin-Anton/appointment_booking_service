@@ -64,8 +64,20 @@
       </div>
     </div>
 
-    <div class="signup-form__agree">
-      <label class="signup-form__checkbox">
+    <div class="signup-form__checkboxes">
+      <label class="signup-form__checkbox signup-form__checkbox_master">
+        <q-checkbox
+          v-model="isMaster"
+          name="isMaster"
+          :dense="true"
+        />
+
+        <div class="signup-form__agrees">
+          Register as a master for commercial activities
+        </div>
+      </label>
+
+      <label class="signup-form__checkbox signup-form__checkbox_agree">
         <q-checkbox
           v-model="agree"
           name="agree"
@@ -100,14 +112,20 @@
           color="primary"
           label="Submit"
           type="submit"
+          :disable="isRequested"
           no-caps
         />
       </div>
 
       <div class="signup-form__signin">
         <span class="signup-form__p">Already have a Square account?</span>&nbsp;
-        <router-link class="signup-form__link" :to="{name: 'signin'}">Sign In</router-link>
-        .
+
+        <router-link
+          class="signup-form__link"
+          :to="{name: 'signin'}"
+        >
+          Sign In
+        </router-link>
       </div>
     </div>
 
@@ -116,9 +134,9 @@
 
 <script>
 import {ref} from "vue";
+import useAuth from "src/hooks/auth/useAuth";
 import useEmailInput from "src/hooks/form/useEmailInput";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
-import useRegistration from "src/hooks/auth/useRegistration";
 
 export default {
   name: "SignUpForm",
@@ -126,18 +144,20 @@ export default {
   setup() {
     const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
     const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
+
     const agree = ref(false);
+    const isMaster = ref(false);
 
-    const {register} = useRegistration();
+    const {isRequested, register} = useAuth();
 
-    const onSubmit = () => register(email, pass, true);
+    const onSubmit = () => register(email.value, pass.value, isMaster.value);
 
     const onReset = () => {
-      email.value = null;
-      emailConfirmation.value = null;
-      pass.value = null;
-      passConfirmation.value = null;
       agree.value = false;
+      email.value = null;
+      pass.value = null;
+      emailConfirmation.value = null;
+      passConfirmation.value = null;
     };
 
     return {
@@ -150,6 +170,8 @@ export default {
       passConfirmation,
       passConfirmationRules,
       agree,
+      isMaster,
+      isRequested,
       onSubmit,
       onReset,
     }
@@ -193,9 +215,18 @@ export default {
     width: 350px;
   }
 
+  &__checkboxes {
+    padding: 25px 15px;
+    border-bottom: .4px solid $grey-5;
+  }
+
   &__checkbox {
     display: flex;
     align-items: center;
+
+    &_master {
+      margin-bottom: 10px;
+    }
   }
 
   &__agrees {
@@ -203,11 +234,7 @@ export default {
     font-size: 11px;
     font-weight: 400;
     color: $grey-7;
-  }
-
-  &__agree {
-    padding: 35px 15px;
-    border-bottom: .4px solid $grey-5;
+    cursor: pointer;
   }
 
   &__link {
