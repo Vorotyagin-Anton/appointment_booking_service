@@ -1,397 +1,135 @@
 const state = {
-  items: [
+  groups: [
     {
-      group: 'Menu',
+      name: 'Payments',
       links: [
-        {
-          title: 'overview',
-          route: 'main',
-        },
-        {
-          title: 'catalog',
-          select: [
-            {
-              title: 'categories',
-              route: 'main',
-            },
-            {
-              title: 'services',
-              route: 'main',
-            },
-            {
-              title: 'masters',
-              route: 'masters',
-            },
-          ],
-        },
-        {
-          title: 'features',
-          route: 'main',
-          groups: [
-            'Catalog',
-            'Payments',
-            'Hardware',
-            'Developers',
-            'Resources',
-            'Business Types',
-            'Points of Sale',
-            'Tools',
-          ],
-        },
-        {
-          title: 'pricing',
-          route: 'main',
-        },
-        {
-          title: 'faq',
-          label: 'FAQ',
-          route: {path: '/', hash: '#faq'},
-        },
+        {title: 'Square Payments', to: {name: 'main'}},
+        {title: 'In Person', to: {name: 'main'}},
+        {title: 'On Your Computer', to: {name: 'main'}},
+        {title: 'On Your Website', to: {name: 'main'}},
+        {title: 'Risk Manager', to: {name: 'main'}},
+        {title: 'Payment Platform', to: {name: 'main'}},
+        {title: 'Payment Secure', to: {name: 'main'}},
+        {title: 'Transfers', to: {name: 'main'}},
+        {title: 'Merchant Services', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Payments',
+      name: 'Point of Sale',
       links: [
-        {
-          title: 'Square Payments',
-          route: 'main',
-        },
-        {
-          title: 'In Person',
-          route: 'main',
-        },
-        {
-          title: 'On Your Computer',
-          route: 'main',
-        },
-        {
-          title: 'On Your Website',
-          route: 'main',
-        },
-        {
-          title: 'Risk Manager',
-          route: 'main',
-        },
-        {
-          title: 'Payment Platform',
-          route: 'main',
-        },
-        {
-          title: 'Payment Secure',
-          route: 'main',
-        },
-        {
-          title: 'Transfers',
-          route: 'main',
-        },
-        {
-          title: 'Merchant Services',
-          route: 'main',
-        },
+        {title: 'Point of Sale Overview', to: {name: 'main'}},
+        {title: 'Square Point of Sale', to: {name: 'main'}},
+        {title: 'Square for Restaurants', to: {name: 'main'}},
+        {title: 'Square for Retail', to: {name: 'main'}},
+        {title: 'Square Appointments', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Point of Sale',
+      name: 'Hardware',
       links: [
-        {
-          title: 'Point of Sale Overview',
-          route: 'main',
-        },
-        {
-          title: 'Square Point of Sale',
-          route: 'main',
-        },
-        {
-          title: 'Square for Restaurants',
-          route: 'main',
-        },
-        {
-          title: 'Square for Retail',
-          route: 'main',
-        },
-        {
-          title: 'Square Appointments',
-          route: 'main',
-        },
+        {title: 'Reader for Magstripe', to: {name: 'main'}},
+        {title: 'Contactless (NFC) & Chip Reader', to: {name: 'main'}},
+        {title: 'Terminal', to: {name: 'main'}},
+        {title: 'Stand', to: {name: 'main'}},
+        {title: 'Register', to: {name: 'main'}},
+        {title: 'By in Store', to: {name: 'main'}},
+        {title: 'Compare Hardware', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Hardware',
+      name: 'Tools',
       links: [
-        {
-          title: 'Reader for Magstripe',
-          route: 'main',
-        },
-        {
-          title: 'Contactless (NFC) & Chip Reader',
-          route: 'main',
-        },
-        {
-          title: 'Terminal',
-          route: 'main',
-        },
-        {
-          title: 'Stand',
-          route: 'main',
-        },
-        {
-          title: 'Register',
-          route: 'main',
-        },
-        {
-          title: 'By in Store',
-          route: 'main',
-        },
-        {
-          title: 'Compare Hardware',
-          route: 'main',
-        },
+        {title: 'Online Store', to: {name: 'main'}},
+        {title: 'Online Checkout', to: {name: 'main'}},
+        {title: 'Team Management', to: {name: 'main'}},
+        {title: 'Marketing', to: {name: 'main'}},
+        {title: 'SMS Marketing', to: {name: 'main'}},
+        {title: 'Messages', to: {name: 'main'}},
+        {title: 'Loyalty', to: {name: 'main'}},
+        {title: 'Dashboard', to: {name: 'main'}},
+        {title: 'Gift Cards', to: {name: 'main'}},
+        {title: 'Customer Directory', to: {name: 'main'}},
+        {title: 'Inventory Management', to: {name: 'main'}},
+        {title: 'Photo Studio', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Tools',
+      name: 'Developers',
       links: [
-        {
-          title: 'Online Store',
-          route: 'main',
-        },
-        {
-          title: 'Online Checkout',
-          route: 'main',
-        },
-        {
-          title: 'Team Management',
-          route: 'main',
-        },
-        {
-          title: 'Marketing',
-          route: 'main',
-        },
-        {
-          title: 'SMS Marketing',
-          route: 'main',
-        },
-        {
-          title: 'Messages',
-          route: 'main',
-        },
-        {
-          title: 'Loyalty',
-          route: 'main',
-        },
-        {
-          title: 'Dashboard',
-          route: 'main',
-        },
-        {
-          title: 'Gift Cards',
-          route: 'main',
-        },
-        {
-          title: 'Customer Directory',
-          route: 'main',
-        },
-        {
-          title: 'Inventory Management',
-          route: 'main',
-        },
-        {
-          title: 'Photo Studio',
-          route: 'main',
-        },
+        {title: 'Developer Platform', to: {name: 'main'}},
+        {title: 'Reader SDK', to: {name: 'main'}},
+        {title: 'In-App Payments SDK', to: {name: 'main'}},
+        {title: 'Online Payments APIs', to: {name: 'main'}},
+        {title: 'Documentation', to: {name: 'main'}},
+        {title: 'Developer Dashboard', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Developers',
+      name: 'Resources',
       links: [
-        {
-          title: 'Developer Platform',
-          route: 'main',
-        },
-        {
-          title: 'Reader SDK',
-          route: 'main',
-        },
-        {
-          title: 'In-App Payments SDK',
-          route: 'main',
-        },
-        {
-          title: 'Online Payments APIs',
-          route: 'main',
-        },
-        {
-          title: 'Documentation',
-          route: 'main',
-        },
-        {
-          title: 'Developer Dashboard',
-          route: 'main',
-        },
+        {title: 'Pricing', to: {name: 'main'}},
+        {title: 'Contact Sales', to: {name: 'main'}},
+        {title: 'Support Center', to: {name: 'main'}},
+        {title: 'App Marketplace', to: {name: 'main'}},
+        {title: 'Small Business Development', to: {name: 'main'}},
+        {title: 'Blog', to: {name: 'main'}},
+        {title: 'Guides', to: {name: 'main'}},
+        {title: 'Seller Community', to: {name: 'main'}},
+        {title: 'Event', to: {name: 'main'}},
+        {title: 'Service Status', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Resources',
+      name: 'Business Types',
       links: [
-        {
-          title: 'Pricing',
-          route: 'main',
-        },
-        {
-          title: 'Contact Sales',
-          route: 'main',
-        },
-        {
-          title: 'Support Center',
-          route: 'main',
-        },
-        {
-          title: 'App Marketplace',
-          route: 'main',
-        },
-        {
-          title: 'Small Business Development',
-          route: 'main',
-        },
-        {
-          title: 'Blog',
-          route: 'main',
-        },
-        {
-          title: 'Guides',
-          route: 'main',
-        },
-        {
-          title: 'Seller Community',
-          route: 'main',
-        },
-        {
-          title: 'Event',
-          route: 'main',
-        },
-        {
-          title: 'Service Status',
-          route: 'main',
-        },
+        {title: 'Large businesses', to: {name: 'main'}},
+        {title: 'Retail', to: {name: 'main'}},
+        {title: 'CBD Retail', to: {name: 'main'}},
+        {title: 'Coffee Shops', to: {name: 'main'}},
+        {title: 'Quick Service', to: {name: 'main'}},
+        {title: 'Full Service', to: {name: 'main'}},
+        {title: 'Bars & Breweries', to: {name: 'main'}},
+        {title: 'Beauty Professionals', to: {name: 'main'}},
+        {title: 'Health & Fitness', to: {name: 'main'}},
+        {title: 'Home & Repair Services', to: {name: 'main'}},
+        {title: 'Professional Services', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Business Types',
+      name: 'Square',
       links: [
-        {
-          title: 'Large businesses',
-          route: 'main',
-        },
-        {
-          title: 'Retail',
-          route: 'main',
-        },
-        {
-          title: 'CBD Retail',
-          route: 'main',
-        },
-        {
-          title: 'Coffee Shops',
-          route: 'main',
-        },
-        {
-          title: 'Quick Service',
-          route: 'main',
-        },
-        {
-          title: 'Full Service',
-          route: 'main',
-        },
-        {
-          title: 'Bars & Breweries',
-          route: 'main',
-        },
-        {
-          title: 'Beauty Professionals',
-          route: 'main',
-        },
-        {
-          title: 'Health & Fitness',
-          route: 'main',
-        },
-        {
-          title: 'Home & Repair Services',
-          route: 'main',
-        },
-        {
-          title: 'Professional Services',
-          route: 'main',
-        },
+        {title: 'Home', to: {name: 'main'}},
+        {title: 'About', to: {name: 'main'}},
+        {title: 'Press and Media', to: {name: 'main'}},
+        {title: 'Investor Relations', to: {name: 'main'}},
+        {title: 'Affiliate Program', to: {name: 'main'}},
+        {title: 'Partner with Square', to: {name: 'main'}},
+        {title: 'Careers', to: {name: 'main'}},
+        {title: 'Developers', to: {name: 'main'}},
+        {title: 'Employment Verification', to: {name: 'main'}},
       ],
     },
     {
-      group: 'Square',
+      name: 'About Us',
       links: [
-        {
-          title: 'Home',
-          route: 'main',
-        },
-        {
-          title: 'About',
-          route: 'main',
-        },
-        {
-          title: 'Press and Media',
-          route: 'main',
-        },
-        {
-          title: 'Investor Relations',
-          route: 'main',
-        },
-        {
-          title: 'Affiliate Program',
-          route: 'main',
-        },
-        {
-          title: 'Partner with Square',
-          route: 'main',
-        },
-        {
-          title: 'Careers',
-          route: 'main',
-        },
-        {
-          title: 'Developers',
-          route: 'main',
-        },
-        {
-          title: 'Employment Verification',
-          route: 'main',
-        },
-      ],
-    },
-    {
-      group: 'About Us',
-      links: [
-        {
-          title: 'Licenses',
-          route: 'main',
-        },
-        {
-          title: 'Privacy Notice',
-          route: 'main',
-        },
-        {
-          title: 'Terms of Service',
-          route: 'main',
-        },
-        {
-          title: 'Block, Inc.',
-          route: 'main',
-        },
+        {title: 'Licenses', to: {name: 'main'}},
+        {title: 'Privacy Notice', to: {name: 'main'}},
+        {title: 'Terms of Service', to: {name: 'main'}},
+        {title: 'Block, Inc.', to: {name: 'main'}},
       ],
     },
   ],
 };
 
 const getters = {
-  all(state) {
-    return state.items;
+  groups: (state) => state.groups,
+
+  getGroup: (state) => (name) => {
+    for (let group of state.groups) {
+      if (group.name === name) {
+        return group;
+      }
+    }
   },
 };
 

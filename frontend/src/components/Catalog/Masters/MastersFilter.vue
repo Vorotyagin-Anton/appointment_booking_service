@@ -35,6 +35,8 @@
       <q-date
         class="masters-filter__date"
         v-model="days"
+        :title="calendarTitle"
+        :subtitle="calendarSubtitle"
         range
         multiple
         square
@@ -64,7 +66,7 @@
 </template>
 
 <script>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import useCategoryList from "src/hooks/useCategoryList";
 import useServiceList from "src/hooks/useServiceList";
 import useSelect from "src/hooks/form/useSelect";
@@ -76,6 +78,8 @@ export default {
 
   setup(props, {emit}) {
     const days = ref([]);
+    const calendarTitle = computed(() => days.value.length === 0 ? 'BOOKING DATES' : null);
+    const calendarSubtitle = computed(() => days.value.length === 0 ? ' ' : null);
 
     // CATEGORIES
     const {categories} = useCategoryList();
@@ -102,11 +106,13 @@ export default {
     const resetFilters = () => {
       selectedCategories.value = [];
       selectedServices.value = [];
-      emit('filter', {});
+      days.value = [];
     }
 
     return {
       days,
+      calendarTitle,
+      calendarSubtitle,
       categoriesList,
       selectedCategories,
       selectedServices,
@@ -168,10 +174,20 @@ export default {
     border-bottom: 1px solid $grey-4;
 
     .q-date__header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 15px 10px;
       background-color: $white;
       color: $dark;
       border-left: 5px solid $primary;
       border-bottom: 1.5px solid $grey-5;
+    }
+
+    .q-date__header-title-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: $primary;
     }
   }
 

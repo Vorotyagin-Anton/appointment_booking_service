@@ -1,6 +1,6 @@
 import {route} from 'quasar/wrappers'
-import {createMemoryHistory, createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import routes from './routes'
+import {createMemoryHistory, createRouter, createWebHashHistory, createWebHistory} from 'vue-router';
 
 /*
  * If not building with SSR mode, you can
@@ -10,13 +10,12 @@ import routes from './routes'
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
-
-export default route(function (/* { store, ssrContext } */) {
+export default route(function ({store, ssrContext}) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
+    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
-  return createRouter({
+  const router = createRouter({
     scrollBehavior: (to, from, savedPosition) => {
       if (to.hash) {
         return {
@@ -24,7 +23,10 @@ export default route(function (/* { store, ssrContext } */) {
           behavior: 'smooth',
         }
       } else {
-        return {x: 0, y: 0}
+        return {
+          top: 0,
+          behavior: 'smooth',
+        }
       }
     },
 
@@ -34,5 +36,11 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
-  })
-})
+  });
+
+  router.beforeEach((to, from) => {
+     to.meta.isAuthorized = store.getters['auth/isAuthorized'];
+  });
+
+  return router;
+});

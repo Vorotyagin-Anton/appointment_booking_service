@@ -10,15 +10,15 @@ const getters = {
     return state.isVisible;
   },
 
-  getType(state) {
+  type(state) {
     return state.type;
   },
 
-  getMessage(state) {
+  message(state) {
     return state.message;
   },
 
-  getLifetime(state) {
+  lifetime(state) {
     return state.lifetime;
   },
 };

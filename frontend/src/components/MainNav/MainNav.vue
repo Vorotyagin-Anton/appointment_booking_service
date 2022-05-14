@@ -4,71 +4,135 @@
     class="container main-nav"
   >
     <q-toolbar class="main-nav__row">
-      <q-tabs class="main-nav__tabs" align="left">
+      <q-tabs
+        class="main-nav__tabs"
+        align="left"
+        indicator-color="transparent"
+      >
+        <main-nav-tab
+          v-for="tab in tabs"
+          :key="tab.name"
+          :name="tab.name"
+          :title="tab.title"
+          :to="tab.to"
+          :child="tab.child"
+          :selectable="tab.selectable"
+          :isSelected="isTabSelected(tab.name)"
+          @select="selectTab"
+        />
 
-        <div
-          v-for="link in menu.links"
-          :key="link.title"
-        >
-          <main-link-dropdown
-            v-if="link.groups"
-            :link="link"
-          />
+        <div v-if="!isAuthorized">
+          <router-link :to="{name: 'signup'}">
+            <q-btn
+              class="main-nav__btn"
+              color="primary"
+              label="Sign up free"
+            />
+          </router-link>
 
-          <main-link-select
-            v-else-if="link.select"
-            :link="link"
-          />
-
-          <main-link
-            v-else
-            :link="link"
-          />
-        </div>
-
-        <router-link :to="{name: 'signup'}">
           <q-btn
             class="main-nav__btn"
             color="primary"
-            label="Sign up free"
+            label="Connect with us"
+            outline
           />
-        </router-link>
-
-        <q-btn
-          class="main-nav__btn"
-          color="primary"
-          label="Connect with us"
-          outline
-        />
+        </div>
       </q-tabs>
     </q-toolbar>
   </q-page-sticky>
 </template>
 
 <script>
-import useNavigation from "src/hooks/common/useNavigation";
-import MainLink from "components/MainNav/MainLink";
-import MainLinkSelect from "components/MainNav/MainLinkSelect";
-import MainLinkDropdown from "components/MainNav/MainLinkDropdown";
+import {onMounted, ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import MainNavTab from "components/MainNav/MainNavTab";
+import DropdownCatalog from "components/MainNav/DropdownCatalog";
+import DropdownFeatures from "components/MainNav/DropdownFeatures";
+import useAuth from "src/hooks/auth/useAuth";
+
+const tabs = [
+  {
+    name: 'overview',
+    title: 'Overview',
+    routes: ['main'],
+    to: {name: 'main'},
+  },
+  {
+    name: 'catalog',
+    title: 'Catalog',
+    routes: ['masters'],
+    selectable: false,
+    child: DropdownCatalog,
+  },
+  {
+    name: 'features',
+    title: 'Features',
+    selectable: false,
+    child: DropdownFeatures,
+  },
+  {
+    name: 'pricing',
+    title: 'Pricing',
+  },
+  {
+    name: 'faq',
+    title: 'FAQ',
+    to: {path: '/', hash: '#faq'},
+  }
+];
 
 export default {
   name: 'MainNav',
 
   components: {
-    MainLink,
-    MainLinkSelect,
-    MainLinkDropdown,
+    MainNavTab,
   },
 
   setup() {
-    const {getGroup} = useNavigation();
+    const {isAuthorized} = useAuth();
 
-    const menu = getGroup('Menu');
+    const route = useRoute();
+
+    const selectedTab = ref('overview');
+
+    const selectTab = (name) => selectedTab.value = name;
+
+    const isTabSelected = (name) => selectedTab.value === name;
+
+    const selectTabByRoute = (route) => {
+      const tab = tabs.find(tab => {
+        if (!tab.routes) {
+          return false;
+        }
+
+        return tab.routes.includes(route.name);
+      });
+
+      if (route.hash === '#' + selectedTab.value) {
+        return;
+      }
+
+      if (tab) {
+        selectedTab.value = tab.name;
+      }
+    }
+
+    watch(route, () => {
+      selectTabByRoute(route);
+    });
+
+    onMounted(() => {
+      selectTabByRoute(route);
+    });
 
     return {
-      menu,
+      isAuthorized,
+      tabs,
+      selectedTab,
+      selectTab,
+      isTabSelected,
     }
-  }
+  },
 }
 </script>
 
