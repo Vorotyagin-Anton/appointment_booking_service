@@ -2,11 +2,7 @@
   <q-header reveal class="container main-header">
     <div class="main-header__row">
       <q-toolbar class="main-header__col">
-        <router-link :to="{name: 'main'}">
-          <q-toolbar-title class="main-header__title">
-            Booking Service
-          </q-toolbar-title>
-        </router-link>
+        <main-header-heading/>
       </q-toolbar>
 
       <div class="main-header__col">
@@ -71,9 +67,14 @@
 
 <script>
 import useAuth from "src/hooks/auth/useAuth";
+import MainHeaderHeading from "components/MainHeader/MainHeaderHeading";
 
 export default {
   name: "MainHeader",
+
+  components: {
+    MainHeaderHeading,
+  },
 
   setup() {
     const {isAuthorized, logout} = useAuth();
@@ -102,13 +103,6 @@ export default {
 
   &__heading {
     font-size: 24px;
-  }
-
-  &__title {
-    display: flex;
-    align-items: center;
-    color: $black;
-    font-size: 26px;
   }
 
   &__icon {

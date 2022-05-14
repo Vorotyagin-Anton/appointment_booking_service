@@ -22,31 +22,37 @@ export default [
   },
 
   {
+    path: '/cabinet',
+    component: () => import('layouts/CabinetLayout.vue'),
+    children: [
+      {
+        name: 'cabinet',
+        path: '/cabinet',
+        component: () => import('pages/CabinetPage.vue'),
+      },
+    ],
+    beforeEnter: [authGuard],
+    meta: {
+      requiredAuth: true,
+    },
+  },
+
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         name: 'main',
-        path: '',
+        path: '/',
         component: () => import('pages/MainPage.vue'),
       },
 
       {
         name: 'masters',
-        path: 'masters',
+        path: '/masters',
         component: () => import('pages/MastersPage.vue'),
       },
-
-      {
-        name: 'cabinet',
-        path: 'cabinet',
-        component: () => import('pages/CabinetPage.vue'),
-        beforeEnter: [authGuard],
-        meta: {
-          requiredAuth: true,
-        },
-      }
-    ]
+    ],
   },
 
   // Always leave this as last one,
