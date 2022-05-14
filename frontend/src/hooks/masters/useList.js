@@ -28,7 +28,10 @@ export default function useList() {
     });
   }
 
-  const flushItems = () => store.dispatch('masters/flush');
+  const flushItems = async () => {
+    page.value = 1;
+    await store.dispatch('masters/flush');
+  }
 
   const log = useLog();
 
