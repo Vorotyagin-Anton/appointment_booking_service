@@ -63,9 +63,20 @@ class Service
         return $this->category;
     }
 
-    public function setCategory(?array $category): self
+    public function addCategory(ServiceCategory $serviceCategory): self
     {
-        $this->category = $category;
+        if (!$this->category->contains($serviceCategory)) {
+            $this->category[] = $serviceCategory;
+            $serviceCategory->addService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(ServiceCategory $serviceCategory): self
+    {
+        $this->category->removeElement($serviceCategory);
+        $serviceCategory->removeService($this);
 
         return $this;
     }
