@@ -5,12 +5,19 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
+use App\Repository\WorkerAvailableTimeRepository;
 use App\Service\Paginator;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
@@ -129,11 +136,15 @@ class UserController extends AbstractController
         ]]));
     }
 
+    /**
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
     #[Route(path: '/api/users/workers/{id}', name: 'app_users_worker_get', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneWorker(
         int $id,
         UserRepository $userRepository,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        WorkerAvailableTimeRepository $workerAvailableTimeRepository
     ): Response
     {
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
@@ -141,13 +152,42 @@ class UserController extends AbstractController
         if (!$user) {
             $user = $userRepository->findOneBy(['isWorker' => true]);
         }
-        return $this->json($serializer->serialize($user, 'json', ['groups' => [
-            'userShort',
-            'user_services',
-            'serviceShort',
-            'user_workerAvailableTimes',
-            'workerAvailableTimeShort'
-        ]]));
+
+        $workerTimeCollection = $workerAvailableTimeRepository->findBy(['worker' => $user, 'isTimeFree' => true]);
+        $serializerManual = new Serializer([
+            new DateTimeNormalizer(),
+            new ObjectNormalizer(new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader())))
+        ]);
+        $workerTimeArray = $serializerManual->normalize($workerTimeCollection, null, [
+            'groups' => ['workerAvailableTimeShort'],
+            DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
+        ]);
+
+        $workerTimeConverted = [];
+        foreach ($workerTimeArray as $workerTime) {
+            $workerTimeConverted[$workerTime['exactDate']][] = [
+                'id' => $workerTime['id'],
+                'value' => $workerTime['exactTimeInMinutes'],
+                'isTimeFree' => $workerTime['isTimeFree']
+            ];
+        }
+
+        $workerTimeResponse = [];
+        foreach ($workerTimeConverted as $date => $timeArray) {
+            $workerTimeResponse[] = [
+                'date' => $date,
+                'timeArray' => $timeArray
+            ];
+        }
+
+        return $this->json([
+            'worker' => $serializer->serialize($user, 'json', ['groups' => [
+                'userShort',
+                'user_services',
+                'serviceShort'
+            ]]),
+            'workerFreeTime' => $workerTimeResponse
+        ]);
     }
 
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]
