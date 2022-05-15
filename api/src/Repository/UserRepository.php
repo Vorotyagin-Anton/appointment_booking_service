@@ -74,7 +74,7 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
-    public function getQueryBuilderBy(array $criteria)
+    public function getQueryBuilderBy(array $criteria, array $filters = [])
     {
         $criteriaName = array_key_first($criteria);
         $criteriaValue = $criteria[$criteriaName];
@@ -84,6 +84,22 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.id', 'ASC')
             ->andWhere($builder->expr()->eq("u.$criteriaName", ":$criteriaName"))
             ->setParameter($criteriaName, $criteriaValue);
+
+        if (isset($filters['services'])) {
+            $builder->join('u.services', 'serv');
+            $builder->andWhere($builder->expr()->in('serv.id', $filters['services']));
+        }
+
+        if (isset($filters['categories'])) {
+            $builder
+                ->join('u.services', 'servcat')
+                ->join('servcat.category', 'cat');
+            $builder->andWhere($builder->expr()->in('cat.id', $filters['categories']));
+        }
+
+        if (isset($filters['sort']) && isset($filters['order'])) {
+            $builder->orderBy('u.' . strtolower($filters['sort']), $filters['order']);
+        }
 
         return $builder->getQuery();
     }

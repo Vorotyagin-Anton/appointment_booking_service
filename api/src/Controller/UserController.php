@@ -11,6 +11,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -123,10 +124,19 @@ class UserController extends AbstractController
     public function getWorkersOnlyByPages(
         UserRepository $userRepository,
         SerializerInterface $serializer,
-        Paginator $paginator
+        Paginator $paginator,
+        RequestStack $requestStack
     ): Response
     {
-        $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isWorker' => true]));
+        $categories = $requestStack->getCurrentRequest()->get('categories');
+        $services = $requestStack->getCurrentRequest()->get('services');
+        $order = $requestStack->getCurrentRequest()->get('order');
+        $sort = $requestStack->getCurrentRequest()->get('sort');
+
+        $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(
+            ['isWorker' => true],
+            ['categories' => $categories, 'services' => $services, 'order' => $order, 'sort' => $sort]
+        ));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
             'user_services',
