@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ServiceCategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -27,6 +28,11 @@ class ServiceCategory
     #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'category')]
     #[Groups(['serviceCategory_service'])]
     private $services;
+
+    public function __construct()
+    {
+        $this->services = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -57,7 +63,10 @@ class ServiceCategory
         return $this;
     }
 
-    public function getServices(): ?Collection
+    /**
+     * @return Collection<int, Service>
+     */
+    public function getServices(): Collection
     {
         return $this->services;
     }
@@ -74,8 +83,9 @@ class ServiceCategory
 
     public function removeService(Service $service): self
     {
-        $this->services->removeElement($service);
-        $service->removeCategory($this);
+        if ($this->services->removeElement($service)) {
+            $service->removeCategory($this);
+        }
 
         return $this;
     }
