@@ -28,6 +28,10 @@ class WorkerAvailableTime
     #[Groups(['workerAvailableTimeShort'])]
     private $isTimeFree;
 
+    #[ORM\Column(type: 'date')]
+    #[Groups(['workerAvailableTimeShort'])]
+    private $exactDate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,6 +69,18 @@ class WorkerAvailableTime
     public function setIsTimeFree(bool $isTimeFree): self
     {
         $this->isTimeFree = $isTimeFree;
+
+        return $this;
+    }
+
+    public function getExactDate(): ?\DateTimeInterface
+    {
+        return $this->exactDate;
+    }
+
+    public function setExactDate(\DateTimeInterface $exactDate): self
+    {
+        $this->exactDate = $exactDate;
 
         return $this;
     }

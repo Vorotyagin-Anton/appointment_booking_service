@@ -93,6 +93,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             foreach ($workerAvailableTimeVariants as $availableTime) {
                 $workerAvailableTime = new WorkerAvailableTime();
                 $workerAvailableTime->setExactTimeInMinutes($availableTime);
+                $workerAvailableTime->setExactDate($this->faker->dateTimeBetween('-3 months', '+3 month'));
                 $workerAvailableTime->setIsTimeFree(true);
                 $user->addWorkerAvailableTime($workerAvailableTime);
             }
