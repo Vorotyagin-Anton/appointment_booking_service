@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -98,7 +100,11 @@ class UserRepository extends ServiceEntityRepository
         }
 
         if (isset($filters['sort']) && isset($filters['order'])) {
-            $builder->orderBy('u.' . strtolower($filters['sort']), $filters['order']);
+            $propertyInfo = new PropertyInfoExtractor([new ReflectionExtractor()], [new ReflectionExtractor()]);
+            $types = $propertyInfo->getTypes(User::class, $filters['sort']);
+            if (isset($types[0]) && in_array($types[0]->getBuiltinType(), ['int', 'string'])){
+                $builder->orderBy('u.' . strtolower($filters['sort']), $filters['order']);
+            }
         }
 
         return $builder->getQuery();
