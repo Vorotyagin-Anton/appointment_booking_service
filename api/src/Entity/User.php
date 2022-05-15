@@ -80,6 +80,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_workerAvailableTimes'])]
     private $workerAvailableTimes;
 
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[Groups(['userShort'])]
+    private $rating;
+
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[Groups(['userShort'])]
+    private $popularity;
+
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
@@ -323,6 +331,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeWorkerAvailableTime(WorkerAvailableTime $workerAvailableTime): self
     {
         $this->workerAvailableTimes->removeElement($workerAvailableTime);
+
+        return $this;
+    }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?int $rating): self
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getPopularity(): ?int
+    {
+        return $this->popularity;
+    }
+
+    public function setPopularity(?int $popularity): self
+    {
+        $this->popularity = $popularity;
 
         return $this;
     }

@@ -104,6 +104,9 @@ class UserFixture extends Fixture implements DependentFixtureInterface
                     $user->addWorkerAvailableTime($workerAvailableTime);
                 }
             }
+
+            $user->setRating($this->faker->numberBetween(0, 100));
+            $user->setPopularity($this->faker->numberBetween(0, 100));
         }
 
         $user->setPassword(
