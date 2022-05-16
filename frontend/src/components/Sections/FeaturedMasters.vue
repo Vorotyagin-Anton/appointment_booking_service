@@ -43,7 +43,6 @@
         </transition>
       </router-link>
 
-
     </div>
   </app-section>
 </template>
@@ -88,7 +87,6 @@ export default {
 
 <style lang="scss">
 .featured-masters {
-  background-color: $grey-3;
 
   &__content {
     padding: 0 120px;

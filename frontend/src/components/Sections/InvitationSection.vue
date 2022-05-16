@@ -3,8 +3,8 @@
     <div class="signup-invitation__content">
       <app-section-header
         class="signup-invitation__header"
-        heading="Start booking appointments."
-        description="No credit card required. No long-term commitments."
+        heading="Start booking appointments"
+        description="No credit card required. No long-term commitments"
       />
 
       <router-link :to="{name: 'signup'}">
@@ -24,7 +24,7 @@ import AppSection from "components/Common/AppSection";
 import AppSectionHeader from "components/Common/AppSectionHeader";
 
 export default {
-  name: "SignUpSection",
+  name: "InvitationSection",
 
   components: {
     AppSection,
