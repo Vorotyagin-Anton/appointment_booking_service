@@ -1,9 +1,10 @@
 <template>
   <q-page>
     <promo-section/>
+    <offers-section/>
     <categories-section/>
-    <featured-masters/>
     <invitation-section/>
+    <featured-masters/>
     <connect-section/>
     <faq-component/>
   </q-page>
@@ -16,11 +17,13 @@ import InvitationSection from "components/Sections/InvitationSection";
 import ConnectSection from "components/Sections/ConnectSection";
 import FaqComponent from "components/Sections/FaqSection";
 import CategoriesSection from "components/Sections/CategoriesSection";
+import OffersSection from "components/Sections/OffersSection";
 
 export default {
   name: 'IndexPage',
 
   components: {
+    OffersSection,
     CategoriesSection,
     PromoSection,
     FeaturedMasters,

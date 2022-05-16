@@ -19,7 +19,7 @@ export default function useFeatured() {
 
       const queryParams = {
         page: 1,
-        offset: 8,
+        offset: 6,
         // sort: 'rating',
         // order: 'desc',
       };
