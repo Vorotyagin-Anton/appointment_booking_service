@@ -5,6 +5,7 @@
     <categories-section/>
     <invitation-section/>
     <featured-masters/>
+    <pricing-section/>
     <connect-section/>
     <faq-component/>
   </q-page>
@@ -18,11 +19,13 @@ import ConnectSection from "components/Sections/ConnectSection";
 import FaqComponent from "components/Sections/FaqSection";
 import CategoriesSection from "components/Sections/CategoriesSection";
 import OffersSection from "components/Sections/OffersSection";
+import PricingSection from "components/Sections/PricingSection";
 
 export default {
   name: 'IndexPage',
 
   components: {
+    PricingSection,
     OffersSection,
     CategoriesSection,
     PromoSection,
