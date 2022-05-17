@@ -1,5 +1,5 @@
 export default function (axios) {
-  return  {
+  return {
     async register(email, password, isMaster) {
       const formData = new FormData();
 
@@ -27,6 +27,14 @@ export default function (axios) {
       const response = await axios.post('/api/login', payload);
 
       return response.data;
+    },
+
+    async authorize() {
+      const response = await axios.get('/api/check-auth');
+
+      const { data } = JSON.parse(response.data);
+
+      return data;
     },
 
     async logout() {

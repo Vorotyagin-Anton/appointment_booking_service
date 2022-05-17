@@ -20,16 +20,25 @@ const instance = axios.create({
 
 export default boot(({store}) => {
 
-  // instance.interceptors.response.use(undefined,(error) => {
-  //   return new Promise((resolve, reject) => {
-  //     if (error.status === 401 && store.getters['auth/isAuthorized']) {
-  //       store.dispatch('auth/logout');
-  //     }
-  //
-  //     reject(error);
-  //   });
-  // });
+  instance.interceptors.response.use(
+    (response) => {
+      const data = JSON.parse(response.data);
 
+      if (data.status === 'error') {
+         throw new Error(data.message ?? 'Unspecified server error');
+      }
+
+      return response;
+    },
+
+    (error) => {
+      if (error.status === 401 && store.getters['auth/isAuthorized']) {
+        store.dispatch('auth/logout');
+        window.localStorage.removeItem('user');
+      }
+
+      return new Promise.reject(error);
+    });
 });
 
 const api = {
@@ -39,4 +48,4 @@ const api = {
   categories: categoriesModule(instance)
 };
 
-export { api };
+export {api};

@@ -60,16 +60,26 @@ export default function useAuth() {
   };
 
   const authorize = async () => {
-    const user = window.localStorage.getItem('user');
+    try {
+      let user = window.localStorage.getItem('user');
 
-    if (user) {
-      await store.dispatch('auth/login', user.user);
+      if (!user) {
+        const response = await api.auth.authorize();
+        user = response.user;
+      }
+
+      await store.dispatch('auth/login', user);
+
+      window.localStorage.setItem('user', user);
+    } catch (error) {
+      log(error);
     }
   };
 
   const logout = async () => {
     try {
       await store.dispatch('auth/logout');
+
       window.localStorage.removeItem('user');
 
       if (route.matched.some(record => record?.meta?.requiredAuth)) {
