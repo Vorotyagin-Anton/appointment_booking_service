@@ -1,11 +1,9 @@
 import {api} from "boot/api";
 import useList from "src/hooks/masters/useList";
-import useLog from "src/hooks/common/useLog";
 import useLoading from "src/hooks/masters/useLoading";
+import logger from "src/helpers/logger";
 
 export default function useSearch() {
-  const log = useLog();
-
   const {startLoading, stopLoading} = useLoading();
 
   const {putItems, flushItems} = useList();
@@ -20,7 +18,7 @@ export default function useSearch() {
 
       await putItems(items, totalPages, currentPage);
     } catch (error) {
-      log(error)
+      logger(error);
     } finally {
       await stopLoading();
     }

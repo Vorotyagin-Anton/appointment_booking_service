@@ -1,12 +1,10 @@
 import {api} from "boot/api";
-import useLog from "src/hooks/common/useLog";
 import useLoading from "src/hooks/masters/useLoading";
 import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
+import logger from "src/helpers/logger";
 
 export default function useFeatured() {
-  const log = useLog();
-
   const {startLoading, stopLoading} = useLoading();
 
   const store = useStore();
@@ -28,7 +26,7 @@ export default function useFeatured() {
 
       await store.dispatch('masters/putFeatured', items)
     } catch (error) {
-      log(error);
+      logger(error);
     } finally {
       await stopLoading();
     }

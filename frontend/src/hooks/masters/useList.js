@@ -1,8 +1,8 @@
 import {api} from "boot/api";
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
-import useLog from "src/hooks/common/useLog";
 import useLoading from "src/hooks/masters/useLoading";
+import logger from "src/helpers/logger";
 
 export default function useList() {
   const store = useStore();
@@ -33,8 +33,6 @@ export default function useList() {
     await store.dispatch('masters/flush');
   }
 
-  const log = useLog();
-
   const {startLoading, stopLoading} = useLoading();
 
   const getFromApi = async (params) => {
@@ -50,7 +48,7 @@ export default function useList() {
 
       await putItems(items, totalPages);
     } catch (error) {
-      log(error);
+      logger(error);
     } finally {
       await stopLoading();
     }

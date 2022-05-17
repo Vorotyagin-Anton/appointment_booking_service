@@ -3,14 +3,12 @@ import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import {useRoute, useRouter} from "vue-router";
 import useMessage from "src/hooks/auth/useMessage";
-import useLog from "src/hooks/common/useLog";
+import logger from "src/helpers/logger";
 
 export default function useAuth() {
   const store = useStore();
   const router = useRouter();
   const route = useRoute();
-
-  const log = useLog();
 
   const {showError} = useMessage();
 
@@ -26,14 +24,13 @@ export default function useAuth() {
       const response = await api.auth.register(email, password, isMaster);
 
       await store.dispatch('auth/login', response.user);
+
       window.localStorage.setItem('user', JSON.stringify(response));
 
       await router.push({name: 'cabinet'});
     } catch (error) {
-      log(error);
-
-      const message = getMessageFromError(error);
-      await showError(message);
+      await showError(error.message);
+      logger(error);
     } finally {
       isRequested.value = false;
     }
@@ -46,14 +43,13 @@ export default function useAuth() {
       const response = await api.auth.login(email, password);
 
       await store.dispatch('auth/login', response.user);
+
       window.localStorage.setItem('user', JSON.stringify(response));
 
       await router.push({name: 'cabinet'});
     } catch (error) {
-      log(error);
-
-      const message = getMessageFromError(error);
-      await showError(message);
+      await showError(error.message);
+      logger(error);
     } finally {
       isRequested.value = false;
     }
@@ -65,14 +61,15 @@ export default function useAuth() {
 
       if (!user) {
         const response = await api.auth.authorize();
+
         user = response.user;
+
+        window.localStorage.setItem('user', user);
       }
 
       await store.dispatch('auth/login', user);
-
-      window.localStorage.setItem('user', user);
     } catch (error) {
-      log(error);
+      logger(error);
     }
   };
 
@@ -88,7 +85,7 @@ export default function useAuth() {
 
       await api.auth.logout();
     } catch (error) {
-      log(error)
+      logger(error)
     }
   };
 
@@ -101,16 +98,4 @@ export default function useAuth() {
     authorize,
     logout,
   }
-}
-
-function getMessageFromError(error) {
-  const data = error.response.data;
-
-  let message = data.detail ?? data.error;
-
-  if (!message) {
-    message = 'Something was wrong. Check your credentials and try again.';
-  }
-
-  return message;
 }
