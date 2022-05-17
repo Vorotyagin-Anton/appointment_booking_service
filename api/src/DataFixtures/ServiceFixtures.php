@@ -45,7 +45,7 @@ class ServiceFixtures extends Fixture implements DependentFixtureInterface
 
         $service->setName($this->faker->city());
         $service->setPathToPhoto('/uploads/photo/dummy.jpg');
-        $service->setCategory([$serviceCategory[array_rand($serviceCategory)]]);
+        $service->addCategory($serviceCategory[array_rand($serviceCategory)]);
 
         return $service;
     }

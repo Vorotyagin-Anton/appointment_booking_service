@@ -19,19 +19,23 @@ class ServiceCategoryFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 10; $i++) {
-            $manager->persist($this->getServiceCategory());
+        $serviceCategoriesData = [
+            'hair salons' => '/uploads/photo/service_categories/hair_and_beauty.webp',
+            'barbershops' => '/uploads/photo/service_categories/barber_shop.webp',
+            'beauty and nail salons' => '/uploads/photo/service_categories/spas_nails_salons.webp',
+            'personal training' => '/uploads/photo/service_categories/personal_training.webp',
+            'health and wellness' => '/uploads/photo/service_categories/health_wellness.webp',
+            'professional services' => '/uploads/photo/service_categories/professional.webp',
+            'home repair and cleaning' => '/uploads/photo/service_categories/home_repair.webp',
+            'tutoring and music lessons' => '/uploads/photo/service_categories/tutoring_music.webp',
+        ];
+
+        foreach ($serviceCategoriesData as $serviceName => $servicePhoto) {
+            $serviceCategory = new ServiceCategory();
+            $serviceCategory->setName($serviceName);
+            $serviceCategory->setPathToPhoto($servicePhoto);
+            $manager->persist($serviceCategory);
         }
         $manager->flush();
-    }
-
-    private function getServiceCategory(): ServiceCategory
-    {
-        $serviceCategory = new ServiceCategory();
-
-        $serviceCategory->setName($this->faker->country());
-        $serviceCategory->setPathToPhoto('/uploads/photo/dummy.jpg');
-
-        return $serviceCategory;
     }
 }

@@ -83,6 +83,11 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
         $service = $this->em->getRepository(Service::class)->findAll();
         $workerAvailableTimeVariants = [540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080];
+        $workerAvailableDates = [];
+        for ($i = 0; $i < 50; $i++) {
+            $workerAvailableDates[] = $this->faker->dateTimeBetween('-3 months', '+3 month');
+        }
+        $workerAvailableDates = array_unique($workerAvailableDates, SORT_REGULAR);
         if ($user->getIsWorker()) {
             $user->setRoles(['ROLE_WORKER']);
 
@@ -90,18 +95,24 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $user->addService($service[array_rand($service)]);
             $user->addService($service[array_rand($service)]);
 
-            foreach ($workerAvailableTimeVariants as $availableTime) {
-                $workerAvailableTime = new WorkerAvailableTime();
-                $workerAvailableTime->setExactTimeInMinutes($availableTime);
-                $workerAvailableTime->setIsTimeFree(true);
-                $user->addWorkerAvailableTime($workerAvailableTime);
+            foreach ($workerAvailableDates as $workerAvailableDate) {
+                foreach ($workerAvailableTimeVariants as $availableTime) {
+                    $workerAvailableTime = new WorkerAvailableTime();
+                    $workerAvailableTime->setExactDate($workerAvailableDate);
+                    $workerAvailableTime->setExactTimeInMinutes($availableTime);
+                    $workerAvailableTime->setIsTimeFree($this->faker->boolean(75));
+                    $user->addWorkerAvailableTime($workerAvailableTime);
+                }
             }
+
+            $user->setRating($this->faker->numberBetween(0, 100));
+            $user->setPopularity($this->faker->numberBetween(0, 100));
         }
 
         $user->setPassword(
             $this->passwordHasher->hashPassword(
                 $user,
-                '123'
+                '123123123'
             )
         );
 
