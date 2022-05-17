@@ -16,9 +16,9 @@
           <master-info
             :class-name="'master-profile__info'"
             :name="master.name"
-            :image="master.image"
-            :speciality="master.speciality"
-            :info="master.info"
+            :image="'http://localhost:8081' + master.pathToPhoto"
+            :speciality="'!!!' + master.speciality"
+            :info="master.story"
             :avatar-size="140"
           />
         </div>
@@ -76,7 +76,7 @@ export default {
   },
 
   setup(props){
-    console.log(props.master);
+   // console.log(props.master);
   }
 }
 </script>

@@ -20,9 +20,9 @@
       <master-info
         class="masters-card__info"
         :name="master.name"
-        :image="generateSourceUrl()"
-        speciality="Lorem ipsum"
-        info="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+        :image="'http://localhost:8081' + master.pathToPhoto"
+        speciality="!!!!Lorem ipsum"
+        :info="master.story"
         :avatar-size="100"
       />
     </q-card-section>
@@ -65,6 +65,7 @@ export default {
     master: {
       type: Object,
       required: true,
+
     },
   },
 
@@ -74,6 +75,8 @@ export default {
   ],
 
   setup(props, {emit}) {
+    console.log(props.master);
+
     const rating = ref({
       max: 5,
       score: Number((Math.random() * 4 + 1).toFixed(1)),
@@ -84,13 +87,13 @@ export default {
 
     const reserveMaster = () => emit('reserved', props.master.id);
 
-    const {generateSourceUrl} = useRandomAvatar();
+    //const {generateSourceUrl} = useRandomAvatar();
 
     return {
       rating,
       selectMaster,
       reserveMaster,
-      generateSourceUrl,
+      //generateSourceUrl,
     }
   }
 }

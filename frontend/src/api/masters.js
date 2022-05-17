@@ -71,13 +71,15 @@ export default function (axios) {
 
     async getById(id) {
       const response = await axios.get(`/api/users/workers/${id}`);
-      return JSON.parse(response.data);
+      const masterData = JSON.parse(response.data);
+      console.log(masterData);
+      return {...master, ...masterData}; // todo костыль
     },
 
     getByName(name) {
       return new Promise((resolve) => {
         setTimeout(() => resolve({
-          items: [master],
+          items: [],
           totalPages: 1,
           currentPage: 1,
         }), 500);
