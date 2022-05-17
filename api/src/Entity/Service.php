@@ -21,7 +21,7 @@ class Service
     #[Groups(['serviceShort'])]
     private $name;
 
-    #[ORM\ManyToMany(targetEntity: ServiceCategory::class)]
+    #[ORM\ManyToMany(targetEntity: ServiceCategory::class, inversedBy: "services")]
     #[ORM\JoinTable(name: 'services_service_categories')]
     #[ORM\JoinColumn(name: "service_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "service_category_id", referencedColumnName: "id")]
@@ -39,6 +39,7 @@ class Service
     public function __construct()
     {
         $this->workers = new ArrayCollection();
+        $this->category = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,14 +59,29 @@ class Service
         return $this;
     }
 
-    public function getCategory(): ?Collection
+    /**
+     * @return Collection<int, ServiceCategory>
+     */
+    public function getCategory(): Collection
     {
         return $this->category;
     }
 
-    public function setCategory(?array $category): self
+    public function addCategory(ServiceCategory $serviceCategory): self
     {
-        $this->category = $category;
+        if (!$this->category->contains($serviceCategory)) {
+            $this->category[] = $serviceCategory;
+            $serviceCategory->addService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(ServiceCategory $serviceCategory): self
+    {
+        if ($this->category->removeElement($serviceCategory)) {
+            $serviceCategory->removeService($this);
+        }
 
         return $this;
     }
@@ -102,7 +118,9 @@ class Service
 
     public function removeWorker(User $worker): self
     {
-        $this->workers->removeElement($worker);
+        if ($this->workers->removeElement($worker)) {
+            $worker->removeService($this);
+        }
 
         return $this;
     }

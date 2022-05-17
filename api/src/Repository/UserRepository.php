@@ -7,6 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -74,7 +76,7 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
-    public function getQueryBuilderBy(array $criteria)
+    public function getQueryBuilderBy(array $criteria, array $filters = [])
     {
         $criteriaName = array_key_first($criteria);
         $criteriaValue = $criteria[$criteriaName];
@@ -84,6 +86,26 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.id', 'ASC')
             ->andWhere($builder->expr()->eq("u.$criteriaName", ":$criteriaName"))
             ->setParameter($criteriaName, $criteriaValue);
+
+        if (isset($filters['services'])) {
+            $builder->join('u.services', 'serv');
+            $builder->andWhere($builder->expr()->in('serv.id', $filters['services']));
+        }
+
+        if (isset($filters['categories'])) {
+            $builder
+                ->join('u.services', 'servcat')
+                ->join('servcat.category', 'cat');
+            $builder->andWhere($builder->expr()->in('cat.id', $filters['categories']));
+        }
+
+        if (isset($filters['sort']) && isset($filters['order'])) {
+            $propertyInfo = new PropertyInfoExtractor([new ReflectionExtractor()], [new ReflectionExtractor()]);
+            $types = $propertyInfo->getTypes(User::class, $filters['sort']);
+            if (isset($types[0]) && in_array($types[0]->getBuiltinType(), ['int', 'string'])){
+                $builder->orderBy('u.' . strtolower($filters['sort']), $filters['order']);
+            }
+        }
 
         return $builder->getQuery();
     }
