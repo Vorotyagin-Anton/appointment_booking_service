@@ -67,7 +67,7 @@
 
 <script>
 import {computed, ref} from "vue";
-import useCategories from "src/hooks/categories/useCategories";
+import useList from "src/hooks/categories/useList";
 import useServiceList from "src/hooks/useServiceList";
 import useSelect from "src/hooks/form/useSelect";
 
@@ -82,7 +82,7 @@ export default {
     const calendarSubtitle = computed(() => days.value.length === 0 ? ' ' : null);
 
     // CATEGORIES
-    const {categories} = useCategories();
+    const {categories} = useList();
 
     const {
       itemsList: categoriesList,

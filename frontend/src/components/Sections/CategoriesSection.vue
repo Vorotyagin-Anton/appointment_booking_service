@@ -78,7 +78,7 @@
 
 <script>
 import {computed, ref, watch} from "vue";
-import useCategories from "src/hooks/categories/useCategories";
+import useList from "src/hooks/categories/useList";
 import AppSection from "components/Common/AppSection";
 import AppSectionHeader from "components/Common/AppSectionHeader";
 import {Carousel, Slide} from 'vue3-carousel';
@@ -106,7 +106,7 @@ export default {
   },
 
   setup() {
-    const {categories} = useCategories();
+    const {categories} = useList();
 
     const categoryList = computed(() => {
       return categories.value.map((category, key) => ({
@@ -118,7 +118,7 @@ export default {
     const slideList = computed(() => {
       return categories.value.map((category, key) => ({
         ...category,
-        ...{img: require('assets/img/' + category.img)},
+        ...{img: process.env.API_HOST + category.pathToPhoto},
         promo: categoryPromos[key],
       }));
     });
@@ -200,6 +200,10 @@ export default {
     margin-bottom: 15px;
     font-size: 32px;
     line-height: 40px;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
 
   &__promo {
