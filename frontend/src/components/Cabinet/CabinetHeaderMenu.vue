@@ -94,6 +94,10 @@ export default {
     const {user, logout} = useAuth();
 
     const userName = computed(() => {
+      if (!user.value) {
+        return null;
+      }
+
       if (!user.value.name || !user.value.surname) {
         return user.value.email;
       }
