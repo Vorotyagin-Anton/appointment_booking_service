@@ -1,5 +1,5 @@
 import {api} from "boot/api";
-import {computed, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import {useStore} from "vuex";
 import {useRoute, useRouter} from "vue-router";
 import useMessage from "src/hooks/auth/useMessage";
@@ -14,62 +14,68 @@ export default function useAuth() {
 
   const user = computed(() => store.getters['auth/user']);
   const isAuthorized = computed(() => store.getters['auth/isAuthorized']);
-
-  const isRequested = ref(false);
+  const isRequested = computed(() => store.getters['auth/isRequested']);
 
   const register = async (email, password, isMaster) => {
     try {
-      isRequested.value = true;
+      await store.dispatch('auth/startRequest');
 
       const response = await api.auth.register(email, password, isMaster);
 
       await store.dispatch('auth/login', response.user);
 
-      window.localStorage.setItem('user', JSON.stringify(response));
+      window.localStorage.setItem('user', JSON.stringify(response.user));
 
       await router.push({name: 'cabinet'});
     } catch (error) {
       await showError(error.message);
       logger(error);
     } finally {
-      isRequested.value = false;
+      await store.dispatch('auth/finishRequest');
     }
   };
 
   const login = async (email, password) => {
     try {
-      isRequested.value = true;
+      await store.dispatch('auth/startRequest');
 
       const response = await api.auth.login(email, password);
 
       await store.dispatch('auth/login', response.user);
 
-      window.localStorage.setItem('user', JSON.stringify(response));
+      window.localStorage.setItem('user', JSON.stringify(response.user));
 
       await router.push({name: 'cabinet'});
     } catch (error) {
       await showError(error.message);
       logger(error);
     } finally {
-      isRequested.value = false;
+      await store.dispatch('auth/finishRequest');
     }
   };
 
   const authorize = async () => {
     try {
+      await store.dispatch('auth/startRequest');
+
       let user = window.localStorage.getItem('user');
 
       if (!user) {
-        const response = await api.auth.authorize();
-
-        user = response.user;
-
-        window.localStorage.setItem('user', user);
+        const {user} = await api.auth.authorize();
+        window.localStorage.setItem('user', JSON.stringify(user));
+      } else {
+        user = JSON.parse(user);
       }
 
       await store.dispatch('auth/login', user);
+
+      if (route.matched.some(record => record?.meta.guards.includes('guest'))) {
+        await router.push({name: 'cabinet'});
+      }
     } catch (error) {
       logger(error);
+    } finally {
+      await store.dispatch('auth/finishRequest');
     }
   };
 
@@ -79,7 +85,7 @@ export default function useAuth() {
 
       window.localStorage.removeItem('user');
 
-      if (route.matched.some(record => record?.meta?.requiredAuth)) {
+      if (route.matched.some(record => record?.meta.guards.includes('auth'))) {
         await router.push({name: 'main'});
       }
 

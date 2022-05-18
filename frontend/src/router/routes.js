@@ -19,6 +19,9 @@ export default [
       },
     ],
     beforeEnter: [guestGuard],
+    meta: {
+      guards: ['guest'],
+    },
   },
 
   {
@@ -33,7 +36,7 @@ export default [
     ],
     beforeEnter: [authGuard],
     meta: {
-      requiredAuth: true,
+      guards: ['auth'],
     },
   },
 

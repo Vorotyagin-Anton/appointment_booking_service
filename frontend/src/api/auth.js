@@ -15,7 +15,9 @@ export default function (axios) {
 
       const response = await axios.post('/api/register', formData, params);
 
-      return JSON.parse(response.data);
+      const { data } = JSON.parse(response.data);
+
+      return data;
     },
 
     async login(email, password) {
@@ -26,7 +28,9 @@ export default function (axios) {
 
       const response = await axios.post('/api/login', payload);
 
-      return response.data;
+      const { data } = JSON.parse(response.data);
+
+      return data
     },
 
     async authorize() {
