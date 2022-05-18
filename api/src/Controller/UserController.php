@@ -196,7 +196,7 @@ class UserController extends AbstractController
                 'user_services',
                 'serviceShort'
             ]]),
-            'workerFreeTime' => $workerTimeResponse
+            'workerFreeTime' => json_encode($workerTimeResponse)
         ]);
     }
 
