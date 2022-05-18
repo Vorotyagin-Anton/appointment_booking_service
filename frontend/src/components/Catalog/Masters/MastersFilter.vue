@@ -37,6 +37,7 @@
         v-model="days"
         :title="calendarTitle"
         :subtitle="calendarSubtitle"
+        mask="YYYY-MM-DD"
         range
         multiple
         square
@@ -67,8 +68,8 @@
 
 <script>
 import {computed, ref} from "vue";
-import useList from "src/hooks/categories/useList";
-import useServiceList from "src/hooks/useServiceList";
+import useCategories from "src/hooks/categories/useList";
+import useServices from "src/hooks/services/useList";
 import useSelect from "src/hooks/form/useSelect";
 
 export default {
@@ -82,7 +83,7 @@ export default {
     const calendarSubtitle = computed(() => days.value.length === 0 ? ' ' : null);
 
     // CATEGORIES
-    const {categories} = useList();
+    const {categories} = useCategories();
 
     const {
       itemsList: categoriesList,
@@ -90,7 +91,7 @@ export default {
     } = useSelect(categories);
 
     // SERVICES
-    const {services} = useServiceList();
+    const {services} = useServices();
 
     const {
       selectedItems: selectedServices,
@@ -101,6 +102,7 @@ export default {
     const applyFilters = () => emit('filter', {
       categories: selectedCategories.value,
       services: selectedServices.value.map(service => service.value),
+      days,
     });
 
     const resetFilters = () => {
@@ -200,5 +202,9 @@ export default {
   &__btn {
     margin-bottom: 10px;
   }
+}
+
+.q-menu {
+  max-height: 350px !important;
 }
 </style>

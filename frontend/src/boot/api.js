@@ -14,13 +14,12 @@ import logger from "src/helpers/logger";
 // for each client)
 
 const ERROR_RESPONSE_STATUS = 'error';
-
-const DEFAULT_ERROR = 'Unspecified server error';
 const VALIDATION_ERROR = 'Validation Failed';
+const DEFAULT_ERROR = 'Unspecified server error';
 
 const instance = axios.create({
   headers: {
-    'Accept': 'application/json'
+    'Accept': 'application/json',
   }
 });
 

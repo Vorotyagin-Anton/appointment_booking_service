@@ -21,7 +21,7 @@
 
 <script>
 import {defineComponent} from "vue";
-import useServiceList from "src/hooks/useServiceList";
+import useList from "src/hooks/services/useList";
 import ServiceListItem from "components/Catalog/ServiceListItem";
 
 export default defineComponent({
@@ -32,7 +32,7 @@ export default defineComponent({
   },
 
   setup() {
-    const {loading, services} = useServiceList();
+    const {loading, services} = useList();
 
     return {
       loading,
