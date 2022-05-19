@@ -40,7 +40,7 @@
               <div class="banner-expansion__item">
                 <router-link
                   class="banner-expansion__link"
-                  :to="{name: 'cabinet'}"
+                  :to="{name: 'auth.profile'}"
                 >
                   <p class="banner-expansion__title">Tell About Your Identity</p>
 

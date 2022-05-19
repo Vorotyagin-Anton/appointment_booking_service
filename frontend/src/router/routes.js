@@ -2,35 +2,66 @@ import authGuard from "src/router/guards/authGuard";
 import guestGuard from "src/router/guards/guestGuard";
 
 export default [
+  // AUTH
   {
-    path: '/authorize',
-    component: () => import('layouts/AuthLayout.vue'),
+    name: 'auth',
+    path: '/auth',
+
     children: [
+      // SIGNIN
       {
-        name: 'signin',
-        path: '',
+        name: 'auth.signin',
+        path: '/signin',
+
+        beforeEnter: [guestGuard],
+
+        meta: {
+          guards: ['guest'],
+        },
+
         component: () => import('pages/SignInPage.vue'),
       },
 
+      // SIGNUP
       {
-        name: 'signup',
+        name: 'auth.signup',
         path: '/signup',
+
+        beforeEnter: [guestGuard],
+
+        meta: {
+          guards: ['guest'],
+        },
+
         component: () => import('pages/SignUpPage.vue'),
       },
+
+      // PROFILE
+      {
+        name: 'auth.profile',
+        path: 'profile',
+
+        beforeEnter: [authGuard],
+
+        meta: {
+          guards: ['auth'],
+        },
+
+        component: () => import('pages/CreateProfilePage.vue'),
+      },
     ],
-    beforeEnter: [guestGuard],
-    meta: {
-      guards: ['guest'],
-    },
+
+    component: () => import('layouts/AuthLayout.vue'),
   },
 
+  // CABINET
   {
     path: '/cabinet',
     component: () => import('layouts/CabinetLayout.vue'),
     children: [
       {
         name: 'cabinet',
-        path: '/cabinet',
+        path: '',
         component: () => import('pages/CabinetPage.vue'),
       },
     ],
@@ -40,6 +71,7 @@ export default [
     },
   },
 
+  // MAIN
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
@@ -58,10 +90,9 @@ export default [
     ],
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
+  // NOT FOUND
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: () => import('pages/NotFoundPage.vue')
   }
 ]

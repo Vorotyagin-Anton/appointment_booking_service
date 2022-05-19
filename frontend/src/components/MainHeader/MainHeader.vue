@@ -55,7 +55,7 @@
         <q-btn v-else flat>
           <router-link
             class="main-header__btn main-header__signin"
-            :to="{name: 'signin'}"
+            :to="{name: 'auth.signin'}"
           >
             Sign In
           </router-link>
