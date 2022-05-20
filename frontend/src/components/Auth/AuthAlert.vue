@@ -32,12 +32,9 @@ export default {
       lifetime,
       hide,
       makeClassByType,
-      callLifetimeWatcher,
     } = useMessage();
 
     const type = makeClassByType('auth-alert__');
-
-    callLifetimeWatcher();
 
     return {
       isVisible,

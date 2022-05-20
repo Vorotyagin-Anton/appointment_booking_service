@@ -1,4 +1,4 @@
-import {computed, watch} from "vue";
+import {computed, onMounted, onUnmounted, watch} from "vue";
 import {useStore} from "vuex";
 
 export default function () {
@@ -25,13 +25,21 @@ export default function () {
 
   const makeClassByType = (prefix) => computed(() => prefix + type.value);
 
-  const callLifetimeWatcher = () => {
-    watch(lifetime, () => {
-      if (lifetime.value > 0) {
-        setTimeout(hide, lifetime.value);
-      }
-    });
-  };
+  let timeoutId = null;
+
+  watch(lifetime, () => {
+    if (lifetime.value > 0) {
+      timeoutId = setTimeout(hide, lifetime.value);
+    }
+  });
+
+  onUnmounted(() => {
+    if (timeoutId) {
+       clearTimeout(timeoutId);
+    }
+
+    hide();
+  });
 
   return {
     isVisible,
@@ -41,6 +49,5 @@ export default function () {
     showError,
     showSuccess,
     makeClassByType,
-    callLifetimeWatcher,
   }
 }

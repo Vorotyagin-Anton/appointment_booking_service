@@ -94,7 +94,7 @@ export default {
   name: "SetupBanner",
 
   setup() {
-    const isExpansionOpen = ref(false);
+    const isExpansionOpen = ref(true);
 
     const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
 
