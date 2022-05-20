@@ -94,11 +94,15 @@ export default {
     const {user, logout} = useAuth();
 
     const userName = computed(() => {
-      if (!user.name || !user.surname) {
-        return user;
+      if (!user.value) {
+        return null;
       }
 
-      return user.name + ' ' + user.surname;
+      if (!user.value.name || !user.value.surname) {
+        return user.value.email;
+      }
+
+      return user.value.name + ' ' + user.value.surname;
     });
 
     return {

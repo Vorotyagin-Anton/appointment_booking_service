@@ -64,20 +64,13 @@
 </template>
 
 <script>
+import useList from "src/hooks/categories/useList";
+
 export default {
   name: "DropdownCatalog",
 
   setup() {
-    const categories = [
-      {id: 1, name: 'Hair salons'},
-      {id: 2, name: 'Barbershops'},
-      {id: 3, name: 'Spas and nail salons'},
-      {id: 4, name: 'Personal training'},
-      {id: 5, name: 'Health and wellness'},
-      {id: 6, name: 'Personal services'},
-      {id: 7, name: 'Home repair and cleaning'},
-      {id: 8, name: 'Tutoring and music lessons'},
-    ];
+    const {categories} = useList();
 
     return {
       categories,
@@ -100,6 +93,10 @@ export default {
 
   &__category {
     padding: 5px 10px;
+
+    &::first-letter {
+      text-transform: capitalize;
+    }
   }
 }
 </style>

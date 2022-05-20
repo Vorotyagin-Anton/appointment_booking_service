@@ -3,7 +3,7 @@ import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 
-export default function useCategoryList() {
+export default function useList() {
   const store = useStore();
 
   const {loading, startLoading, finishLoading} = useLoading();

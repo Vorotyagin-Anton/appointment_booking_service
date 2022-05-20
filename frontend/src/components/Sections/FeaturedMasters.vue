@@ -21,30 +21,11 @@
       </div>
     </div>
 
-    <div class="featured-masters__link">
-      <router-link
-        class="featured-masters__a"
-        :to="{name: 'masters'}"
-      >
-        <span
-          @mouseenter="toggleArrow"
-          @mouseleave="toggleArrow"
-        >
-          Browse all
-        </span>
-
-        <transition name="slide-fade">
-          <span
-            class="material-icons featured-masters__arrow"
-            v-if="showArrow"
-          >
-            east
-          </span>
-        </transition>
-      </router-link>
-
-
-    </div>
+    <app-section-link
+      class="featured-masters__link"
+      label="Browse all"
+      :to="{name: 'masters'}"
+    />
   </app-section>
 </template>
 
@@ -54,6 +35,7 @@ import useFeatured from "src/hooks/masters/useFeatured";
 import useMaster from "src/hooks/useMaster";
 import AppSection from "components/Common/AppSection";
 import AppSectionHeader from "components/Common/AppSectionHeader";
+import AppSectionLink from "components/Common/AppSectionLink";
 import MasterCard from "components/Master/MasterCard";
 
 export default {
@@ -62,6 +44,7 @@ export default {
   components: {
     AppSection,
     AppSectionHeader,
+    AppSectionLink,
     MasterCard,
   },
 
@@ -88,7 +71,6 @@ export default {
 
 <style lang="scss">
 .featured-masters {
-  background-color: $grey-3;
 
   &__content {
     padding: 0 120px;
@@ -101,28 +83,15 @@ export default {
   &__list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
+  }
+
+  &__item {
+    margin: 0 10px 25px;
   }
 
   &__link {
     margin-top: 15px;
-    display: flex;
-    justify-content: center;
-  }
-
-  &__a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    color: $primary;
-    font-size: 16px;
-  }
-
-  &__arrow {
-    position: absolute;
-    right: -25px;
-    font-size: 18px;
-    color: $primary;
   }
 }
 

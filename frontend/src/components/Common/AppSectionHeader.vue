@@ -39,7 +39,6 @@ export default {
   &__heading {
     font-size: 46px;
     font-weight: 400;
-    letter-spacing: 1.5px;
   }
 
   &__description {

@@ -9,20 +9,36 @@
       <auth-alert/>
 
     </q-page-container>
+
+    <app-loading
+      v-if="isRequested"
+      title="Loading cabinet..."
+    />
   </q-layout>
 </template>
 
 <script>
+import useAuth from "src/hooks/auth/useAuth";
 import AuthHeader from "components/Auth/AuthHeader";
 import AuthAlert from "components/Auth/AuthAlert";
+import AppLoading from "components/Common/AppLoading";
 
 export default {
   name: "AuthLayout",
 
   components: {
     AuthHeader,
-    AuthAlert
+    AuthAlert,
+    AppLoading,
   },
+
+  setup() {
+    const {isRequested} = useAuth();
+
+    return {
+      isRequested,
+    }
+  }
 }
 </script>
 

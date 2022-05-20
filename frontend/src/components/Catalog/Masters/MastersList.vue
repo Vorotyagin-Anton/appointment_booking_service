@@ -3,6 +3,7 @@
     <div class="masters-list__content" v-if="!loading">
       <div class="masters-list__items">
         <master-card
+          class="masters-list__item"
           v-for="item in items"
           :key="item.id"
           :master="item"
@@ -101,8 +102,12 @@ export default {
 
   &__items {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  &__item {
+    margin: 10px 5px;
   }
 
   &__pagination {

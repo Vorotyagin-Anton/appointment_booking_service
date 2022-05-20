@@ -3,8 +3,8 @@
     <div class="connect-section__content">
       <app-section-header
         class="connect-section__header"
-        heading="We’re happy to help."
-        description="Please select the option that best fits you."
+        heading="We’re happy to help"
+        description="Please select the option that best fits you"
       />
 
       <div class="connect-section__options">

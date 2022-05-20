@@ -1,5 +1,6 @@
 const state = {
   isAuthorized: false,
+  isRequested: false,
   user: null,
 };
 
@@ -10,6 +11,10 @@ const getters = {
 
   isAuthorized(state) {
     return state.isAuthorized;
+  },
+  
+  isRequested(state) {
+    return state.isRequested;
   },
 };
 
@@ -23,6 +28,14 @@ const actions = {
     commit('putUserToState', null);
     commit('setAuthorizedStatus', false);
   },
+  
+  startRequest({commit}) {
+    commit('setRequestedStatus', true);
+  },
+  
+  finishRequest({commit}) {
+    commit('setRequestedStatus', false);
+  }
 };
 
 const mutations = {
@@ -32,6 +45,10 @@ const mutations = {
 
   setAuthorizedStatus(state, payload) {
     state.isAuthorized = payload;
+  },
+
+  setRequestedStatus(state, payload) {
+    state.isRequested = payload;
   },
 };
 
