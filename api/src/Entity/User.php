@@ -84,10 +84,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_rating'])]
     private $rating;
 
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Career::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['user_career'])]
+    private $career;
+
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
         $this->services = new ArrayCollection();
+        $this->career = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -344,6 +349,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Career>
+     */
+    public function getCareer(): Collection
+    {
+        return $this->career;
+    }
+
+    public function addCareer(Career $career): self
+    {
+        if (!$this->career->contains($career)) {
+            $this->career[] = $career;
+            $career->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCareer(Career $career): self
+    {
+        if ($this->career->removeElement($career)) {
+            // set the owning side to null (unless already changed)
+            if ($career->getWorker() === $this) {
+                $career->setWorker(null);
+            }
+        }
 
         return $this;
     }

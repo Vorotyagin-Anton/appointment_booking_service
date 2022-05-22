@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Career;
 use App\Entity\Rating;
 use App\Entity\Service;
 use App\Entity\User;
@@ -110,8 +111,20 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $rating = new Rating();
             $rating->setScore($this->faker->numberBetween(0, 10));
             $rating->setVoices($this->faker->numberBetween(0, 1000));
-
             $user->setRating($rating);
+
+            $career = new Career();
+            $career->setYearFrom($this->faker->dateTimeBetween('-10 years', '-8 years'));
+            $career->setYearTo($this->faker->dateTimeBetween('-8 years', '-5 years'));
+            $career->setSpeciality('worker');
+            $career->setPlace($this->faker->company());
+            $user->addCareer($career);
+
+            $career = new Career();
+            $career->setYearFrom($this->faker->dateTimeBetween('-5 years', '-3 years'));
+            $career->setSpeciality('worker');
+            $career->setPlace($this->faker->company());
+            $user->addCareer($career);
         }
 
         $user->setPassword(
