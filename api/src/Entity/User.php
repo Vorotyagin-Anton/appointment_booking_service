@@ -88,11 +88,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_career'])]
     private $career;
 
+    #[ORM\OneToMany(mappedBy: 'reviewer', targetEntity: Review::class, cascade: ['persist'])]
+    #[Groups(['user_reviews'])]
+    private $reviews;
+
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Review::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['user_gettedReviews'])]
+    private $gettedReviews;
+
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
         $this->services = new ArrayCollection();
         $this->career = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
+        $this->gettedReviews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -377,6 +387,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($career->getWorker() === $this) {
                 $career->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): self
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews[] = $review;
+            $review->setReviewer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): self
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getReviewer() === $this) {
+                $review->setReviewer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getGettedReviews(): Collection
+    {
+        return $this->gettedReviews;
+    }
+
+    public function addGettedReview(Review $gettedReview): self
+    {
+        if (!$this->gettedReviews->contains($gettedReview)) {
+            $this->gettedReviews[] = $gettedReview;
+            $gettedReview->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGettedReview(Review $gettedReview): self
+    {
+        if ($this->gettedReviews->removeElement($gettedReview)) {
+            // set the owning side to null (unless already changed)
+            if ($gettedReview->getWorker() === $this) {
+                $gettedReview->setWorker(null);
             }
         }
 
