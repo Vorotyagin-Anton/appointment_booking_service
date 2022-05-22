@@ -132,17 +132,16 @@ class UserController extends AbstractController
         $services = $requestStack->getCurrentRequest()->get('services');
         $order = $requestStack->getCurrentRequest()->get('order');
         $sort = $requestStack->getCurrentRequest()->get('sort');
+        $searchByName = $requestStack->getCurrentRequest()->get('name');
 
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(
             ['isWorker' => true],
-            ['categories' => $categories, 'services' => $services, 'order' => $order, 'sort' => $sort]
+            ['categories' => $categories, 'services' => $services, 'order' => $order, 'sort' => $sort, 'searchByName' => $searchByName]
         ));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
             'user_services',
-            'serviceShort',
-            'user_workerAvailableTimes',
-            'workerAvailableTimeShort'
+            'serviceShort'
         ]]));
     }
 

@@ -119,6 +119,13 @@ class UserRepository extends ServiceEntityRepository
             }
         }
 
+        if (isset($filters['searchByName'])) {
+            $builder
+                ->andWhere($builder->expr()->like('u.name', ':name'))
+                ->orWhere($builder->expr()->like('u.surname', ':name'))
+                ->setParameter('name', '%' . $filters['searchByName'] . '%');
+        }
+
         return $builder->getQuery();
     }
 }
