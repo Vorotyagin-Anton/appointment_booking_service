@@ -36,6 +36,14 @@ class Service
     #[Groups(['service_workers'])]
     private $workers;
 
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[Groups(['serviceShort'])]
+    private $price;
+
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[Groups(['serviceShort'])]
+    private $duration;
+
     public function __construct()
     {
         $this->workers = new ArrayCollection();
@@ -121,6 +129,30 @@ class Service
         if ($this->workers->removeElement($worker)) {
             $worker->removeService($this);
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
 
         return $this;
     }
