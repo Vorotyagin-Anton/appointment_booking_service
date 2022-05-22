@@ -100,6 +100,18 @@ class UserRepository extends ServiceEntityRepository
         }
 
         if (isset($filters['sort']) && isset($filters['order'])) {
+            if (strtolower($filters['sort']) === 'rating') {
+                $builder
+                    ->join('u.rating', 'ur')
+                    ->orderBy('ur.score', $filters['order']);
+            }
+
+            if (strtolower($filters['sort']) === 'popularity') {
+                $builder
+                    ->join('u.rating', 'ur')
+                    ->orderBy('ur.voices', $filters['order']);
+            }
+
             $propertyInfo = new PropertyInfoExtractor([new ReflectionExtractor()], [new ReflectionExtractor()]);
             $types = $propertyInfo->getTypes(User::class, $filters['sort']);
             if (isset($types[0]) && in_array($types[0]->getBuiltinType(), ['int', 'string'])){
