@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Rating;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Entity\WorkerAvailableTime;
@@ -66,6 +67,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user = new User();
 
         $user->setEmail($this->faker->email());
+        $user->setMobilePhoneNumber('7' . $this->faker->numberBetween(100000000, 999999999));
         $user->setSurname($this->faker->lastName());
         $user->setName($this->faker->firstName());
         $user->setMiddlename($this->faker->firstName());
@@ -105,8 +107,11 @@ class UserFixture extends Fixture implements DependentFixtureInterface
                 }
             }
 
-            $user->setRating($this->faker->numberBetween(0, 100));
-            $user->setPopularity($this->faker->numberBetween(0, 100));
+            $rating = new Rating();
+            $rating->setScore($this->faker->numberBetween(0, 10));
+            $rating->setVoices($this->faker->numberBetween(0, 1000));
+
+            $user->setRating($rating);
         }
 
         $user->setPassword(

@@ -80,13 +80,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_workerAvailableTimes'])]
     private $workerAvailableTimes;
 
-    #[ORM\Column(type: 'smallint', nullable: true)]
-    #[Groups(['userShort'])]
+    #[ORM\OneToOne(mappedBy: 'worker', targetEntity: Rating::class, cascade: ['persist', 'remove'])]
+    #[Groups(['user_rating'])]
     private $rating;
-
-    #[ORM\Column(type: 'smallint', nullable: true)]
-    #[Groups(['userShort'])]
-    private $popularity;
 
     public function __construct()
     {
@@ -335,26 +331,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRating(): ?int
+    public function getRating(): ?Rating
     {
         return $this->rating;
     }
 
-    public function setRating(?int $rating): self
+    public function setRating(Rating $rating): self
     {
+        // set the owning side of the relation if necessary
+        if ($rating->getWorker() !== $this) {
+            $rating->setWorker($this);
+        }
+
         $this->rating = $rating;
-
-        return $this;
-    }
-
-    public function getPopularity(): ?int
-    {
-        return $this->popularity;
-    }
-
-    public function setPopularity(?int $popularity): self
-    {
-        $this->popularity = $popularity;
 
         return $this;
     }
