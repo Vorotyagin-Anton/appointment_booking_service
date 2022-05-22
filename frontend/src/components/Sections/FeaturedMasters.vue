@@ -14,10 +14,10 @@
           class="featured-masters__item"
           v-for="item in items"
           :key="item.id"
-          :master="item"
-          @selected="selectMaster"
-          @reserved="reserveMaster"
-        />
+          :master="item"/>
+<!--          @selected="selectMaster"-->
+<!--          @reserved="reserveMaster"-->
+<!--        />-->
       </div>
     </div>
 
@@ -70,7 +70,7 @@ export default {
 
     initOnMountedHandler();
 
-    const {selectMaster, reserveMaster} = useMaster();
+    // const {selectMaster, reserveMaster} = useMaster();
 
     const showArrow = ref(false);
     const toggleArrow = () => showArrow.value = !showArrow.value;
@@ -78,8 +78,8 @@ export default {
     return {
       items,
       showArrow,
-      selectMaster,
-      reserveMaster,
+      // selectMaster,
+      // reserveMaster,
       toggleArrow,
     }
   }

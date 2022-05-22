@@ -37,7 +37,13 @@ export default {
 
     rating: {
       type: Object,
-      required: true,
+      default: function () {
+        return {
+          max: 5,
+          score: Number((Math.random() * 4 + 1).toFixed(1)),
+          voices: Math.floor(Math.random() * 200)
+        }
+      }
     },
 
     className: {

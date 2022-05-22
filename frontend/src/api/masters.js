@@ -62,6 +62,48 @@ const master = {
   ],
 };
 
+// const master = {
+//   id: 52,
+//   name: "Presley",
+//   surname: 'Doe',
+//   middlename: "Pat",
+//   pathToPhoto: "/uploads/photo/fake_image/041.jpeg",
+//   story: "Dr Baker began her training ai Middlesex Hospital, choosing to specialise in Obstetrics and Gynecology before moving over to primary care.",
+//   mobilePhoneNumber: null,
+//   email: "lind.bella@gmail.com",
+//   isClient: false,
+//   isWorker: true,
+//   services: [{id: 53, name: "Port Myrtiechester", pathToPhoto: "/uploads/photo/dummy.jpg"}],
+//   rating: { //изменить
+//     score: 4,
+//     voices: 551,
+//   },
+//   career: [ //нет
+//     {
+//       id: 1,
+//       yearFrom: 2012,
+//       yearTo: 2018,
+//       speciality: 'Head Physician',
+//       place: 'Medical Center \"Ultima Ratio\"',
+//     },
+//   ],
+//   categories: [{id: 1, name: 'category 1', pathToPhoto: "/uploads/photo/dummy.jpg"}], //нет
+//   reviews: [ //нет
+//     {
+//       id: 1,
+//       user: {
+//         id: 1,
+//         name: 'Mick',
+//         surname: 'Jagger',
+//         pathToPhoto: 'https://i.pravatar.cc/700',
+//       },
+//       score: 5,
+//       text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, nesciunt.',
+//       date: '2021-11-13',
+//     },
+//   ],
+// };
+
 export default function (axios) {
   return {
     async get(options) {
@@ -71,8 +113,12 @@ export default function (axios) {
 
     async getById(id) {
       const response = await axios.get(`/api/users/workers/${id}`);
-      const masterData = JSON.parse(response.data);
-      console.log(masterData);
+
+      const masterData = JSON.parse(response.data.worker);
+      masterData.workerFreeTime = response.data.workerFreeTime;
+      //console.log('master', master);
+      //console.log('masterData', masterData);
+
       return {...master, ...masterData}; // todo костыль
     },
 

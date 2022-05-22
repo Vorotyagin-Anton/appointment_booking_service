@@ -11,11 +11,20 @@
         transition-next="jump-up"
       >
 
-          <q-tab-panel v-for="item in dateArray" :name="item.date" :key="item.date">
-            <div class="text-h4 q-mb-md">2022/06/01</div>
-            <div>
-                <span class="time" v-for="time in item.timeArray" :key="time">{{ getTime(time.value) }}</span>
+          <q-tab-panel v-for="item in workerFreeTime" :name="formatDate(item.date)" :key="item.date">
+            <div class="text-h4 q-mb-md"> {{ item.date }} </div>
+
+            <div class="q-pa-md">
+              <q-chip v-for="time in item.timeArray" :key="time.id"
+                      clickable
+                      @click="selectTime(item.date, time.id)"
+                      :color="selectedTime === time.id ? 'secondary':'primary'"
+                      text-color="white"
+                      icon="watch_later">
+                {{ formatTime(time.value) }}
+              </q-chip>
             </div>
+
           </q-tab-panel>
 
       </q-tab-panels>
@@ -37,49 +46,77 @@
 </template>
 
 <script>
-import {onMounted, onUpdated, ref} from 'vue';
+import {onMounted, onUpdated, ref,watch} from 'vue';
+import useMaster from "src/hooks/useMaster";
 export default {
   name: "OrderStepperTime",
 
   setup(){
-    const dateArray = [
-      {
-        date:'2022/06/01', //дата
-        timeArray:[
-          {
-            value: 1000, //время в минутах от полуночи
-            id: 1 //ид времени
-          }
-        ]
-      },
-      {
-        date:'2022/06/03',
-        timeArray:[ { value: 600, id: 2 }, { value: 660, id: 2 }, { value: 690, id: 2 }]
-      },
-      {
-        date:'2022/06/05',
-        timeArray:[ { value: 630, id: 2 }, { value: 660, id: 2 }, { value: 720, id: 2 }]
-      },
-    ]
+    const {master, mountMaster} = useMaster();
 
-    const getTime = (int) => {
+    const nowDate = () => {
+      const date = new Date()
+      return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1).toString().slice(-2)) + '/' + ('0' + date.getDate().toString()).slice(-2)
+    }
+
+    const date = ref(nowDate()) //текущая дата
+    const selectedDate = ref() //выбранная дата
+    const selectedTime = ref() //выбранное время
+    const availableDate = []; //маркеры возможных дат
+    const workerFreeTime = master.value.workerFreeTime
+
+    mountMaster();
+
+    const formatTime = (int) => {
       return ('0' + (Math.trunc(int/60)).toString()).slice(-2) + ':' + ('0' + (int % 60).toString()).slice(-2);
     };
 
-    let availableDate = [];
-
-    const getDate = () => {
-      dateArray.forEach(item=>
-        availableDate.push(item.date));
+    const formatDate = (date) => {
+      return date.replace(/-/g, '/')
     }
-    getDate();
+
+    const formatTimeToToggle = (timeArray) => {
+      const newArray = []
+      timeArray.forEach(item => newArray.push({label:formatTime(item.value), value: item.id, 'icon-right':"watch_later"}))
+      return newArray
+    }
+
+    //извлечение массива разрешенных дат
+    const getAvailableDate = () => {
+      master.value.workerFreeTime.forEach(item=> {
+        availableDate.push(formatDate(item.date));
+      })
+    }
+
+    getAvailableDate()
+
+    const selectTime = (date, time) => {
+      selectedDate.value = date
+      selectedTime.value = time
+    }
+
+    watch(selectedTime, (selectedTime, prevSelectedTime) => {
+      console.log('записать в сторедж ид времени', selectedTime)
+      const dateObject = workerFreeTime.find(d => d.date === selectedDate.value)
+      console.log('записать в сторедж объект времени', dateObject.timeArray.find(t => t.id === selectedTime))
+    })
+
+
+    console.log('время', master.value.workerFreeTime) //пришло
+    console.log('workerFreeTime', workerFreeTime) //пришло
+    console.log('availableDate', availableDate)
 
     return{
+      selectedTime,
+      availableDate,
+      workerFreeTime,
+      formatTime,
+      formatDate,
+      date,
+      formatTimeToToggle,
+      selectTime,
+
       splitterModel: ref(60),
-      date: ref('2022/06/01'), //текущая дата
-      availableDate, //маркеры
-      dateArray, //массив объектов с временем
-      getTime,
     }
   }
 }

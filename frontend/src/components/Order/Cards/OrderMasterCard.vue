@@ -36,12 +36,11 @@ export default {
   },
 
   setup() {
-    const {loading, master, mountMaster} = useMaster();
+    const {master, mountMaster} = useMaster();
 
     mountMaster();
 
     return {
-      loading,
       master,
     }
   }
