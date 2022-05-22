@@ -191,11 +191,23 @@ class UserController extends AbstractController
         }
 
         return $this->json([
-            'worker' => $serializer->serialize($user, 'json', ['groups' => [
-                'userShort',
-                'user_services',
-                'serviceShort'
-            ]]),
+            'worker' => $serializer->serialize($user, 'json', [
+                'groups' => [
+                    'userShort',
+                    'user_services',
+                    'serviceShort',
+                    'service_category',
+                    'serviceCategoryShort',
+                    'user_rating',
+                    'ratingShort',
+                    'user_career',
+                    'careerShort',
+                    'user_gettedReviews',
+                    'reviewShort',
+                    'review_reviewer'
+                ],
+                DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
+            ]),
             'workerFreeTime' => json_encode($workerTimeResponse)
         ]);
     }
