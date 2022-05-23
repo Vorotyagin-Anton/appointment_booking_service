@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Repository\WorkerAvailableTimeRepository;
+use App\Service\CustomDataValidator;
 use App\Service\Paginator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -125,7 +126,8 @@ class UserController extends AbstractController
         UserRepository $userRepository,
         SerializerInterface $serializer,
         Paginator $paginator,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        CustomDataValidator $customDataValidator
     ): Response
     {
         $categories = $requestStack->getCurrentRequest()->get('categories');
@@ -133,10 +135,40 @@ class UserController extends AbstractController
         $order = $requestStack->getCurrentRequest()->get('order');
         $sort = $requestStack->getCurrentRequest()->get('sort');
         $searchByName = $requestStack->getCurrentRequest()->get('name');
+        $requiredDates = $requestStack->getCurrentRequest()->get('days') ?? [];
+
+        $datesForFilter = [
+            'singleDates' => [],
+            'dateRanges' => []
+        ];
+        foreach ($requiredDates as $date) {
+            if ($customDataValidator->validateDateTime($date, 'Y-m-d')) {
+                $datesForFilter['singleDates'][] = $date;
+                continue;
+            }
+
+            $dateRange = \json_decode($date, true);
+            if (
+                $customDataValidator->validateDateTime($dateRange['from'], 'Y-m-d') &&
+                $customDataValidator->validateDateTime($dateRange['to'], 'Y-m-d')
+            ) {
+                $datesForFilter['dateRanges'][] = [
+                    'from' => $dateRange['from'],
+                    'to' => $dateRange['to']
+                ];
+            }
+        }
 
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(
             ['isWorker' => true],
-            ['categories' => $categories, 'services' => $services, 'order' => $order, 'sort' => $sort, 'searchByName' => $searchByName]
+            [
+                'categories' => $categories,
+                'services' => $services,
+                'order' => $order,
+                'sort' => $sort,
+                'searchByName' => $searchByName,
+                'requiredDates' => $datesForFilter
+            ]
         ));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
