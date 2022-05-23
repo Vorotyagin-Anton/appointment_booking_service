@@ -19,7 +19,8 @@ const actions = {
   },
 
   setMaster({commit}, payload) {
-    commit('putMasterToState', payload);
+    const master = {...payload};
+    commit('putMasterToState', master);
   },
 };
 

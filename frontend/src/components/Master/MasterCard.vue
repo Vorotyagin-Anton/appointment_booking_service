@@ -1,7 +1,7 @@
 <template>
   <q-card
     class="my-card masters-card"
-    @click="selectMaster"
+    @click="clickSelectMaster"
     flat
     bordered
   >
@@ -9,9 +9,9 @@
     <q-card-section class="masters-card__header">
       <master-header
         class="masters-card__heading"
-        :rating="rating"
-        :name="master.name + ' ' + master.surname"
-      />
+        :name="master.name + ' ' + master.surname"/>
+<!--      :rating="master.rating"-->
+<!--      />-->
     </q-card-section>
 
     <q-separator/>
@@ -20,9 +20,9 @@
       <master-info
         class="masters-card__info"
         :name="master.name"
-        :image="generateSourceUrl()"
-        speciality="Lorem ipsum"
-        info="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+        :image="hostUrl + master.pathToPhoto"
+        speciality="!!!!Lorem ipsum"
+        :info="master.story"
         :avatar-size="100"
       />
     </q-card-section>
@@ -39,7 +39,7 @@
       <q-btn
         flat
         color="primary"
-        @click.stop="reserveMaster"
+        @click.stop="clickReserveMaster"
       >
         Reserve
       </q-btn>
@@ -52,6 +52,7 @@ import {ref} from "vue";
 import useRandomAvatar from "src/hooks/common/useRandomAvatar";
 import MasterHeader from "components/Master/MasterHeader";
 import MasterInfo from "components/Master/MasterInfo";
+import useMaster from "src/hooks/useMaster";
 
 export default {
   name: "MasterCard",
@@ -65,6 +66,7 @@ export default {
     master: {
       type: Object,
       required: true,
+
     },
   },
 
@@ -74,23 +76,32 @@ export default {
   ],
 
   setup(props, {emit}) {
-    const rating = ref({
-      max: 5,
-      score: Number((Math.random() * 4 + 1).toFixed(1)),
-      voices: Math.floor(Math.random() * 200),
-    });
+    // console.log(props.master);
 
-    const selectMaster = () => emit('selected', props.master.id);
+    const hostUrl = 'http://localhost:8081'
 
-    const reserveMaster = () => emit('reserved', props.master.id);
+    // const rating = ref({
+    //   max: 5,
+    //   score: Number((Math.random() * 4 + 1).toFixed(1)),
+    //   voices: Math.floor(Math.random() * 200),
+    // });
 
-    const {generateSourceUrl} = useRandomAvatar();
+    const {selectMaster, reserveMaster} = useMaster();
+    const clickSelectMaster = () => selectMaster(props.master.id)
+    const clickReserveMaster = () => reserveMaster(props.master.id)
+
+    //const selectMaster = () => emit('selected', props.master.id);
+    //const reserveMaster = () => emit('reserved', props.master.id);
+    //const {generateSourceUrl} = useRandomAvatar();
 
     return {
-      rating,
-      selectMaster,
-      reserveMaster,
-      generateSourceUrl,
+      hostUrl,
+      // rating,
+      clickSelectMaster,
+      clickReserveMaster,
+      //selectMaster,
+      //reserveMaster,
+      //generateSourceUrl,
     }
   }
 }

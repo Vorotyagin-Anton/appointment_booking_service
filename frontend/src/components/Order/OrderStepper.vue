@@ -44,7 +44,7 @@ export default {
       setNextStep,
       setPrevStep,
       isFirstStep,
-      isLastStep
+      isLastStep,
     }
   },
 }

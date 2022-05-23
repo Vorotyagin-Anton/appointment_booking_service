@@ -7,18 +7,18 @@
         <div class="master-profile__section">
           <master-header
             :class-name="'master-profile__header'"
-            :name="master.name + ' ' +  master.surname"
-            :rating="master.rating"
-          />
+            :name="master.name + ' ' +  master.surname"/>
+<!--            :rating="master.rating"-->
+<!--          />-->
         </div>
 
         <div class="master-profile__section">
           <master-info
             :class-name="'master-profile__info'"
             :name="master.name"
-            :image="master.image"
-            :speciality="master.speciality"
-            :info="master.info"
+            :image="hostUrl + master.pathToPhoto"
+            :speciality="'!!!' + master.speciality"
+            :info="master.story"
             :avatar-size="140"
           />
         </div>
@@ -74,6 +74,14 @@ export default {
       required: true,
     },
   },
+
+  setup(props){
+    console.log(props.master);
+    const hostUrl = 'http://localhost:8081'
+    return{
+      hostUrl,
+    }
+  }
 }
 </script>
 
