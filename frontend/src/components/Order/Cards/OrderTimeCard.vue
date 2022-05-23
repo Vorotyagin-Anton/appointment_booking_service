@@ -12,7 +12,7 @@
       >
 
           <q-tab-panel v-for="item in workerFreeTime" :name="formatDate(item.date)" :key="item.date">
-            <div class="text-h4 q-mb-md"> {{ item.date }} </div>
+            <div class="text-h4 q-mb-md"> {{ dateToString(item.date) }} </div>
 
             <div class="q-pa-md">
               <q-chip v-for="time in item.timeArray" :key="time.id"
@@ -58,12 +58,11 @@ export default {
       const date = new Date()
       return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1).toString().slice(-2)) + '/' + ('0' + date.getDate().toString()).slice(-2)
     }
-
     const date = ref(nowDate()) //текущая дата
     const selectedDate = ref() //выбранная дата
     const selectedTime = ref() //выбранное время
     const availableDate = []; //маркеры возможных дат
-    const workerFreeTime = master.value.workerFreeTime
+    const { workerFreeTime } = master.value;
 
     mountMaster();
 
@@ -72,18 +71,19 @@ export default {
     };
 
     const formatDate = (date) => {
-      return date.replace(/-/g, '/')
+      if (typeof date !== "undefined"){
+        return date.replace(/-/g, '/')
+      }
     }
 
-    const formatTimeToToggle = (timeArray) => {
-      const newArray = []
-      timeArray.forEach(item => newArray.push({label:formatTime(item.value), value: item.id, 'icon-right':"watch_later"}))
-      return newArray
+    const dateToString = (string) => {
+      const date = new Date(string)
+      return date.getDate() + ' ' + date.toLocaleString('en-EN', { month: 'long' }) + ' ' + date.getFullYear()
     }
 
     //извлечение массива разрешенных дат
     const getAvailableDate = () => {
-      master.value.workerFreeTime.forEach(item=> {
+      workerFreeTime.forEach(item=> {
         availableDate.push(formatDate(item.date));
       })
     }
@@ -101,10 +101,9 @@ export default {
       console.log('записать в сторедж объект времени', dateObject.timeArray.find(t => t.id === selectedTime))
     })
 
-
-    console.log('время', master.value.workerFreeTime) //пришло
-    console.log('workerFreeTime', workerFreeTime) //пришло
-    console.log('availableDate', availableDate)
+    // console.log('master.workerFreeTime', master.value.workerFreeTime) //пришло
+    // console.log('workerFreeTime', workerFreeTime) //пришло
+    // console.log('availableDate', availableDate)
 
     return{
       selectedTime,
@@ -113,8 +112,8 @@ export default {
       formatTime,
       formatDate,
       date,
-      formatTimeToToggle,
       selectTime,
+      dateToString,
 
       splitterModel: ref(60),
     }

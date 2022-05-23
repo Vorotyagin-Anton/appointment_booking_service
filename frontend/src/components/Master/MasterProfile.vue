@@ -7,9 +7,9 @@
         <div class="master-profile__section">
           <master-header
             :class-name="'master-profile__header'"
-            :name="master.name + ' ' +  master.surname"/>
-<!--            :rating="master.rating"-->
-<!--          />-->
+            :name="master.name + ' ' +  master.surname"
+            :rating="master.rating"
+          />
         </div>
 
         <div class="master-profile__section">
@@ -17,7 +17,7 @@
             :class-name="'master-profile__info'"
             :name="master.name"
             :image="hostUrl + master.pathToPhoto"
-            :speciality="'!!!' + master.speciality"
+            :speciality="master.speciality"
             :info="master.story"
             :avatar-size="140"
           />
@@ -45,7 +45,7 @@
         </div>
 
         <div class="master-profile__section">
-          <master-reviews :reviews="master.reviews"/>
+          <master-reviews :reviews="master.gettedReviews"/>
         </div>
       </div>
     </div>
@@ -71,12 +71,17 @@ export default {
   props: {
     master: {
       type: Object,
-      required: true,
+      default: function () {
+        return {
+          speciality: 'Speciality default',
+        }
+      }
+      //required: true,
     },
   },
 
   setup(props){
-    console.log(props.master);
+    //console.log('MasterProfile', props.master);
     const hostUrl = 'http://localhost:8081'
     return{
       hostUrl,
