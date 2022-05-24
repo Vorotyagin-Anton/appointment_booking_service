@@ -76,7 +76,7 @@ export default {
   ],
 
   setup(props, {emit}) {
-    // console.log(props.master);
+     console.log(props.master);
 
     const hostUrl = 'http://localhost:8081'
 

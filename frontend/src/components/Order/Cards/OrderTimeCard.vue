@@ -101,7 +101,7 @@ export default {
       console.log('записать в сторедж объект времени', dateObject.timeArray.find(t => t.id === selectedTime))
     })
 
-    // console.log('master.workerFreeTime', master.value.workerFreeTime) //пришло
+    //console.log('master.workerFreeTime', master.value.workerFreeTime) //пришло
     // console.log('workerFreeTime', workerFreeTime) //пришло
     // console.log('availableDate', availableDate)
 
