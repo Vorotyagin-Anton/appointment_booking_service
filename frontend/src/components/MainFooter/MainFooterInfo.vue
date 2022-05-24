@@ -39,14 +39,14 @@
 </template>
 
 <script>
-import useApplicationDates from "src/hooks/useApplicationDates";
 import useNavigation from "src/hooks/common/useNavigation";
+import useAppTime from "src/hooks/common/useAppTime";
 
 export default {
   name: "MainFooterInfo",
 
   setup() {
-    const date = useApplicationDates();
+    const date = useAppTime();
 
     const {getGroup} = useNavigation();
 

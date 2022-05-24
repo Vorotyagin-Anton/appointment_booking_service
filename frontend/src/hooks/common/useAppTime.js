@@ -1,6 +1,6 @@
 import {computed, ref} from 'vue';
 
-export default function useApplicationDates() {
+export default function useAppTime() {
   const createdYear = 2022;
   const currentYear = ref((new Date).getFullYear());
 
