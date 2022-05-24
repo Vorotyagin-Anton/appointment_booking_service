@@ -9,7 +9,6 @@
 
     <div class="cabinet-page__side">
       <cabinet-actions/>
-
       <cabinet-stats/>
     </div>
   </div>
@@ -19,6 +18,7 @@
 import SetupBanner from "components/Cabinet/Banners/SetupBanner";
 import CabinetActions from "components/Cabinet/CabinetActions";
 import CabinetStats from "components/Cabinet/CabinetStats";
+import {onMounted} from "vue";
 
 export default {
   name: "ProfilePage",
@@ -26,7 +26,20 @@ export default {
   components: {
     SetupBanner,
     CabinetActions,
-    CabinetStats
+    CabinetStats,
+  },
+
+  emits: [
+    'toggleLeftDrawer',
+  ],
+
+  setup(props, {emit}) {
+    onMounted(() => {
+      emit('toggleLeftDrawer', {
+        isOpen: true,
+        isOverlay: false,
+      });
+    });
   },
 }
 </script>

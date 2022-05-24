@@ -16,9 +16,9 @@
         <q-item-section>
           <router-link
             class="cabinet-header-menu__link"
-            :to="{name: 'cabinet'}"
+            :to="{name: 'cabinet.profile'}"
           >
-            Account settings
+            Profile settings
           </router-link>
         </q-item-section>
       </q-item>

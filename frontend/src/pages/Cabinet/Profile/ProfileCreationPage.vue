@@ -1,5 +1,5 @@
 <template>
-  <div class="create-profile-page">
+  <div class="profile-creation-page">
     <keep-alive>
       <component
         :is="component"
@@ -39,10 +39,16 @@ const steps = [
 ];
 
 export default {
-  name: "CreatePage",
+  name: "ProfileCreationPage",
 
   setup() {
-    const {component, isFirstStep, isLastStep, nextStep, prevStep} = useStepper(steps);
+    const {
+      component,
+      isFirstStep,
+      isLastStep,
+      nextStep,
+      prevStep,
+    } = useStepper(steps);
 
     return {
       steps,
@@ -55,7 +61,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>

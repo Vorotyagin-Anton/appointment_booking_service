@@ -5,19 +5,21 @@
         <q-item-section class="cabinet-left-drawer__title">Quick access</q-item-section>
       </q-item>
 
-      <q-item class="cabinet-left-drawer__item" clickable v-ripple>
-        <q-item-section class="cabinet-left-drawer__section" avatar>
-          <svg aria-labelledby="ember62__title" role="img" height="28" width="28" viewBox="0 0 28 28" id="ember62"
-               class="cabinet-left-drawer__icon cabinet-left-drawer__home">
-            <title id="ember62__title"></title>
-            <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"
-                  d="M14.6508 6.24074C14.2763 5.91975 13.7237 5.91975 13.3492 6.24074L6.34923 12.2407C5.9299 12.6002 5.88134 13.2315 6.24076 13.6508C6.43844 13.8814 6.71836 13.9999 7.00002 14V21C7.00002 21.5523 7.44773 22 8.00002 22H12H16H20C20.5523 22 21 21.5523 21 21V14C21.2817 13.9999 21.5616 13.8814 21.7593 13.6508C22.1187 13.2315 22.0701 12.6002 21.6508 12.2407L20 10.8258V9C20 8.44772 19.5523 8 19 8C18.4477 8 18 8.44772 18 9V9.11149L14.6508 6.24074ZM15 16V20H13V16H15ZM17 15V20H19V12.6028L14 8.31708L9.00002 12.6028V20H11V15C11 14.4477 11.4477 14 12 14H16C16.5523 14 17 14.4477 17 15Z"
-                  fill="white"></path>
-          </svg>
-        </q-item-section>
+      <router-link :to="{name: 'cabinet'}">
+        <q-item class="cabinet-left-drawer__item" clickable v-ripple>
+          <q-item-section class="cabinet-left-drawer__section" avatar>
+            <svg aria-labelledby="ember62__title" role="img" height="28" width="28" viewBox="0 0 28 28" id="ember62"
+                 class="cabinet-left-drawer__icon cabinet-left-drawer__home">
+              <title id="ember62__title"></title>
+              <path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"
+                    d="M14.6508 6.24074C14.2763 5.91975 13.7237 5.91975 13.3492 6.24074L6.34923 12.2407C5.9299 12.6002 5.88134 13.2315 6.24076 13.6508C6.43844 13.8814 6.71836 13.9999 7.00002 14V21C7.00002 21.5523 7.44773 22 8.00002 22H12H16H20C20.5523 22 21 21.5523 21 21V14C21.2817 13.9999 21.5616 13.8814 21.7593 13.6508C22.1187 13.2315 22.0701 12.6002 21.6508 12.2407L20 10.8258V9C20 8.44772 19.5523 8 19 8C18.4477 8 18 8.44772 18 9V9.11149L14.6508 6.24074ZM15 16V20H13V16H15ZM17 15V20H19V12.6028L14 8.31708L9.00002 12.6028V20H11V15C11 14.4477 11.4477 14 12 14H16C16.5523 14 17 14.4477 17 15Z"
+                    fill="white"></path>
+            </svg>
+          </q-item-section>
 
-        <q-item-section class="cabinet-left-drawer__text">Home</q-item-section>
-      </q-item>
+          <q-item-section class="cabinet-left-drawer__text">Home</q-item-section>
+        </q-item>
+      </router-link>
 
       <q-item class="cabinet-left-drawer__item" clickable v-ripple>
         <q-item-section class="cabinet-left-drawer__section" avatar>
@@ -203,6 +205,7 @@ export default {
   &__text {
     font-size: 16px;
     font-weight: 500;
+    color: $black;
   }
 
   &__separator {

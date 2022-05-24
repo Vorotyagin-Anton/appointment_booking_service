@@ -47,7 +47,7 @@ export default [
           guards: ['auth'],
         },
 
-        component: () => import('pages/CreateProfilePage.vue'),
+        component: () => import('pages/cabinet/profile/ProfileCreationPage.vue'),
       },
     ],
 
@@ -62,7 +62,12 @@ export default [
       {
         name: 'cabinet',
         path: '',
-        component: () => import('pages/CabinetPage.vue'),
+        component: () => import('pages/Cabinet/CabinetPage.vue'),
+      },
+      {
+        name: 'cabinet.profile',
+        path: 'profile',
+        component: () => import('pages/Cabinet/Profile/ProfilePage.vue'),
       },
     ],
     beforeEnter: [authGuard],
@@ -92,6 +97,7 @@ export default [
 
   // NOT FOUND
   {
+    name: '404',
     path: '/:catchAll(.*)*',
     component: () => import('pages/NotFoundPage.vue')
   }
