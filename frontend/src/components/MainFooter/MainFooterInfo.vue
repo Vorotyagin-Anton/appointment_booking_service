@@ -46,14 +46,14 @@ export default {
   name: "MainFooterInfo",
 
   setup() {
-    const date = useAppTime();
+    const {currentDate} = useAppTime();
 
     const {getGroup} = useNavigation();
 
     const nav = getGroup('About Us');
 
     return {
-      date,
+      date: currentDate,
       nav,
     }
   }

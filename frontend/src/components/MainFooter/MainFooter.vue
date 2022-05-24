@@ -21,10 +21,10 @@ export default {
   },
 
   setup() {
-    const date = useAppTime();
+    const {currentDate} = useAppTime();
 
     return {
-      date,
+      date: currentDate,
     }
   }
 }
