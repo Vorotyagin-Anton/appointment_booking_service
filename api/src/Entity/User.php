@@ -96,6 +96,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_gettedReviews'])]
     private $gettedReviews;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $speciality;
+
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
@@ -449,6 +453,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $gettedReview->setWorker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSpeciality(): ?string
+    {
+        return $this->speciality;
+    }
+
+    public function setSpeciality(?string $speciality): self
+    {
+        $this->speciality = $speciality;
 
         return $this;
     }
