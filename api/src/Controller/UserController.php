@@ -173,7 +173,9 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
             'user_services',
-            'serviceShort'
+            'serviceShort',
+            'user_rating',
+            'ratingShort'
         ]]));
     }
 
