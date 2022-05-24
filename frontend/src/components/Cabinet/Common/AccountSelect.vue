@@ -1,17 +1,17 @@
 <template>
   <div
-    class="profile-account-select"
-    :class="{'profile-account-select_focused': isFocused}"
+    class="acccount-select"
+    :class="{'acccount-select_focused': isFocused}"
   >
     <div
-      class="profile-account-select__label"
-      :class="{'profile-account-select__label_focused': isFocused}"
+      class="acccount-select__label"
+      :class="{'acccount-select__label_focused': isFocused}"
     >
       {{ label }}
     </div>
 
     <q-select
-      class="profile-account-select__input"
+      class="acccount-select__input"
       v-model="model"
       :options="options"
       dense
@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-account-select {
+.acccount-select {
   width: 100%;
   height: 50px;
   display: flex;

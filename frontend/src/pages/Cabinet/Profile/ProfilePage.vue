@@ -30,11 +30,12 @@ import ProfileAccount from "components/Cabinet/Profile/ProfileAccount";
 import ProfileBusiness from "components/Cabinet/Profile/ProfileBusiness";
 import ProfileSchedule from "components/Cabinet/Profile/ProfileSchedule";
 import {useRoute, useRouter} from "vue-router";
+import ProfilePricing from "components/Cabinet/Profile/ProfilePricing";
 
 const menu = [
   {
     id: 1,
-    title: 'Account Information',
+    title: 'Account',
     component: shallowRef(ProfileAccount),
     children: [
       {
@@ -56,7 +57,7 @@ const menu = [
   },
   {
     id: 2,
-    title: 'Business Description',
+    title: 'Business',
     component: shallowRef(ProfileBusiness),
     children: [
       {
@@ -66,11 +67,6 @@ const menu = [
       },
       {
         id: 2,
-        title: 'Pricing',
-        to: {name: 'cabinet.profile', query: {sec: 2}, hash: '#pricing'},
-      },
-      {
-        id: 3,
         title: 'Bank & Payment',
         to: {name: 'cabinet.profile', query: {sec: 2}, hash: '#payment'},
       },
@@ -81,6 +77,11 @@ const menu = [
     title: 'Schedule',
     component: shallowRef(ProfileSchedule),
   },
+  {
+    id: 4,
+    title: 'Pricing',
+    component: shallowRef(ProfilePricing),
+  }
 ];
 
 export default {

@@ -1,11 +1,11 @@
 <template>
-  <div class="profile-account-textarea">
-      <div class="profile-account-textarea__label">
+  <div class="account-textarea">
+      <div class="account-textarea__label">
         {{ label }}
       </div>
 
       <textarea
-        class="profile-account-textarea__input"
+        class="account-textarea__input"
         v-model="model"
       ></textarea>
   </div>
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-account-textarea {
+.account-textarea {
   display: flex;
   border: 1px solid $grey-4;
   min-height: 180px;

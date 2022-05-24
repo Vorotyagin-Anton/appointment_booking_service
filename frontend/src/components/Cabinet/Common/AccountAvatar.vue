@@ -1,8 +1,8 @@
 <template>
-  <div class="profile-account-avatar">
-    <div class="profile-account-avatar__content">
+  <div class="acccount-avatar">
+    <div class="acccount-avatar__content">
       <q-avatar
-        class="profile-account-avatar__photo"
+        class="acccount-avatar__photo"
         size="250px"
       >
         <img
@@ -12,29 +12,29 @@
         >
       </q-avatar>
 
-      <div class="profile-account-avatar__background"></div>
+      <div class="acccount-avatar__background"></div>
 
       <div
-        class="profile-account-avatar__btn"
+        class="acccount-avatar__btn"
       >
-        <span class="material-icons profile-account-avatar__icon-photo">add_a_photo</span>
-        <span class="profile-account-avatar__span">Upload photo</span>
+        <span class="material-icons acccount-avatar__icon-photo">add_a_photo</span>
+        <span class="acccount-avatar__span">Upload photo</span>
       </div>
 
       <q-file
-        class="profile-account-avatar__uploader"
+        class="acccount-avatar__uploader"
         v-model="model"
         @update:model-value="updateModel"
       />
     </div>
 
     <div
-      class="profile-account-avatar__file"
+      class="acccount-avatar__file"
       v-if="model"
     >
       {{ model.name }}
       <span
-        class="material-icons profile-account-avatar__close-icon"
+        class="material-icons acccount-avatar__close-icon"
         @click="removeModel"
       >
         close
@@ -88,7 +88,7 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-account-avatar {
+.acccount-avatar {
   display: flex;
 
   &__file {
