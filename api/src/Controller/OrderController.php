@@ -2,7 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
+use App\Entity\Service;
+use App\Entity\User;
+use App\Entity\WorkerAvailableTime;
+use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,10 +30,64 @@ class OrderController extends AbstractController
     }
 
     #[Route(path: 'api/orders', name: 'app_orders_post', methods: ['POST'])]
-    public function saveOrder(
+    public function addOrder(
+        EntityManagerInterface $em,
+        SerializerInterface $serializer,
         Request $request
     ): Response
     {
-        return new Response($request->getContent());
+        $data = json_decode($request->getContent(), true);
+        $form = $this->createForm(OrderFormType::class, null, ['csrf_protection' => false]);
+        $form->submit($data);
+
+        if ($form->isValid()) {
+            if (isset($data['client_id'])) {
+                $client = $em->getRepository(User::class)->findOneBy(['id' => $data['client_id']]);
+            } else {
+                $client = new User();
+                $client->setIsWorker(false);
+                $client->setIsClient(true);
+                $client->setName($data['client_name']);
+                $client->setMobilePhoneNumber($data['phone']);
+                $client->setTelegram($data['telegram']);
+
+                $user = $em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
+                if (!isset($user)) {
+                    $client->setEmail($data['email']);
+                } else {
+                    $client->setEmail('default@default.default');
+                }
+
+                $em->persist($client);
+            }
+
+            $worker = $em->getRepository(User::class)->findOneBy(['id' => $data['master_id']]);
+            $service = $em->getRepository(Service::class)->findOneBy(['id' => $data['service_id']]);
+            $time = $em->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $data['time_id']]);
+
+            $order = new Order();
+            $order->setClient($client);
+            $order->setClientName($data['client_name']);
+            $order->setClientEmail($data['email']);
+            $order->setClientPhone($data['phone']);
+            $order->setClientTelegram($data['telegram']);
+            $order->setClientContactType($data['notification_type']);
+
+            $order->setWorker($worker);
+            $order->setService($service);
+            $order->addTime($time);
+            $time->setIsTimeFree(false);
+
+            $order->setStatus(1);
+
+            $em->persist($order);
+            $em->flush();
+
+            return $this->json($serializer->serialize($order, 'json', ['groups' => [
+                'orderShort'
+            ]]));
+        }
+
+        return $this->json($serializer->serialize($form, 'json'));
     }
 }
