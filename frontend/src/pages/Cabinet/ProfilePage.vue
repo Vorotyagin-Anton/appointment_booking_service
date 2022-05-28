@@ -171,7 +171,7 @@
         </div>
       </div>
     </div>
-    <profile-footer class="profile-page__footer"/>
+    <account-footer class="profile-page__footer"/>
   </div>
 </template>
 
@@ -179,10 +179,10 @@
 import {ref, onMounted} from "vue";
 import useAuth from "src/hooks/auth/useAuth";
 import useProfile from "src/hooks/auth/useProfile";
-import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
+import AccountFooter from "components/Cabinet/Profile/AccountFooter";
 
 export default {
   name: "ProfilePage",
@@ -191,7 +191,7 @@ export default {
     AccountField,
     AccountTextarea,
     AccountAvatar,
-    ProfileFooter,
+    AccountFooter,
   },
 
   emits: [
