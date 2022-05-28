@@ -162,7 +162,6 @@ export default {
     font-size: 14px;
     font-weight: 300;
     color: $black;
-    line-height: 5px;
   }
 }
 </style>
