@@ -2,7 +2,7 @@
   <div class="profile-account">
     <h3 id="personal" class="profile-account__h3">Profile photo</h3>
 
-    <profile-account-avatar
+    <account-avatar
       class="profile-account__avatar"
       :photo="user.pathToPhoto"
       v-model="avatar"
@@ -11,21 +11,21 @@
     <h3 class="profile-account__h3">Basic Information</h3>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="First name"
         v-model="profile.name"
       />
     </div>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="Second name"
         v-model="profile.surname"
       />
     </div>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="Middle name"
         v-model="profile.middlename"
       />
@@ -35,7 +35,7 @@
 
     <div class="profile-account__field">
       <div class="profile-account__month">
-        <profile-account-select
+        <account-select
           label="Month"
           placeholder="Select month..."
           v-model="profile.month"
@@ -44,7 +44,7 @@
       </div>
 
       <div class="profile-account__day">
-        <profile-account-field
+        <account-field
           label="Day"
           placeholder="DD"
           v-model="profile.day"
@@ -52,7 +52,7 @@
       </div>
 
       <div class="profile-account__year">
-        <profile-account-field
+        <account-field
           label="Year"
           placeholder="YYYY"
           v-model="profile.year"
@@ -102,7 +102,7 @@
     </p>
 
     <div class="profile-account__field">
-      <profile-account-textarea
+      <account-textarea
         label="Business story"
         v-model="profile.story"
       />
@@ -111,7 +111,7 @@
     <h3 id="contacts" class="profile-account__h3">Contact Information</h3>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="Email Address"
         type="email"
         v-model="profile.email"
@@ -120,7 +120,7 @@
 
     <div class="profile-account__phone">
       <div class="profile-account__field">
-        <profile-account-field
+        <account-field
           label="Phone Number"
           v-model="profile.mobilePhoneNumber"
         />
@@ -132,21 +132,21 @@
     <h3 id="location" class="profile-account__h3">Business Address</h3>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="Full street address"
         v-model="profile.street"
       />
     </div>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="Apt/Unit"
         v-model="profile.home"
       />
     </div>
 
     <div class="profile-account__field">
-      <profile-account-field
+      <account-field
         label="City"
         v-model="profile.city"
       />
@@ -154,14 +154,14 @@
 
     <div class="profile-account__field">
       <div class="profile-account__code">
-        <profile-account-field
+        <account-field
           label="Code"
           v-model="profile.code"
         />
       </div>
 
       <div class="profile-account__state">
-        <profile-account-field
+        <account-field
           label="State"
           v-model="profile.state"
         />
@@ -175,19 +175,19 @@
 import {ref} from "vue";
 import useAuth from "src/hooks/auth/useAuth";
 import useProfile from "src/hooks/auth/useProfile";
-import ProfileAccountAvatar from "components/Cabinet/Profile/ProfileAccountAvatar";
-import ProfileAccountField from "components/Cabinet/Profile/ProfileAccountField";
-import ProfileAccountTextarea from "components/Cabinet/Profile/ProfileAccountTextarea";
-import ProfileAccountSelect from "components/Cabinet/Profile/ProfileAccountSelect";
+import AccountSelect from "components/Cabinet/Common/AccountSelect";
+import AccountField from "components/Cabinet/Common/AccountField";
+import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
+import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
 
 export default {
   name: "ProfileAccount",
 
   components: {
-    ProfileAccountField,
-    ProfileAccountTextarea,
-    ProfileAccountAvatar,
-    ProfileAccountSelect,
+    AccountField,
+    AccountTextarea,
+    AccountAvatar,
+    AccountSelect,
   },
 
   setup() {

@@ -1,17 +1,17 @@
 <template>
   <div
-    class="acccount-field"
-    :class="{'acccount-field_focused': isFocused}"
+    class="account-field"
+    :class="{'account-field_focused': isFocused}"
   >
     <div
-      class="acccount-field__label"
-      :class="{'acccount-field__label_focused': isFocused}"
+      class="account-field__label"
+      :class="{'account-field__label_focused': isFocused}"
     >
       {{ label }}
     </div>
 
     <q-input
-      class="acccount-field__input"
+      class="account-field__input"
       v-model="model"
       :type="type"
       :placeholder="placeholder"
@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss">
-.acccount-field {
+.account-field {
   width: 100%;
   height: 50px;
   display: flex;

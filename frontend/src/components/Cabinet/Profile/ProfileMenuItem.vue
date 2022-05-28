@@ -5,7 +5,6 @@
     :expand-icon-class="{'profile-menu-item__icon': !item.children}"
     :label="item.title"
     :default-opened="isSelected"
-    expand-separator
     @click="select"
   >
     <div v-if="item.children">
