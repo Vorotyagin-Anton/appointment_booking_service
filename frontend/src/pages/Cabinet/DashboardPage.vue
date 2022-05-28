@@ -2,7 +2,7 @@
   <div class="container cabinet-page">
 
     <div class="cabinet-page__center">
-      <h1 class="cabinet-page__heading">Welcome to Booking Service. Here’s your business at a glance.</h1>
+      <div class="cabinet-page__heading">Welcome to Booking Service. Here’s your business at a glance.</div>
 
       <setup-banner class="cabinet-page__banner"/>
     </div>
@@ -21,7 +21,7 @@ import CabinetStats from "components/Cabinet/CabinetStats";
 import {onMounted} from "vue";
 
 export default {
-  name: "ProfilePage",
+  name: "DashboardPage",
 
   components: {
     SetupBanner,
@@ -58,6 +58,7 @@ export default {
   }
 
   &__heading {
+    padding: 25px 0 50px;
     font-size: 22px;
     font-weight: 500;
   }
