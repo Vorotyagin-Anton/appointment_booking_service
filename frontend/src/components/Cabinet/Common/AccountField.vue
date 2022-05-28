@@ -80,20 +80,20 @@ export default {
   width: 100%;
   height: 50px;
   display: flex;
-  border: 1px solid $grey-3;
+  border: 1px solid $grey-4;
 
   &_focused {
     border-bottom: 1px solid $primary;
   }
 
   &__label {
-    flex: 2;
+    width: 130px;
     height: 100%;
     padding: 0 15px;
     display: flex;
     align-items: center;
     background-color: $grey-3;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
 
     &_focused {
@@ -102,7 +102,8 @@ export default {
   }
 
   &__input {
-    flex: 5;
+    width: calc(100% - 130px);
+    font-size: 13px;
 
     .q-field__control {
       height: 49px;
@@ -126,6 +127,7 @@ export default {
 
     .q-field__native::placeholder {
       color: $grey-6;
+      font-size: 12px;
     }
   }
 

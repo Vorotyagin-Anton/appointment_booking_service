@@ -17,6 +17,10 @@ export default function useProfile(user) {
     // contacts
     email: user.email,
     mobilePhoneNumber: user.mobilePhoneNumber ?? null,
+    website: user.website,
+    facebook: user.facebook,
+    instagram: user.instagram,
+    telegram: user.telegram,
 
     // address
     state: user.state ?? null,
