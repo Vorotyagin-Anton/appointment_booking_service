@@ -10,6 +10,7 @@ import order from "src/store/modules/order";
 import navigation from "src/store/modules/navigation";
 import breadcrumbs from "src/store/modules/breadcrumbs";
 import categories from "src/store/modules/categories";
+import schedule from "src/store/modules/schedule"
 
 /*
  * If not building with SSR mode, you can
@@ -32,6 +33,7 @@ export default store(function (/* { ssrContext } */) {
       navigation,
       breadcrumbs,
       categories,
+      schedule,
     },
 
     // enable strict mode (adds overhead!)
