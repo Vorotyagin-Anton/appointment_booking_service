@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -258,5 +259,38 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
         ]]));
+    }
+
+    #[Route('/api/users/change-password', name: 'app_users_change_password', methods: ['PATCH'])]
+    public function changePassword(
+        EntityManagerInterface $em,
+        SerializerInterface $serializer,
+        UserPasswordHasherInterface $passwordHasher,
+        Request $request
+    ): Response
+    {
+        $data = json_decode($request->getContent());
+        $userId = $data->userId;
+        $userNewPassword = $data->newPassword;
+
+        $user = $em->getRepository(User::class)->findOneBy(['id' => $userId]);
+        $user->setPassword(
+            $passwordHasher->hashPassword(
+                $user,
+                $userNewPassword
+            )
+        );
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->json($serializer->serialize(
+            [
+                'status' => 'success',
+                'message' => 'the password has been updated',
+                'data' => []
+            ],
+            'json'
+        ));
     }
 }
