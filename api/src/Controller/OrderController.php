@@ -8,10 +8,13 @@ use App\Entity\User;
 use App\Entity\WorkerAvailableTime;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
+use App\Service\CustomDataFormatter;
+use App\Service\TelegramSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Notifier\ChatterInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -33,7 +36,10 @@ class OrderController extends AbstractController
     public function addOrder(
         EntityManagerInterface $em,
         SerializerInterface $serializer,
-        Request $request
+        Request $request,
+        TelegramSender $telegramSender,
+        CustomDataFormatter $customDataFormatter,
+        ChatterInterface $chatter
     ): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -82,6 +88,26 @@ class OrderController extends AbstractController
 
             $em->persist($order);
             $em->flush();
+
+            $serviceStartTime = $customDataFormatter->convertWorkerAvailableExactTime($time->getExactTimeInMinutes());
+            $serviceEndTime = $customDataFormatter->convertWorkerAvailableExactTime(
+                $time->getExactTimeInMinutes() + $service->getDuration() * 30
+            );
+            $serviceDate = date_format($time->getExactDate(), 'Y-m-d');
+            if ($worker->getTelegram()) {
+                $message = <<<STR
+                К Вам записался {$client->getName()} (tg: {$client->getTelegram()}) на $serviceDate $serviceStartTime-$serviceEndTime.
+                Услуга - {$service->getName()}.
+                STR;
+                $telegramSender->sendMessage($message, $worker->getTelegram(), $chatter);
+            }
+            if ($client->getTelegram()) {
+                $message = <<<STR
+                Вы записались к {$worker->getName()} (м.т.: {$worker->getMobilePhoneNumber()}) на $serviceDate $serviceStartTime-$serviceEndTime.
+                Услуга - {$service->getName()}, стоимость - {$service->getPrice()} рублей.
+                STR;
+                $telegramSender->sendMessage($message, $client->getTelegram(), $chatter);
+            }
 
             return $this->json($serializer->serialize($order, 'json', ['groups' => [
                 'orderShort'
