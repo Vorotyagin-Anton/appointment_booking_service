@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\User;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
@@ -107,8 +108,25 @@ class UserController extends AbstractController
             return $this->json($serializer->serialize(['error' => 'user not found'], 'json'));
         }
 
+        $data = $request->toArray();
+        $userAddress = $user->getAddresses()->toArray()[0] ?? null;
+        if (!$userAddress) {
+            $userAddress = new Address();
+            $user->addAddress($userAddress);
+        }
+        $userAddress->setState($data['state'] ?? null);
+        unset($data['state']);
+        $userAddress->setCity($data['city'] ?? null);
+        unset($data['city']);
+        $userAddress->setStreet($data['street'] ?? null);
+        unset($data['street']);
+        $userAddress->setHome($data['home'] ?? null);
+        unset($data['home']);
+        $userAddress->setCode(intval($data['code'] ?? null));
+        unset($data['code']);
+
         $form = $this->createForm(UserFormType::class, $user, ['csrf_protection' => false]);
-        $form->submit($request->toArray(), false);
+        $form->submit($data, false);
 
         if ($form->isValid()) {
             $entityManager->persist($user);
