@@ -32,6 +32,10 @@ class WorkerAvailableTime
     #[Groups(['workerAvailableTimeShort'])]
     private $exactDate;
 
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'time')]
+    #[Groups(['workerAvailableTime_relatedOrder'])]
+    private $relatedOrder;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,6 +85,18 @@ class WorkerAvailableTime
     public function setExactDate(\DateTimeInterface $exactDate): self
     {
         $this->exactDate = $exactDate;
+
+        return $this;
+    }
+
+    public function getRelatedOrder(): ?Order
+    {
+        return $this->relatedOrder;
+    }
+
+    public function setRelatedOrder(?Order $relatedOrder): self
+    {
+        $this->relatedOrder = $relatedOrder;
 
         return $this;
     }

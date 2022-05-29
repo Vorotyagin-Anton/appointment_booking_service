@@ -100,11 +100,58 @@ class UserRepository extends ServiceEntityRepository
         }
 
         if (isset($filters['sort']) && isset($filters['order'])) {
+            if (strtolower($filters['sort']) === 'rating') {
+                $builder
+                    ->join('u.rating', 'ur')
+                    ->orderBy('ur.score', $filters['order']);
+            }
+
+            if (strtolower($filters['sort']) === 'popularity') {
+                $builder
+                    ->join('u.rating', 'ur')
+                    ->orderBy('ur.voices', $filters['order']);
+            }
+
             $propertyInfo = new PropertyInfoExtractor([new ReflectionExtractor()], [new ReflectionExtractor()]);
             $types = $propertyInfo->getTypes(User::class, $filters['sort']);
             if (isset($types[0]) && in_array($types[0]->getBuiltinType(), ['int', 'string'])){
                 $builder->orderBy('u.' . strtolower($filters['sort']), $filters['order']);
             }
+        }
+
+        if (isset($filters['searchByName'])) {
+            $builder
+                ->andWhere($builder->expr()->orX(
+                    $builder->expr()->like('u.name', ':name'),
+                    $builder->expr()->like('u.surname', ':name')
+                ))
+                ->setParameter('name', '%' . $filters['searchByName'] . '%');
+        }
+
+        if (isset($filters['requiredDates'])) {
+            $builder
+                ->join('u.workerAvailableTimes', 'wat')
+                ->andWhere($builder->expr()->eq("wat.isTimeFree", ":isTimeFree"))
+                ->setParameter('isTimeFree', true);
+
+            $requiredDateExpressions = [];
+
+            foreach ($filters['requiredDates']['dateRanges'] as $k => $dateRange) {
+                $requiredDateExpressions[] = $builder->expr()->between('wat.exactDate', ":dateFrom{$k}", ":dateTo{$k}");
+                $builder
+                    ->setParameter(":dateFrom{$k}", $dateRange['from'])
+                    ->setParameter(":dateTo{$k}", $dateRange['to']);
+            }
+
+            if (!empty($filters['requiredDates']['singleDates'])) {
+                $requiredDateExpressions[] = $builder->expr()->in('wat.exactDate', ':exactDates');
+                $builder->setParameter("exactDates", $filters['requiredDates']['singleDates']);
+            }
+
+            $builder
+                ->andWhere($builder->expr()->orX(
+                    ...$requiredDateExpressions
+                ));
         }
 
         return $builder->getQuery();

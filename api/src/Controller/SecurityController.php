@@ -26,10 +26,7 @@ class SecurityController extends AbstractController
                     'message' => 'there is no authorized user',
                     'data' => []
                 ],
-                'json',
-                ['groups' => [
-                    'userShort'
-                ]]
+                'json'
             ));
         }
 

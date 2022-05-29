@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -16,27 +18,6 @@ class Order
     #[Groups(['orderShort'])]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'client_user_id', referencedColumnName: 'id', nullable: false)]
-    #[Groups(['order_client'])]
-    private $client;
-
-    #[ORM\Column(type: 'date', nullable: true)]
-    #[Groups(['orderShort'])]
-    private $executionDate;
-
-    #[ORM\Column(type: 'time', nullable: true)]
-    #[Groups(['orderShort'])]
-    private $executionTime;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['orderShort'])]
-    private $serviceType;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['orderShort'])]
-    private $workerContactType;
-
     #[ORM\Column(type: 'integer')]
     #[Groups(['orderShort'])]
     private $clientContactType;
@@ -49,15 +30,43 @@ class Order
     #[Groups(['orderShort'])]
     private $details;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'worker_user_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'orders')]
+    #[Groups(['order_service'])]
+    private $service;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['orderShort'])]
+    private $clientName;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['orderShort'])]
+    private $clientPhone;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['orderShort'])]
+    private $clientEmail;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['orderShort'])]
+    private $clientTelegram;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clientOrders')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['order_client'])]
+    private $client;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workerOrders')]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['order_worker'])]
     private $worker;
 
-    public function __construct($client, $worker)
+    #[ORM\OneToMany(mappedBy: 'relatedOrder', targetEntity: WorkerAvailableTime::class)]
+    #[Groups(['order_time'])]
+    private $time;
+
+    public function __construct()
     {
-        $this->client = $client;
-        $this->worker = $worker;
+        $this->time = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,54 +82,6 @@ class Order
     public function setClient(User $client): self
     {
         $this->client = $client;
-
-        return $this;
-    }
-
-    public function getExecutionDate(): ?\DateTimeInterface
-    {
-        return $this->executionDate;
-    }
-
-    public function setExecutionDate(?\DateTimeInterface $executionDate): self
-    {
-        $this->executionDate = $executionDate;
-
-        return $this;
-    }
-
-    public function getExecutionTime(): ?\DateTimeInterface
-    {
-        return $this->executionTime;
-    }
-
-    public function setExecutionTime(?\DateTimeInterface $executionTime): self
-    {
-        $this->executionTime = $executionTime;
-
-        return $this;
-    }
-
-    public function getServiceType(): ?int
-    {
-        return $this->serviceType;
-    }
-
-    public function setServiceType(?int $serviceType): self
-    {
-        $this->serviceType = $serviceType;
-
-        return $this;
-    }
-
-    public function getWorkerContactType(): ?int
-    {
-        return $this->workerContactType;
-    }
-
-    public function setWorkerContactType(?int $workerContactType): self
-    {
-        $this->workerContactType = $workerContactType;
 
         return $this;
     }
@@ -169,6 +130,96 @@ class Order
     public function setWorker(User $worker): self
     {
         $this->worker = $worker;
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): self
+    {
+        $this->service = $service;
+
+        return $this;
+    }
+
+    public function getClientName(): ?string
+    {
+        return $this->clientName;
+    }
+
+    public function setClientName(string $clientName): self
+    {
+        $this->clientName = $clientName;
+
+        return $this;
+    }
+
+    public function getClientPhone(): ?string
+    {
+        return $this->clientPhone;
+    }
+
+    public function setClientPhone(?string $clientPhone): self
+    {
+        $this->clientPhone = $clientPhone;
+
+        return $this;
+    }
+
+    public function getClientEmail(): ?string
+    {
+        return $this->clientEmail;
+    }
+
+    public function setClientEmail(?string $clientEmail): self
+    {
+        $this->clientEmail = $clientEmail;
+
+        return $this;
+    }
+
+    public function getClientTelegram(): ?string
+    {
+        return $this->clientTelegram;
+    }
+
+    public function setClientTelegram(?string $clientTelegram): self
+    {
+        $this->clientTelegram = $clientTelegram;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkerAvailableTime>
+     */
+    public function getTime(): Collection
+    {
+        return $this->time;
+    }
+
+    public function addTime(WorkerAvailableTime $time): self
+    {
+        if (!$this->time->contains($time)) {
+            $this->time[] = $time;
+            $time->setRelatedOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTime(WorkerAvailableTime $time): self
+    {
+        if ($this->time->removeElement($time)) {
+            // set the owning side to null (unless already changed)
+            if ($time->getRelatedOrder() === $this) {
+                $time->setRelatedOrder(null);
+            }
+        }
 
         return $this;
     }

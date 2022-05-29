@@ -80,18 +80,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_workerAvailableTimes'])]
     private $workerAvailableTimes;
 
-    #[ORM\Column(type: 'smallint', nullable: true)]
-    #[Groups(['userShort'])]
+    #[ORM\OneToOne(mappedBy: 'worker', targetEntity: Rating::class, cascade: ['persist', 'remove'])]
+    #[Groups(['user_rating'])]
     private $rating;
 
-    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Career::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['user_career'])]
+    private $career;
+
+    #[ORM\OneToMany(mappedBy: 'reviewer', targetEntity: Review::class, cascade: ['persist'])]
+    #[Groups(['user_reviews'])]
+    private $reviews;
+
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Review::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['user_gettedReviews'])]
+    private $gettedReviews;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
-    private $popularity;
+    private $speciality;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Order::class)]
+    #[Groups(['user_clientOrders'])]
+    private $clientOrders;
+
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Order::class)]
+    #[Groups(['user_workerOrders'])]
+    private $workerOrders;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $telegram;
 
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
         $this->services = new ArrayCollection();
+        $this->career = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
+        $this->gettedReviews = new ArrayCollection();
+        $this->clientOrders = new ArrayCollection();
+        $this->workerOrders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -335,26 +364,193 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRating(): ?int
+    public function getRating(): ?Rating
     {
         return $this->rating;
     }
 
-    public function setRating(?int $rating): self
+    public function setRating(Rating $rating): self
     {
+        // set the owning side of the relation if necessary
+        if ($rating->getWorker() !== $this) {
+            $rating->setWorker($this);
+        }
+
         $this->rating = $rating;
 
         return $this;
     }
 
-    public function getPopularity(): ?int
+    /**
+     * @return Collection<int, Career>
+     */
+    public function getCareer(): Collection
     {
-        return $this->popularity;
+        return $this->career;
     }
 
-    public function setPopularity(?int $popularity): self
+    public function addCareer(Career $career): self
     {
-        $this->popularity = $popularity;
+        if (!$this->career->contains($career)) {
+            $this->career[] = $career;
+            $career->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCareer(Career $career): self
+    {
+        if ($this->career->removeElement($career)) {
+            // set the owning side to null (unless already changed)
+            if ($career->getWorker() === $this) {
+                $career->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): self
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews[] = $review;
+            $review->setReviewer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): self
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getReviewer() === $this) {
+                $review->setReviewer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getGettedReviews(): Collection
+    {
+        return $this->gettedReviews;
+    }
+
+    public function addGettedReview(Review $gettedReview): self
+    {
+        if (!$this->gettedReviews->contains($gettedReview)) {
+            $this->gettedReviews[] = $gettedReview;
+            $gettedReview->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGettedReview(Review $gettedReview): self
+    {
+        if ($this->gettedReviews->removeElement($gettedReview)) {
+            // set the owning side to null (unless already changed)
+            if ($gettedReview->getWorker() === $this) {
+                $gettedReview->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSpeciality(): ?string
+    {
+        return $this->speciality;
+    }
+
+    public function setSpeciality(?string $speciality): self
+    {
+        $this->speciality = $speciality;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getClientOrders(): Collection
+    {
+        return $this->clientOrders;
+    }
+
+    public function addClientOrder(Order $clientOrder): self
+    {
+        if (!$this->clientOrders->contains($clientOrder)) {
+            $this->clientOrders[] = $clientOrder;
+            $clientOrder->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClientOrder(Order $clientOrder): self
+    {
+        if ($this->clientOrders->removeElement($clientOrder)) {
+            // set the owning side to null (unless already changed)
+            if ($clientOrder->getClient() === $this) {
+                $clientOrder->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getWorkerOrders(): Collection
+    {
+        return $this->workerOrders;
+    }
+
+    public function addWorkerOrder(Order $workerOrder): self
+    {
+        if (!$this->workerOrders->contains($workerOrder)) {
+            $this->workerOrders[] = $workerOrder;
+            $workerOrder->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkerOrder(Order $workerOrder): self
+    {
+        if ($this->workerOrders->removeElement($workerOrder)) {
+            // set the owning side to null (unless already changed)
+            if ($workerOrder->getWorker() === $this) {
+                $workerOrder->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTelegram(): ?string
+    {
+        return $this->telegram;
+    }
+
+    public function setTelegram(?string $telegram): self
+    {
+        $this->telegram = $telegram;
 
         return $this;
     }

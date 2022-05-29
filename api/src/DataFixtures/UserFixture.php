@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Career;
+use App\Entity\Rating;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Entity\WorkerAvailableTime;
@@ -66,6 +68,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user = new User();
 
         $user->setEmail($this->faker->email());
+        $user->setMobilePhoneNumber('7' . $this->faker->numberBetween(100000000, 999999999));
         $user->setSurname($this->faker->lastName());
         $user->setName($this->faker->firstName());
         $user->setMiddlename($this->faker->firstName());
@@ -90,6 +93,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $workerAvailableDates = array_unique($workerAvailableDates, SORT_REGULAR);
         if ($user->getIsWorker()) {
             $user->setRoles(['ROLE_WORKER']);
+            $user->setSpeciality($this->faker->jobTitle());
 
             $user->addService($service[array_rand($service)]);
             $user->addService($service[array_rand($service)]);
@@ -105,8 +109,23 @@ class UserFixture extends Fixture implements DependentFixtureInterface
                 }
             }
 
-            $user->setRating($this->faker->numberBetween(0, 100));
-            $user->setPopularity($this->faker->numberBetween(0, 100));
+            $rating = new Rating();
+            $rating->setScore($this->faker->numberBetween(0, 10));
+            $rating->setVoices($this->faker->numberBetween(0, 1000));
+            $user->setRating($rating);
+
+            $career = new Career();
+            $career->setYearFrom($this->faker->dateTimeBetween('-10 years', '-8 years'));
+            $career->setYearTo($this->faker->dateTimeBetween('-8 years', '-5 years'));
+            $career->setSpeciality('worker');
+            $career->setPlace($this->faker->company());
+            $user->addCareer($career);
+
+            $career = new Career();
+            $career->setYearFrom($this->faker->dateTimeBetween('-5 years', '-3 years'));
+            $career->setSpeciality('worker');
+            $career->setPlace($this->faker->company());
+            $user->addCareer($career);
         }
 
         $user->setPassword(

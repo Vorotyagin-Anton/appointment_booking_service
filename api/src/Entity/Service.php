@@ -36,10 +36,23 @@ class Service
     #[Groups(['service_workers'])]
     private $workers;
 
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[Groups(['serviceShort'])]
+    private $price;
+
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[Groups(['serviceShort'])]
+    private $duration;
+
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Order::class)]
+    #[Groups(['service_orders'])]
+    private $orders;
+
     public function __construct()
     {
         $this->workers = new ArrayCollection();
         $this->category = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,6 +133,60 @@ class Service
     {
         if ($this->workers->removeElement($worker)) {
             $worker->removeService($this);
+        }
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getService() === $this) {
+                $order->setService(null);
+            }
         }
 
         return $this;

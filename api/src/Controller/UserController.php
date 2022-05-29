@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Repository\WorkerAvailableTimeRepository;
+use App\Service\CustomDataValidator;
 use App\Service\Paginator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -125,24 +127,56 @@ class UserController extends AbstractController
         UserRepository $userRepository,
         SerializerInterface $serializer,
         Paginator $paginator,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        CustomDataValidator $customDataValidator
     ): Response
     {
         $categories = $requestStack->getCurrentRequest()->get('categories');
         $services = $requestStack->getCurrentRequest()->get('services');
         $order = $requestStack->getCurrentRequest()->get('order');
         $sort = $requestStack->getCurrentRequest()->get('sort');
+        $searchByName = $requestStack->getCurrentRequest()->get('name');
+        $requiredDates = $requestStack->getCurrentRequest()->get('days') ?? [];
+
+        $datesForFilter = [
+            'singleDates' => [],
+            'dateRanges' => []
+        ];
+        foreach ($requiredDates as $date) {
+            if ($customDataValidator->validateDateTime($date, 'Y-m-d')) {
+                $datesForFilter['singleDates'][] = $date;
+                continue;
+            }
+
+            $dateRange = \json_decode($date, true);
+            if (
+                $customDataValidator->validateDateTime($dateRange['from'], 'Y-m-d') &&
+                $customDataValidator->validateDateTime($dateRange['to'], 'Y-m-d')
+            ) {
+                $datesForFilter['dateRanges'][] = [
+                    'from' => $dateRange['from'],
+                    'to' => $dateRange['to']
+                ];
+            }
+        }
 
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(
             ['isWorker' => true],
-            ['categories' => $categories, 'services' => $services, 'order' => $order, 'sort' => $sort]
+            [
+                'categories' => $categories,
+                'services' => $services,
+                'order' => $order,
+                'sort' => $sort,
+                'searchByName' => $searchByName,
+                'requiredDates' => $datesForFilter
+            ]
         ));
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
             'user_services',
             'serviceShort',
-            'user_workerAvailableTimes',
-            'workerAvailableTimeShort'
+            'user_rating',
+            'ratingShort'
         ]]));
     }
 
@@ -191,11 +225,23 @@ class UserController extends AbstractController
         }
 
         return $this->json([
-            'worker' => $serializer->serialize($user, 'json', ['groups' => [
-                'userShort',
-                'user_services',
-                'serviceShort'
-            ]]),
+            'worker' => $serializer->serialize($user, 'json', [
+                'groups' => [
+                    'userShort',
+                    'user_services',
+                    'serviceShort',
+                    'service_category',
+                    'serviceCategoryShort',
+                    'user_rating',
+                    'ratingShort',
+                    'user_career',
+                    'careerShort',
+                    'user_gettedReviews',
+                    'reviewShort',
+                    'review_reviewer'
+                ],
+                DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
+            ]),
             'workerFreeTime' => json_encode($workerTimeResponse)
         ]);
     }
@@ -213,5 +259,38 @@ class UserController extends AbstractController
         return $this->json($serializer->serialize($result, 'json', ['groups' => [
             'userShort',
         ]]));
+    }
+
+    #[Route('/api/users/change-password', name: 'app_users_change_password', methods: ['PATCH'])]
+    public function changePassword(
+        EntityManagerInterface $em,
+        SerializerInterface $serializer,
+        UserPasswordHasherInterface $passwordHasher,
+        Request $request
+    ): Response
+    {
+        $data = json_decode($request->getContent());
+        $userId = $data->userId;
+        $userNewPassword = $data->newPassword;
+
+        $user = $em->getRepository(User::class)->findOneBy(['id' => $userId]);
+        $user->setPassword(
+            $passwordHasher->hashPassword(
+                $user,
+                $userNewPassword
+            )
+        );
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->json($serializer->serialize(
+            [
+                'status' => 'success',
+                'message' => 'the password has been updated',
+                'data' => []
+            ],
+            'json'
+        ));
     }
 }
