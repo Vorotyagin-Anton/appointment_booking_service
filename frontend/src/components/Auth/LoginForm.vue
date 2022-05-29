@@ -8,7 +8,7 @@
 
       <router-link
         class="login-form__link"
-        :to="{name: 'signup'}"
+        :to="{name: 'auth.signup'}"
       >
         Sign up
       </router-link>

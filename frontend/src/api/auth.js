@@ -44,5 +44,15 @@ export default function (axios) {
     async logout() {
       await axios.get('/api/logout');
     },
+    
+    async updateProfile(payload) {
+      console.log(payload);
+      
+      const response = await axios.get('/api/check-auth');
+
+      const { data } = JSON.parse(response.data);
+      
+      return data;
+    },
   };
 }

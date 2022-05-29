@@ -22,7 +22,7 @@
         />
 
         <div v-if="!isAuthorized">
-          <router-link :to="{name: 'signup'}">
+          <router-link :to="{name: 'auth.signup'}">
             <q-btn
               class="main-nav__btn"
               color="primary"

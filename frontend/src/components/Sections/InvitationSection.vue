@@ -7,7 +7,7 @@
         description="No credit card required. No long-term commitments"
       />
 
-      <router-link :to="{name: 'signup'}">
+      <router-link :to="{name: 'auth.signup'}">
         <q-btn
           class="signup-invitation__btn"
           color="white"

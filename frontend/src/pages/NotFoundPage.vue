@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="fullscreen text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">
         404
@@ -12,9 +12,10 @@
       <q-btn
         class="q-mt-xl"
         color="white"
-        text-color="blue"
+        text-color="black"
         unelevated
-        to="/"
+        outline
+        :to="{name: 'main'}"
         label="Go Home"
         no-caps
       />
@@ -23,9 +24,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'ErrorNotFound'
-})
+export default {
+  name: 'NotFoundPage',
+}
 </script>

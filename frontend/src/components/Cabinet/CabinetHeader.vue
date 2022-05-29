@@ -53,13 +53,26 @@
 <script>
 import MainHeaderHeading from "components/MainHeader/MainHeaderHeading";
 import CabinetHeaderMenu from "components/Cabinet/CabinetHeaderMenu";
+import {ref} from "vue";
 
 export default {
   name: "CabinetHeader",
 
   components: {
     CabinetHeaderMenu,
-    MainHeaderHeading
+    MainHeaderHeading,
+  },
+
+  props: {
+    leftDrawer: {
+      type: Object,
+      required: true,
+    },
+
+    rightDrawer: {
+      type: Object,
+      required: true,
+    },
   },
 
   emits: [
@@ -67,9 +80,20 @@ export default {
     'toggleRightDrawer',
   ],
 
-  setup(props, { emit }) {
-    const toggleLeftDrawer = () => emit('toggleLeftDrawer');
-    const toggleRightDrawer = () => emit('toggleRightDrawer');
+  setup(props, {emit}) {
+    const toggleLeftDrawer = () => {
+      emit('toggleLeftDrawer', {
+        isOpen: !props.leftDrawer.isOpen,
+        isOverlay: props.leftDrawer.isOverlay,
+      });
+    };
+
+    const toggleRightDrawer = () => {
+      emit('toggleRightDrawer', {
+        isOpen: !props.rightDrawer.isOpen,
+        isOverlay: !props.rightDrawer.isOverlay,
+      });
+    };
 
     return {
       toggleLeftDrawer,

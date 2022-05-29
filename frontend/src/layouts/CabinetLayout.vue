@@ -1,18 +1,19 @@
 <template>
-  <q-layout view="hHh LpR fFf" class="cabinet">
-
+  <q-layout view="hHh LpR fFf" class="cabinet-layout">
     <cabinet-header
-      @toggleLeftDrawer="toggleLeftDrawer"
-      @toggleRightDrawer="toggleRightDrawer"
+      :left-drawer="leftDrawer"
+      :right-drawer="rightDrawer"
+      @toggle-left-drawer="toggleLeftDrawer"
+      @toggle-right-drawer="toggleRightDrawer"
     />
 
     <div class="container">
       <q-drawer
         class="cabinet__left-drawer"
-        v-model="leftDrawerOpen"
-        side="left"
+        v-model="leftDrawer.isOpen"
+        :overlay="leftDrawer.isOverlay"
         :width="350"
-        show-if-above
+        side="left"
         bordered
       >
         <cabinet-left-drawer/>
@@ -20,10 +21,10 @@
 
       <q-drawer
         class="cabinet__right-drawer"
-        v-model="rightDrawerOpen"
-        side="right"
+        v-model="rightDrawer.isOpen"
+        :overlay="rightDrawer.isOverlay"
         :width="450"
-        overlay
+        side="right"
         elevated
       >
         <!-- drawer content -->
@@ -31,7 +32,9 @@
     </div>
 
     <q-page-container>
-      <router-view/>
+      <router-view
+        @toggle-left-drawer="toggleLeftDrawer"
+      />
     </q-page-container>
 
   </q-layout>
@@ -51,15 +54,29 @@ export default {
   },
 
   setup() {
-    const leftDrawerOpen = ref(false)
-    const rightDrawerOpen = ref(false)
+    const leftDrawer = ref({
+      isOpen: true,
+      isOverlay: false,
+    });
 
-    const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
-    const toggleRightDrawer = () => rightDrawerOpen.value = !rightDrawerOpen.value;
+    const rightDrawer = ref({
+      isOpen: false,
+      isOverlay: false,
+    });
+
+    const toggleLeftDrawer = (value) => {
+      leftDrawer.value.isOpen = value.isOpen;
+      leftDrawer.value.isOverlay = value.isOverlay;
+    };
+
+    const toggleRightDrawer = (value) => {
+      rightDrawer.value.isOpen = value.isOpen;
+      rightDrawer.value.isOverlay = value.isOverlay;
+    };
 
     return {
-      leftDrawerOpen,
-      rightDrawerOpen,
+      leftDrawer,
+      rightDrawer,
       toggleLeftDrawer,
       toggleRightDrawer,
     }
@@ -68,4 +85,5 @@ export default {
 </script>
 
 <style lang="scss">
+.cabinet-layout {}
 </style>
