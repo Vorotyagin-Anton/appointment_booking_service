@@ -96,6 +96,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_gettedReviews'])]
     private $gettedReviews;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $speciality;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Order::class)]
+    #[Groups(['user_clientOrders'])]
+    private $clientOrders;
+
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Order::class)]
+    #[Groups(['user_workerOrders'])]
+    private $workerOrders;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $telegram;
+
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
@@ -103,6 +119,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->career = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->gettedReviews = new ArrayCollection();
+        $this->clientOrders = new ArrayCollection();
+        $this->workerOrders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -449,6 +467,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $gettedReview->setWorker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSpeciality(): ?string
+    {
+        return $this->speciality;
+    }
+
+    public function setSpeciality(?string $speciality): self
+    {
+        $this->speciality = $speciality;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getClientOrders(): Collection
+    {
+        return $this->clientOrders;
+    }
+
+    public function addClientOrder(Order $clientOrder): self
+    {
+        if (!$this->clientOrders->contains($clientOrder)) {
+            $this->clientOrders[] = $clientOrder;
+            $clientOrder->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClientOrder(Order $clientOrder): self
+    {
+        if ($this->clientOrders->removeElement($clientOrder)) {
+            // set the owning side to null (unless already changed)
+            if ($clientOrder->getClient() === $this) {
+                $clientOrder->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getWorkerOrders(): Collection
+    {
+        return $this->workerOrders;
+    }
+
+    public function addWorkerOrder(Order $workerOrder): self
+    {
+        if (!$this->workerOrders->contains($workerOrder)) {
+            $this->workerOrders[] = $workerOrder;
+            $workerOrder->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkerOrder(Order $workerOrder): self
+    {
+        if ($this->workerOrders->removeElement($workerOrder)) {
+            // set the owning side to null (unless already changed)
+            if ($workerOrder->getWorker() === $this) {
+                $workerOrder->setWorker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTelegram(): ?string
+    {
+        return $this->telegram;
+    }
+
+    public function setTelegram(?string $telegram): self
+    {
+        $this->telegram = $telegram;
 
         return $this;
     }

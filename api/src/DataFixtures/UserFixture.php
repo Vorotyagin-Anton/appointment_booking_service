@@ -93,6 +93,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $workerAvailableDates = array_unique($workerAvailableDates, SORT_REGULAR);
         if ($user->getIsWorker()) {
             $user->setRoles(['ROLE_WORKER']);
+            $user->setSpeciality($this->faker->jobTitle());
 
             $user->addService($service[array_rand($service)]);
             $user->addService($service[array_rand($service)]);

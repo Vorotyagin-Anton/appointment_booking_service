@@ -31,7 +31,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $manager->persist($this->getOrder());
         }
         $manager->flush();
@@ -42,25 +42,29 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         $clients = $this->em->getRepository(User::class)->findBy(['isClient' => true]);
         $workers = $this->em->getRepository(User::class)->findBy(['isWorker' => true]);
 
-        $order = new Order(
-            $clients[array_rand($clients)],
-            $workers[array_rand($workers)]
-        );
+        $randomClient = $clients[array_rand($clients)];
+        $randomWorker = $workers[array_rand($workers)];
 
-        $dt = $this->faker->dateTimeBetween($startDate = 'now', $endDate = '+60 days');
-        $date = $dt->format("Y-m-d");
+        $services = $randomWorker->getServices()->toArray();
+        $randomService = $services[array_rand($services)];
 
-        $date = new \DateTime($date);
-        $time = new \DateTime($this->faker->time('H:i'));
-        $serviceType = rand(0, 1000);
-        $details = $this->faker->text(100);
+        $times = $randomWorker->getWorkerAvailableTimes()->toArray();
+        $randomTime = $times[array_rand($times)];
 
-        $order->setExecutionDate($date);
-        $order->setExecutionTime($time);
-        $order->setServiceType($serviceType);
-        $order->setDetails($details);
-        $order->setClientContactType(1);
-        $order->setStatus(1);
+        $order = new Order();
+        $order->setClient($randomClient);
+        $order->setClientName($randomClient->getName());
+        $order->setClientEmail($randomClient->getEmail());
+        $order->setClientPhone($randomClient->getMobilePhoneNumber());
+        $order->setClientTelegram($randomClient->getTelegram());
+        $order->setClientContactType($this->faker->numberBetween(1, 3));
+
+        $order->setWorker($randomWorker);
+        $order->setService($randomService);
+        $order->addTime($randomTime);
+
+        $order->setDetails($this->faker->text(100));
+        $order->setStatus($this->faker->numberBetween(1, 10));
 
         return $order;
     }
