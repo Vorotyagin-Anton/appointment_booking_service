@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Entity\User;
+use App\Entity\WorkerAvailableTime;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Repository\WorkerAvailableTimeRepository;
@@ -262,6 +263,50 @@ class UserController extends AbstractController
             ]),
             'workerFreeTime' => json_encode($workerTimeResponse)
         ]);
+    }
+
+    #[Route(path: '/api/users/workers/{id}/worker-available-time', name: 'app_users_worker_change_available_time', requirements: ['id' => '\d+'], methods: ['PATCH'])]
+    public function changeWorkerAvailableTime(
+        int $id,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        SerializerInterface $serializer,
+        Request $request
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+        $data = $request->toArray();
+
+        foreach ($data['delete'] as $timeForDeleteId) {
+            $timeForDelete = $entityManager->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $timeForDeleteId]);
+            $user->removeWorkerAvailableTime($timeForDelete);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+
+        foreach ($data['add'] as $addedDataItem) {
+            foreach ($addedDataItem['dates'] as $date) {
+                foreach ($addedDataItem['slots'] as $timeInMinutes) {
+                    $time = new WorkerAvailableTime();
+                    $time->setWorker($user);
+                    $time->setExactDate(\DateTime::createFromFormat('Y/m/d', $date));
+                    $time->setExactTimeInMinutes((int)$timeInMinutes);
+                    $time->setIsTimeFree(true);
+                    $user->addWorkerAvailableTime($time);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                }
+            }
+        }
+
+        return $this->json($serializer->serialize(
+            [
+                'status' => 'success',
+                'message' => 'worker available time has been changed',
+                'data' => []
+            ],
+            'json'
+        ));
     }
 
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]
