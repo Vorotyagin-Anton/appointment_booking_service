@@ -25,7 +25,7 @@ import useAuth from "src/hooks/auth/useAuth";
 import useAppTime from "src/hooks/common/useAppTime";
 import useSchedule from "src/hooks/auth/useSchedule";
 import AccountSelect from "components/Cabinet/Common/AccountSelect";
-import ScheduleCalendar from "components/Cabinet/Profile/Schedule/ScheduleCalendar";
+import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
 
 export default {
   name: "ProfileSchedule",

@@ -8,9 +8,11 @@
       <q-item class="cabinet-header-menu__item" dense>
         <q-item-section>
           <p class="cabinet-header-menu__user">{{ userName }}</p>
-          <p class="cabinet-header-menu__tole">Owner</p>
+          <p class="cabinet-header-menu__role">Owner</p>
         </q-item-section>
       </q-item>
+
+      <q-separator class="cabinet-header-menu__separator"/>
 
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
         <q-item-section>
@@ -23,42 +25,16 @@
         </q-item-section>
       </q-item>
 
-      <q-separator class="cabinet-header-menu__separator"/>
-
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
         <q-item-section>
           <router-link
             class="cabinet-header-menu__link"
-            :to="{name: 'cabinet'}"
+            :to="{name: 'cabinet.schedule'}"
           >
-            Seller community
+            Change schedule
           </router-link>
         </q-item-section>
       </q-item>
-
-      <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
-        <q-item-section>
-          <router-link
-            class="cabinet-header-menu__link"
-            :to="{name: 'cabinet'}"
-          >
-            Get a free processing
-          </router-link>
-        </q-item-section>
-      </q-item>
-
-      <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
-        <q-item-section>
-          <router-link
-            class="cabinet-header-menu__link"
-            :to="{name: 'cabinet'}"
-          >
-            Order a reader
-          </router-link>
-        </q-item-section>
-      </q-item>
-
-      <q-separator class="cabinet-header-menu__separator"/>
 
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
         <q-item-section>
@@ -70,6 +46,8 @@
           </router-link>
         </q-item-section>
       </q-item>
+
+      <q-separator class="cabinet-header-menu__separator"/>
 
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
         <q-item-section
@@ -128,6 +106,10 @@ export default {
     color: $black;
     font-weight: 600;
     margin: 0 0 5px;
+  }
+
+  &__role {
+    margin: 0;
   }
 
   &__link {

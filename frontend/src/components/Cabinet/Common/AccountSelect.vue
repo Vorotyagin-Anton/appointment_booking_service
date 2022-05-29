@@ -14,9 +14,9 @@
       class="account-select__input"
       v-model="model"
       :options="options"
+      square
       dense
       options-dense
-      square
       @focus="focus"
       @blur="blur"
     />
@@ -121,6 +121,10 @@ export default {
       height: 50px;
       min-height: 50px;
       box-sizing: border-box;
+    }
+
+    .q-field__marginal {
+      height: 100%;
     }
   }
 }

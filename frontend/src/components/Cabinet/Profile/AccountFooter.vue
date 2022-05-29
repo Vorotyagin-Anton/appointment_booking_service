@@ -1,5 +1,5 @@
 <template>
-  <footer class="container profile-footer">
+  <footer class="profile-footer">
     <div class="profile-footer__content">
       <q-btn
         class="profile-footer__btn profile-footer__reset"
@@ -7,6 +7,7 @@
         label="Cancel"
         no-caps
         outline
+        @click="reset"
       />
 
       <q-btn
@@ -15,6 +16,7 @@
         label="Save"
         color="primary"
         no-caps
+        @click="confirm"
       />
     </div>
   </footer>
@@ -35,6 +37,21 @@ export default {
       default: false,
     },
   },
+
+  emits: [
+    'confirm',
+    'reset',
+  ],
+
+  setup(props, {emit}) {
+    const confirm = () => emit('confirm');
+    const reset = () => emit('reset');
+
+    return {
+      confirm,
+      reset,
+    }
+  },
 }
 </script>
 
@@ -47,6 +64,7 @@ export default {
   height: 70px;
   border-top: 1px solid $grey-4;
   background-color: $white;
+  z-index: 2000;
 
   &__content {
     height: 100%;
