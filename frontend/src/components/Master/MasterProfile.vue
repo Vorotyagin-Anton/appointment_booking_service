@@ -80,8 +80,7 @@ export default {
     },
   },
 
-  setup(props){
-    console.log('MasterProfile', props.master);
+  setup(){
     const hostUrl = 'http://localhost:8081'
     return{
       hostUrl,

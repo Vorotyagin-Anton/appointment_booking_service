@@ -10,21 +10,24 @@
     <div class="master-header__rating">
       <q-rating
         class="master-header__score"
-        v-model="masterRating.score"
-        :max="masterRating.max"
+        v-model="ratingLocal"
+        max="5"
+        icon="star_border"
+        icon-selected="star"
+        icon-half="star_half"
         :color="'warning'"
         readonly
       />
 
       <span class="master-header__voices">
-        {{ masterRating.score }} ({{ masterRating.voices }})
+        {{ (masterRating.score/2).toFixed(1) }} ({{ masterRating.voices }})
       </span>
     </div>
   </div>
 </template>
 
 <script>
-import {toRef} from "vue";
+import {toRef,ref} from "vue";
 
 export default {
   name: "MasterHeader",
@@ -37,13 +40,13 @@ export default {
 
     rating: {
       type: Object,
-      default: function () {
-        return {
-          max: 5,
-          score: Number((Math.random() * 4 + 1).toFixed(1)),
-          voices: Math.floor(Math.random() * 200)
-        }
-      }
+      // default: function () {
+      //   return {
+      //     max: 5,
+      //     score: Number((Math.random() * 4 + 1).toFixed(1)),
+      //     voices: Math.floor(Math.random() * 200)
+      //   }
+      // }
     },
 
     className: {
@@ -55,8 +58,11 @@ export default {
   setup(props) {
     const masterRating = toRef(props, 'rating');
 
+    let ratingLocal = ref(masterRating.value.score/2);
+
     return {
       masterRating,
+      ratingLocal
     }
   }
 }

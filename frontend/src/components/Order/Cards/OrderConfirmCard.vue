@@ -1,45 +1,155 @@
 <template>
-  <q-input filled v-model="name" label="Name" stack-label />
-  <q-input filled v-model="phone" label="phone" stack-label  />
-  <q-input filled v-model="email" label="phone" stack-label  />
+  <div class="column items-center">
+    <div class="col-8">
 
-  <q-chip
-    color="primary"
-    text-color="white"
-    icon="watch_later">
-    service
-  </q-chip>
+      <q-list>
+        <q-item>
 
-  <q-chip
-    color="primary"
-    text-color="white"
-    icon="watch_later">
-    date
-  </q-chip>
+            Date of visit: {{ formattedDate }}
 
-  <q-chip
-          color="primary"
-          text-color="white"
-          icon="watch_later">
-          time
-  </q-chip>
-  <q-btn>confirm</q-btn>
+        </q-item>
+
+        <q-item>
+          <q-item-section> Your master: {{ master.name + ' ' + master.surname }}</q-item-section>
+          <q-item-section avatar>
+            <q-avatar>
+              <img :src="hostUrl + master.pathToPhoto">
+            </q-avatar>
+          </q-item-section>
+        </q-item>
+
+        <q-item>
+          <q-item-section> Service: {{service.label }}</q-item-section>
+        </q-item>
+
+        <q-item>
+          <q-item-section> Time: {{ time.formattedTime }}</q-item-section>
+        </q-item>
+
+        <q-item>
+          <q-item-section>
+            <OrderField
+              label="Name"
+              v-model="order.client_name"
+            />
+          </q-item-section>
+        </q-item>
+
+        <q-item>
+          <q-item-section>
+            <OrderField
+              label="Phone"
+              v-model="order.phone"
+            />
+          </q-item-section>
+        </q-item>
+
+        <q-item>
+          <OrderField
+            label="E-mail"
+            v-model="order.email"
+          />
+        </q-item>
+
+        <q-item>
+          <OrderField
+            label="Telegram"
+            v-model="order.telegram"
+          />
+        </q-item>
+
+        <q-item>
+          <q-checkbox v-model="order.notification_type" label="Send notification"/>
+        </q-item>
+
+        <q-item>
+          <q-btn
+            class="q-ml-sm"
+            color="green"
+            label="Confirm"
+            :disable="!readySend"
+            @click="sendOrder"
+          />
+        </q-item>
+
+      </q-list>
+
+    </div>
+  </div>
+
 </template>
 
 <script>
-import {ref} from "vue"
+import {computed, ref, watch} from "vue"
+import useMaster from "src/hooks/useMaster";
+import OrderField from "components/Order/OrderField";
+import axios from "axios";
+
 export default {
   name: "OrderStepperConfirm",
 
-  setup(){
-    const name = ref()
-    const phone = ref()
-    const email = ref()
+  components: {
+    OrderField
+  },
 
-    return{
-      name,
-      phone,
-      email
+  setup() {
+    const {master, mountMaster, orderInfo} = useMaster();
+    mountMaster();
+
+    const {date, time, service} = orderInfo.value
+
+    const hostUrl = 'http://localhost:8081'
+
+    //форматировние даты для вывода в карточку
+    const dateToString = (string) => {
+      const date = new Date(string)
+      return date.getDate() + ' ' + date.toLocaleString('en-EN', { month: 'long' }) + ' ' + date.getFullYear()
+    }
+
+    const formattedDate = dateToString(date)
+
+    const order = ref({
+      client_name: '',
+      phone: '',
+      email: '',
+      telegram: '',
+      notification_type: false,
+
+      client_id: null,
+      price: 1000,
+      duration: 1,
+
+      master_id: master.value.id,
+      time_id: time.id,
+      service_id: service.value.id,
+    })
+
+    const readySend = computed(()=>{
+      if (order.value.client_name && order.value.phone && order.value.email && order.value.telegram) {
+        return true
+      } else {
+        return false
+      }
+    })
+
+    const sendOrder = () => {
+      console.log('order', order)
+      axios.post('api/orders', order)
+        .then(response => {
+          console.log('response', JSON.parse(response.data));
+        })
+        .catch(error => {
+          console.log('error', error);
+        });
+    }
+
+    return {
+      order,
+      sendOrder,
+      master,
+      hostUrl,
+      readySend,
+      formattedDate, time, service
     }
   }
 }

@@ -9,9 +9,9 @@
     <q-card-section class="masters-card__header">
       <master-header
         class="masters-card__heading"
-        :name="master.name + ' ' + master.surname"/>
-<!--      :rating="master.rating"-->
-<!--      />-->
+        :name="master.name + ' ' + master.surname"
+        :rating="master.rating"
+      />
     </q-card-section>
 
     <q-separator/>
@@ -21,7 +21,7 @@
         class="masters-card__info"
         :name="master.name"
         :image="hostUrl + master.pathToPhoto"
-        speciality="!!!!Lorem ipsum"
+        :speciality="master.speciality"
         :info="master.story"
         :avatar-size="100"
       />
@@ -76,7 +76,7 @@ export default {
   ],
 
   setup(props, {emit}) {
-     console.log(props.master);
+     //console.log(props.master);
 
     const hostUrl = 'http://localhost:8081'
 

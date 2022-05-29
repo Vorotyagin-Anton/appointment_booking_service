@@ -22,12 +22,10 @@ export default {
   name: "OrderStepperService",
 
   setup() {
-    const selectedService = ref();
-    const {master, mountMaster} = useMaster();
-
+    const {master, mountMaster, makeOrder, orderInfo} = useMaster();
     mountMaster();
 
-    const items =[]
+    const items = []
 
     const makeItems = (services) => {
       services.forEach(service => {
@@ -37,9 +35,11 @@ export default {
 
     makeItems(master.value.services)
 
+    const selectedService = ref(orderInfo.value.service);
+
     watch(selectedService, (selectedService, prevSelectedService) => {
-      console.log('записать в сторедж ид сервиса', selectedService)
-      console.log('записать в сторедж объект сервиса', master.value.services.find(item => item.id === selectedService))
+
+      makeOrder(master.value.id, items.find(service => service.id === selectedService.value))
     })
 
     return {

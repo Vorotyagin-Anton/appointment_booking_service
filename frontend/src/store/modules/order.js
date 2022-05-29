@@ -48,8 +48,9 @@ const state = {
 
   data: {
     master: null,
-    service: null,
-    time: null,
+    service: null, //объект
+    date: null,
+    time: null, //объект
   },
 };
 
@@ -80,6 +81,14 @@ const actions = {
     commit('setServiceToOrder', payload);
   },
 
+  setDate({commit}, payload) {
+    commit('setDateToOrder', payload);
+  },
+
+  setTime({commit}, payload) {
+    commit('setTimeToOrder', payload);
+  },
+
   setStepStatusDone({commit}, payload) {
     commit('setStepStatus', {name: payload, state: true})
   },
@@ -100,6 +109,16 @@ const mutations = {
 
   setServiceToOrder(state, payload) {
     state.data.service = payload;
+    console.log('state.data', state.data)
+  },
+
+  setDateToOrder(state, payload){
+    state.data.date = payload;
+  },
+
+  setTimeToOrder(state, payload){
+    state.data.time = payload;
+    console.log('state.data', state.data)
   },
 
   setStepStatus(state, payload) {
