@@ -3,11 +3,14 @@ import {useStore} from "vuex";
 import {computed} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 import logger from "src/helpers/logger";
+import useMessage from "src/hooks/auth/useMessage";
 
 export default function useSchedule() {
   const store = useStore();
 
   const {loading, startLoading, finishLoading} = useLoading();
+
+  const {showError, showSuccess} = useMessage();
 
   const STATUS = store.getters['schedule/status'];
   const slots = computed(() => store.getters['schedule/slots']);
@@ -15,6 +18,7 @@ export default function useSchedule() {
   const oldDates = computed(() => store.getters['schedule/oldDates']);
   const newDates = computed(() => store.getters['schedule/newDates']);
   const selectedDates = computed(() => store.getters['schedule/selectedDates']);
+  const selectedSlots = computed(() => store.getters['schedule/selectedSlots']);
 
   const getScheduleFromApi = async (userId) => {
     try {
@@ -24,6 +28,21 @@ export default function useSchedule() {
 
       await store.dispatch('schedule/putSchedule', data);
     } catch (error) {
+      logger(error);
+    } finally {
+      finishLoading();
+    }
+  };
+
+  const updateScheduleInApi = async (userId) => {
+    try {
+      startLoading();
+
+      const data = await api.schedule.updateSchedule(userId, selectedSlots.value);
+
+      await showSuccess(data.message, 5000);
+    } catch (error) {
+      await showError(error);
       logger(error);
     } finally {
       finishLoading();
@@ -58,7 +77,9 @@ export default function useSchedule() {
     oldDates,
     newDates,
     selectedDates,
+    selectedSlots,
     getScheduleFromApi,
+    updateScheduleInApi,
     handleDatesSelection,
     confirmSlotsChanges,
     resetSelection,

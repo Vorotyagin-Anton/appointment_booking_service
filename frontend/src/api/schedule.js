@@ -3,6 +3,12 @@ export default function (axios) {
     async getByUserId(id) {
       return Promise.resolve(schedule);
     },
+
+    async updateSchedule(userId, payload) {
+      const response = await axios.patch(`/api/users/workers/${userId}/worker-available-time`, payload);
+
+      return JSON.parse(response.data);
+    }
   };
 }
 

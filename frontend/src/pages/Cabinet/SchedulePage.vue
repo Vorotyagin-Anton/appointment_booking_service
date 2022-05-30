@@ -55,9 +55,12 @@
 
     <account-footer
       class="profile-page__footer"
+      :is-save-disabled="!isSlotsSelected"
       @confirm="saveChanges"
       @reset="resetSelection"
     />
+
+    <auth-alert/>
   </div>
 </template>
 
@@ -68,6 +71,7 @@ import useSchedule from "src/hooks/auth/useSchedule";
 import AccountFooter from "components/Cabinet/Profile/AccountFooter";
 import ScheduleSlots from "components/Cabinet/Schedule/ScheduleSlots";
 import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
+import AuthAlert from "components/Auth/AuthAlert";
 
 export default {
   name: "SchedulePage",
@@ -76,6 +80,7 @@ export default {
     ScheduleCalendar,
     ScheduleSlots,
     AccountFooter,
+    AuthAlert,
   },
 
   emits: [
@@ -104,7 +109,9 @@ export default {
       slots,
       schedule,
       selectedDates,
+      selectedSlots,
       getScheduleFromApi,
+      updateScheduleInApi,
       handleDatesSelection,
       confirmSlotsChanges,
       resetSelection,
@@ -112,12 +119,19 @@ export default {
 
     const isDatesSelected = computed(() => selectedDates.value.length > 0);
 
+    const isSlotsSelected = computed(() => {
+      return selectedSlots.value.add.length > 0 || selectedSlots.value.delete.length > 0;
+    });
+
     const handleConfirmation = (slots) => {
       confirmSlotsChanges(slots);
       miniDrawer.value = true;
     };
 
-    const saveChanges = () => {}
+    const saveChanges = () => {
+      updateScheduleInApi(user.value.id);
+      resetSelection();
+    }
 
     onMounted(() => {
       emit('toggle-left-drawer', {
@@ -126,7 +140,7 @@ export default {
       });
 
       if (schedule.value.length === 0) {
-        getScheduleFromApi(user.id);
+        getScheduleFromApi(user.value.id);
       }
     });
 
@@ -150,6 +164,7 @@ export default {
       slots,
       schedule,
       isDatesSelected,
+      isSlotsSelected,
       handleDatesSelection,
       handleConfirmation,
       saveChanges,

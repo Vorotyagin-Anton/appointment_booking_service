@@ -58,6 +58,7 @@ export default {
   justify-content: center;
   transition: transform 300ms, background-color 300ms;
   transform: translateY(-100%);
+  z-index: 9999;
 
   &_active {
     transform: translateY(0);
@@ -90,11 +91,11 @@ export default {
   }
 
   &__success {
-    background-color: $green-9;
+    background-color: $green-8;
   }
 
   &__info {
-    background-color: $blue-9;
+    background-color: $blue-8;
   }
 
   &__error {
