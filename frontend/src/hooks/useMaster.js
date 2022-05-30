@@ -37,12 +37,23 @@ export default function useMaster() {
 
   const {openOrderModal} = useOrderModal();
 
-  const reserveMaster = (id) => {
+  const reserveMaster = async (id) => {
     console.log('reserved', id);
 
-    openOrderModal({
-      master: id,
-    });
+    await store.dispatch('master/setId', id)
+    openOrderModal();
+  }
+
+  const orderInfo = computed(() => store.getters['order/getData']);
+
+  const makeOrder = async (masterId,serviceId) => {
+    await store.dispatch('order/setMaster', masterId)
+    await store.dispatch('order/setService', serviceId)
+  }
+
+  const addTimeToOrder = async (date, timeId) =>{
+    await store.dispatch('order/setDate', date)
+    await store.dispatch('order/setTime', timeId)
   }
 
   return {
@@ -52,5 +63,8 @@ export default function useMaster() {
     mountMaster,
     selectMaster,
     reserveMaster,
+    makeOrder,
+    orderInfo,
+    addTimeToOrder
   }
 }

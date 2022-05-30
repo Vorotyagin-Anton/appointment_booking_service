@@ -16,9 +16,9 @@
           <master-info
             :class-name="'master-profile__info'"
             :name="master.name"
-            :image="master.image"
+            :image="hostUrl + master.pathToPhoto"
             :speciality="master.speciality"
-            :info="master.info"
+            :info="master.story"
             :avatar-size="140"
           />
         </div>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="master-profile__section">
-          <master-reviews :reviews="master.reviews"/>
+          <master-reviews :reviews="master.gettedReviews"/>
         </div>
       </div>
     </div>
@@ -71,9 +71,21 @@ export default {
   props: {
     master: {
       type: Object,
-      required: true,
+      default: function () {
+        return {
+          speciality: 'Speciality default',
+        }
+      }
+      //required: true,
     },
   },
+
+  setup(){
+    const hostUrl = 'http://localhost:8081'
+    return{
+      hostUrl,
+    }
+  }
 }
 </script>
 
