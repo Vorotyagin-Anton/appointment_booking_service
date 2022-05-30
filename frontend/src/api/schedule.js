@@ -1,7 +1,9 @@
 export default function (axios) {
   return {
-    async getByUserId(id) {
-      return Promise.resolve(schedule);
+    async getByUserId(userId) {
+      return new Promise(resolve => {
+        setTimeout(() => resolve(schedule), 2000);
+      })
     },
 
     async updateSchedule(userId, payload) {

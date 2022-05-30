@@ -61,6 +61,11 @@
     />
 
     <auth-alert/>
+
+    <app-loading
+      v-if="loading"
+      :title="loadingTitle"
+    />
   </div>
 </template>
 
@@ -72,11 +77,13 @@ import AccountFooter from "components/Cabinet/Profile/AccountFooter";
 import ScheduleSlots from "components/Cabinet/Schedule/ScheduleSlots";
 import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
 import AuthAlert from "components/Auth/AuthAlert";
+import AppLoading from "components/Common/AppLoading";
 
 export default {
   name: "SchedulePage",
 
   components: {
+    AppLoading,
     ScheduleCalendar,
     ScheduleSlots,
     AccountFooter,
@@ -88,6 +95,8 @@ export default {
   ],
 
   setup(props, {emit}) {
+    const loadingTitle = ref('');
+
     const drawer = ref(true);
     const miniDrawer = ref(true);
 
@@ -129,6 +138,7 @@ export default {
     };
 
     const saveChanges = () => {
+      loadingTitle.value = 'Update Schedule...';
       updateScheduleInApi(user.value.id);
       resetSelection();
     }
@@ -140,6 +150,7 @@ export default {
       });
 
       if (schedule.value.length === 0) {
+        loadingTitle.value = 'Loading Schedule...';
         getScheduleFromApi(user.value.id);
       }
     });
@@ -155,12 +166,14 @@ export default {
     });
 
     return {
+      loading,
+      loadingTitle,
+
       drawer,
       miniDrawer,
       toggleDrawer,
       drawerClick,
 
-      loading,
       slots,
       schedule,
       isDatesSelected,
