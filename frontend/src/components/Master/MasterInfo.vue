@@ -71,6 +71,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 195px;
   }
 
   &__speciality {
@@ -85,6 +86,8 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: $grey-7;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

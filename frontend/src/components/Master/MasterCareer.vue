@@ -9,7 +9,9 @@
       :key="key"
     >
       <div class="master-career__dates">
-        {{ item.dates[0] }} - {{ item.dates[1] }}
+        {{ item.yearFrom }} -
+        <span v-if="item.yearTo"> {{ item.yearTo }} </span>
+        <span v-else> to this day </span>
       </div>
 
       <div class="master-career__biography">
@@ -31,7 +33,18 @@ export default {
   props: {
     career: {
       type: Array,
-      required: true,
+      default: function (){
+        return [
+          {
+            id: 1,
+            place: "place",
+            speciality: "speciality",
+            yearFrom: "2000-00-00",
+            yearTo: "2000-00-00",
+          },
+        ]
+      }
+      //required: true,
     },
 
     className: {

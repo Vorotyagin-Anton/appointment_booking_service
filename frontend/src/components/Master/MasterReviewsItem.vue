@@ -4,16 +4,16 @@
       <profile-avatar
         class="master-review__avatar"
         :size="50"
-        :name="data.user.name"
-        :image="data.user.image"
+        :name="data.reviewer.name"
+        :image="hostUrl + data.reviewer.pathToPhoto"
       />
 
       <div class="master-review__info">
-        <div class="master-review__name">{{ data.user.name }} {{ data.user.surname }}</div>
+        <div class="master-review__name">{{ data.reviewer.name }} {{ data.reviewer.surname }}</div>
         <q-rating
           class="master-review__score"
           v-model="data.score"
-          :max="data.max"
+          :max="5"
           :color="'warning'"
           readonly
         />
@@ -42,15 +42,16 @@ export default {
   props: {
     review: {
       type: Object,
-      required: true,
     },
   },
 
   setup(props) {
+    const hostUrl = 'http://localhost:8081';
     const data = toRef(props, 'review');
 
     return {
       data,
+      hostUrl
     }
   },
 }
