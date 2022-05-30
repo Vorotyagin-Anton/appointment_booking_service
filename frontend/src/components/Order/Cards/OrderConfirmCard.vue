@@ -138,8 +138,8 @@ export default {
     })
 
     const sendOrder = () => {
-      console.log('order', order)
-      axios.post('api/orders', order)
+      console.log('order.value', order.value)
+      axios.post('api/orders', order.value)
         .then(response => {
           console.log('response', JSON.parse(response.data));
         })
