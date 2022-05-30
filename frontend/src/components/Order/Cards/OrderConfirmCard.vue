@@ -1,6 +1,6 @@
 <template>
   <div class="column items-center">
-    <div class="col-8">
+    <div class="col">
 
       <q-list>
         <q-item>
@@ -19,7 +19,12 @@
         </q-item>
 
         <q-item>
-          <q-item-section> Service: {{service.label }}</q-item-section>
+          <q-item-section> Service: {{service.name }}</q-item-section>
+          <q-item-section avatar>
+            <q-avatar>
+              <img :src="hostUrl + service.pathToPhoto">
+            </q-avatar>
+          </q-item-section>
         </q-item>
 
         <q-item>
@@ -64,7 +69,7 @@
 
         <q-item>
           <q-btn
-            class="q-ml-sm"
+            class="q-ml-sm full-width"
             color="green"
             label="Confirm"
             :disable="!readySend"
@@ -121,7 +126,7 @@ export default {
 
       master_id: master.value.id,
       time_id: time.id,
-      service_id: service.value.id,
+      service_id: service.id,
     })
 
     const readySend = computed(()=>{

@@ -5,7 +5,7 @@
         <q-btn-toggle
           push
           glossy
-          v-model="selectedService"
+          v-model="service"
           toggle-color="primary"
           :options="items"
         />
@@ -29,21 +29,21 @@ export default {
 
     const makeItems = (services) => {
       services.forEach(service => {
-        items.push({label: service.name, value: service.id})
+        items.push({label: service.name, value: service.id, id: service.id})
         })
       }
 
     makeItems(master.value.services)
 
-    const selectedService = ref(orderInfo.value.service);
+    const service = ref();
 
-    watch(selectedService, (selectedService, prevSelectedService) => {
-
-      makeOrder(master.value.id, items.find(service => service.id === selectedService.value))
+    watch(service, (service, prevService) => {
+      const selectedService = service
+      makeOrder(master.value.id, master.value.services.find(item => item.id === selectedService))
     })
 
     return {
-      selectedService,
+      service,
       items,
     }
   }

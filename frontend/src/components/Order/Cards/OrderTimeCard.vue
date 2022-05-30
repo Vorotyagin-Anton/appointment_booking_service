@@ -80,6 +80,11 @@ export default {
     const ObjectTime = ref()
     mountMaster();
 
+    if (orderInfo.value.date !== null){
+      console.log('orderInfo.value.date', orderInfo.value.date)
+      date.value = orderInfo.value.date
+    }
+
     const formatTime = (int) => {
       return ('0' + (Math.trunc(int/60)).toString()).slice(-2) + ':' + ('0' + (int % 60).toString()).slice(-2);
     };
