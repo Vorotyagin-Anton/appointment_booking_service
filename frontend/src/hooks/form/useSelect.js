@@ -10,6 +10,7 @@ export default function useSelect(items) {
     return {
       value: item.id,
       label: item.name,
+      ...item
     };
   });
 

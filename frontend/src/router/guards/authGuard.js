@@ -1,5 +1,5 @@
 export default function (to) {
   if (!to.meta.isAuthorized) {
-    return {name: 'signin'}
+    return {name: 'auth.signin'}
   }
 }

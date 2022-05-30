@@ -112,6 +112,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['userShort'])]
     private $telegram;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $website;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $facebook;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $instagram;
+
+    #[ORM\ManyToMany(targetEntity: Address::class, mappedBy: 'relatedUsers', cascade: ['persist'])]
+    #[Groups(['user_addresses'])]
+    private $addresses;
+
     public function __construct()
     {
         $this->workerAvailableTimes = new ArrayCollection();
@@ -121,6 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->gettedReviews = new ArrayCollection();
         $this->clientOrders = new ArrayCollection();
         $this->workerOrders = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -551,6 +568,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTelegram(?string $telegram): self
     {
         $this->telegram = $telegram;
+
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    public function getFacebook(): ?string
+    {
+        return $this->facebook;
+    }
+
+    public function setFacebook(?string $facebook): self
+    {
+        $this->facebook = $facebook;
+
+        return $this;
+    }
+
+    public function getInstagram(): ?string
+    {
+        return $this->instagram;
+    }
+
+    public function setInstagram(?string $instagram): self
+    {
+        $this->instagram = $instagram;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Address>
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->addRelatedUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->addresses->removeElement($address)) {
+            $address->removeRelatedUser($this);
+        }
 
         return $this;
     }

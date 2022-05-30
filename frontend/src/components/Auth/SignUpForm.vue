@@ -122,7 +122,7 @@
 
         <router-link
           class="signup-form__link"
-          :to="{name: 'signin'}"
+          :to="{name: 'auth.signin'}"
         >
           Sign In
         </router-link>

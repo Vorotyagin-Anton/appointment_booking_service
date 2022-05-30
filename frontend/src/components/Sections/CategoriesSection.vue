@@ -84,17 +84,6 @@ import AppSectionHeader from "components/Common/AppSectionHeader";
 import {Carousel, Slide} from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 
-const categoryPromos = [
-  'For people who work magic with hair care.',
-  'For people who give haircuts and life advice.',
-  'For people who believe we should treat ourselves.',
-  'For people who push for one more rep.',
-  'For people who specialize in health, healing, and self-care.',
-  'For people who do what you can’t learn on the internet.',
-  'For people who save homes from DIY disasters.',
-  'For people who believe practice makes perfect.',
-];
-
 export default {
   name: "CategoriesSection",
 
@@ -119,7 +108,6 @@ export default {
       return categories.value.map((category, key) => ({
         ...category,
         ...{img: process.env.API_HOST + category.pathToPhoto},
-        promo: categoryPromos[key],
       }));
     });
 

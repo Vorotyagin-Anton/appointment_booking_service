@@ -40,7 +40,7 @@
               <div class="banner-expansion__item">
                 <router-link
                   class="banner-expansion__link"
-                  :to="{name: 'cabinet'}"
+                  :to="{name: 'cabinet.profile'}"
                 >
                   <p class="banner-expansion__title">Tell About Your Identity</p>
 
@@ -55,7 +55,7 @@
               <div class="banner-expansion__item">
                 <router-link
                   class="banner-expansion__link"
-                  :to="{name: 'cabinet'}"
+                  :to="{name: 'cabinet.schedule'}"
                 >
                   <p class="banner-expansion__title">Setup Schedule</p>
 
@@ -94,7 +94,7 @@ export default {
   name: "SetupBanner",
 
   setup() {
-    const isExpansionOpen = ref(false);
+    const isExpansionOpen = ref(true);
 
     const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
 
@@ -162,7 +162,6 @@ export default {
     font-size: 14px;
     font-weight: 300;
     color: $black;
-    line-height: 5px;
   }
 }
 </style>

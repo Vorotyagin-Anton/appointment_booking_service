@@ -19,7 +19,7 @@
       <div class="slider-overview__title">
         <h2 class="slider-overview__heading">Booking Service</h2>
         <p class="slider-overview__p">Scheduling that puts time in your hands.</p>
-        <router-link :to="{name: 'signup'}">
+        <router-link :to="{name: 'auth.signup'}">
           <q-btn
             class="slider-overview__btn"
             color="primary"

@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import useApplicationDates from "src/hooks/useApplicationDates";
 import MainFooterNav from "components/MainFooter/MainFooterNav";
 import MainFooterInfo from "components/MainFooter/MainFooterInfo";
+import useAppTime from "src/hooks/common/useAppTime";
 
 export default {
   name: "MainFooter",
@@ -21,10 +21,10 @@ export default {
   },
 
   setup() {
-    const date = useApplicationDates();
+    const {currentDate} = useAppTime();
 
     return {
-      date,
+      date: currentDate,
     }
   }
 }
