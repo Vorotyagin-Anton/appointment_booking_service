@@ -32,9 +32,8 @@
 </template>
 
 <script>
-import {ref, toRefs} from "vue";
+import {onUpdated, ref, toRefs, watch} from "vue";
 import useOrderSteps from "src/hooks/order/useOrderSteps";
-import axios from "axios";
 import useMaster from "src/hooks/useMaster";
 
 export default {
@@ -60,10 +59,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    buttonDisable: {
-      type: Boolean,
-      default: false
-    }
+    // buttonDisable: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
 
   emits: ["finished", "return"],
@@ -73,7 +72,11 @@ export default {
 
     const {setStatusDone, setStatusProcess} = useOrderSteps();
 
+    const { orderInfo } = useMaster();
+
     const currentStep = ref(step.value);
+
+    const buttonDisable = ref(false)
 
     const finishStep = () => {
       emit("finished", currentStep.value);
@@ -85,7 +88,6 @@ export default {
       setStatusProcess(data.value.name);
     };
 
-
     return {
       stepData: data,
       currentStep,
@@ -93,6 +95,7 @@ export default {
       isLastStep: isLast,
       finishStep,
       returnStep,
+      buttonDisable
     }
   }
 }

@@ -37,6 +37,11 @@ export default {
 
     const service = ref();
 
+    if (orderInfo.value.service !== null){
+      //console.log('orderInfo.value.service', orderInfo.value.service)
+      service.value = orderInfo.value.service.id
+    }
+
     watch(service, (service, prevService) => {
       const selectedService = service
       makeOrder(master.value.id, master.value.services.find(item => item.id === selectedService))

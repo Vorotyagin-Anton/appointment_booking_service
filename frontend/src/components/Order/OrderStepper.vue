@@ -27,6 +27,7 @@
 import useOrderSteps from "src/hooks/order/useOrderSteps";
 import OrderStep from "components/Order/OrderStep";
 import {onUpdated} from "vue";
+import useMaster from "src/hooks/useMaster";
 
 export default {
   name: "OrderStepper",
@@ -45,7 +46,6 @@ export default {
       setPrevStep,
       isFirstStep,
       isLastStep,
-      service: true
     }
   },
 }
