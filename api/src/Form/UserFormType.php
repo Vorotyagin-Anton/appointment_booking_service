@@ -25,10 +25,12 @@ class UserFormType extends AbstractType
             ->add('surname')
             ->add('name')
             ->add('middlename')
-            ->add('isWorker')
-            ->add('isClient')
             ->add('mobilePhoneNumber')
             ->add('story')
+            ->add('website')
+            ->add('facebook')
+            ->add('instagram')
+            ->add('telegram')
         ;
     }
 

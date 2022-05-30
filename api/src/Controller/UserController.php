@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\User;
+use App\Entity\WorkerAvailableTime;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Repository\WorkerAvailableTimeRepository;
@@ -107,8 +109,25 @@ class UserController extends AbstractController
             return $this->json($serializer->serialize(['error' => 'user not found'], 'json'));
         }
 
+        $data = $request->toArray();
+        $userAddress = $user->getAddresses()->toArray()[0] ?? null;
+        if (!$userAddress) {
+            $userAddress = new Address();
+            $user->addAddress($userAddress);
+        }
+        $userAddress->setState($data['state'] ?? null);
+        unset($data['state']);
+        $userAddress->setCity($data['city'] ?? null);
+        unset($data['city']);
+        $userAddress->setStreet($data['street'] ?? null);
+        unset($data['street']);
+        $userAddress->setHome($data['home'] ?? null);
+        unset($data['home']);
+        $userAddress->setCode(intval($data['code'] ?? null));
+        unset($data['code']);
+
         $form = $this->createForm(UserFormType::class, $user, ['csrf_protection' => false]);
-        $form->submit($request->toArray(), false);
+        $form->submit($data, false);
 
         if ($form->isValid()) {
             $entityManager->persist($user);
@@ -244,6 +263,50 @@ class UserController extends AbstractController
             ]),
             'workerFreeTime' => json_encode($workerTimeResponse)
         ]);
+    }
+
+    #[Route(path: '/api/users/workers/{id}/worker-available-time', name: 'app_users_worker_change_available_time', requirements: ['id' => '\d+'], methods: ['PATCH'])]
+    public function changeWorkerAvailableTime(
+        int $id,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        SerializerInterface $serializer,
+        Request $request
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+        $data = $request->toArray();
+
+        foreach ($data['delete'] as $timeForDeleteId) {
+            $timeForDelete = $entityManager->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $timeForDeleteId]);
+            $user->removeWorkerAvailableTime($timeForDelete);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+
+        foreach ($data['add'] as $addedDataItem) {
+            foreach ($addedDataItem['dates'] as $date) {
+                foreach ($addedDataItem['slots'] as $timeInMinutes) {
+                    $time = new WorkerAvailableTime();
+                    $time->setWorker($user);
+                    $time->setExactDate(\DateTime::createFromFormat('Y/m/d', $date));
+                    $time->setExactTimeInMinutes((int)$timeInMinutes);
+                    $time->setIsTimeFree(true);
+                    $user->addWorkerAvailableTime($time);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                }
+            }
+        }
+
+        return $this->json($serializer->serialize(
+            [
+                'status' => 'success',
+                'message' => 'worker available time has been changed',
+                'data' => []
+            ],
+            'json'
+        ));
     }
 
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Address;
 use App\Entity\Career;
 use App\Entity\Rating;
 use App\Entity\Service;
@@ -79,6 +80,16 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setIsWorker(!$fakerBoolean);
         $user->setPathToPhoto(\array_pop($this->fakeImagePaths));
         $user->setStory($this->faker->text());
+        $user->setTelegram('310345945');
+
+        $address = new Address();
+        $address->setState('Russia');
+        $address->setCity($this->faker->city());
+        $address->setStreet($this->faker->streetName());
+        $address->setHome($this->faker->buildingNumber());
+        $address->setCode($this->faker->numberBetween(100000, 999999));
+
+        $user->addAddress($address);
 
         if ($user->getIsClient()) {
             $user->setRoles(['ROLE_CLIENT']);
