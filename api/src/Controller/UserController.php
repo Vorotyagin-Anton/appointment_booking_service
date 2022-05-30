@@ -280,24 +280,22 @@ class UserController extends AbstractController
         foreach ($data['delete'] as $timeForDeleteId) {
             $timeForDelete = $entityManager->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $timeForDeleteId]);
             $user->removeWorkerAvailableTime($timeForDelete);
-            $entityManager->persist($user);
-            $entityManager->flush();
         }
+        $entityManager->persist($user);
+        $entityManager->flush();
 
         foreach ($data['add'] as $addedDataItem) {
-            foreach ($addedDataItem['dates'] as $date) {
-                foreach ($addedDataItem['slots'] as $timeInMinutes) {
-                    $time = new WorkerAvailableTime();
-                    $time->setWorker($user);
-                    $time->setExactDate(\DateTime::createFromFormat('Y/m/d', $date));
-                    $time->setExactTimeInMinutes((int)$timeInMinutes);
-                    $time->setIsTimeFree(true);
-                    $user->addWorkerAvailableTime($time);
-                    $entityManager->persist($user);
-                    $entityManager->flush();
-                }
+            foreach ($addedDataItem['slots'] as $timeInMinutes) {
+                $time = new WorkerAvailableTime();
+                $time->setWorker($user);
+                $time->setExactDate(\DateTime::createFromFormat('Y/m/d', $addedDataItem['date']));
+                $time->setExactTimeInMinutes((int)$timeInMinutes);
+                $time->setIsTimeFree(true);
+                $user->addWorkerAvailableTime($time);
             }
         }
+        $entityManager->persist($user);
+        $entityManager->flush();
 
         return $this->json($serializer->serialize(
             [

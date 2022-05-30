@@ -15,9 +15,7 @@ export default function (axios) {
 
       const response = await axios.post('/api/register', formData, params);
 
-      const { data } = JSON.parse(response.data);
-
-      return data;
+      return JSON.parse(response.data);
     },
 
     async login(email, password) {
@@ -44,14 +42,14 @@ export default function (axios) {
     async logout() {
       await axios.get('/api/logout');
     },
-    
+
     async updateProfile(payload) {
       console.log(payload);
-      
+
       const response = await axios.get('/api/check-auth');
 
       const { data } = JSON.parse(response.data);
-      
+
       return data;
     },
   };

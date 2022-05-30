@@ -1,30 +1,3 @@
-const slotsModel = [
-  {index: 0, time: '00:00', div: 'am', isActive: false, status: null},
-  {index: 60, time: '01:00', div: 'am', isActive: false, status: null},
-  {index: 120, time: '02:00', div: 'am', isActive: false, status: null},
-  {index: 180, time: '03:00', div: 'am', isActive: false, status: null},
-  {index: 240, time: '04:00', div: 'am', isActive: false, status: null},
-  {index: 300, time: '05:00', div: 'am', isActive: false, status: null},
-  {index: 360, time: '06:00', div: 'am', isActive: false, status: null},
-  {index: 420, time: '07:00', div: 'am', isActive: false, status: null},
-  {index: 480, time: '08:00', div: 'am', isActive: false, status: null},
-  {index: 540, time: '09:00', div: 'am', isActive: false, status: null},
-  {index: 600, time: '10:00', div: 'am', isActive: false, status: null},
-  {index: 660, time: '11:00', div: 'am', isActive: false, status: null},
-  {index: 720, time: '12:00', div: 'am', isActive: false, status: null},
-  {index: 780, time: '01:00', div: 'pm', isActive: false, status: null},
-  {index: 840, time: '02:00', div: 'pm', isActive: false, status: null},
-  {index: 900, time: '03:00', div: 'pm', isActive: false, status: null},
-  {index: 960, time: '04:00', div: 'pm', isActive: false, status: null},
-  {index: 1020, time: '05:00', div: 'pm', isActive: false, status: null},
-  {index: 1080, time: '06:00', div: 'pm', isActive: false, status: null},
-  {index: 1140, time: '07:00', div: 'pm', isActive: false, status: null},
-  {index: 1200, time: '08:00', div: 'pm', isActive: false, status: null},
-  {index: 1260, time: '09:00', div: 'pm', isActive: false, status: null},
-  {index: 1320, time: '10:00', div: 'pm', isActive: false, status: null},
-  {index: 1380, time: '11:00', div: 'pm', isActive: false, status: null},
-];
-
 const state = {
   status: {
     NEW: 'new',
@@ -32,16 +5,46 @@ const state = {
   },
 
   // slots list
-  slots: slotsModel,
+  slots: [
+    {index: 0, time: '00:00', div: 'am', isActive: false, status: null},
+    {index: 60, time: '01:00', div: 'am', isActive: false, status: null},
+    {index: 120, time: '02:00', div: 'am', isActive: false, status: null},
+    {index: 180, time: '03:00', div: 'am', isActive: false, status: null},
+    {index: 240, time: '04:00', div: 'am', isActive: false, status: null},
+    {index: 300, time: '05:00', div: 'am', isActive: false, status: null},
+    {index: 360, time: '06:00', div: 'am', isActive: false, status: null},
+    {index: 420, time: '07:00', div: 'am', isActive: false, status: null},
+    {index: 480, time: '08:00', div: 'am', isActive: false, status: null},
+    {index: 540, time: '09:00', div: 'am', isActive: false, status: null},
+    {index: 600, time: '10:00', div: 'am', isActive: false, status: null},
+    {index: 660, time: '11:00', div: 'am', isActive: false, status: null},
+    {index: 720, time: '12:00', div: 'am', isActive: false, status: null},
+    {index: 780, time: '01:00', div: 'pm', isActive: false, status: null},
+    {index: 840, time: '02:00', div: 'pm', isActive: false, status: null},
+    {index: 900, time: '03:00', div: 'pm', isActive: false, status: null},
+    {index: 960, time: '04:00', div: 'pm', isActive: false, status: null},
+    {index: 1020, time: '05:00', div: 'pm', isActive: false, status: null},
+    {index: 1080, time: '06:00', div: 'pm', isActive: false, status: null},
+    {index: 1140, time: '07:00', div: 'pm', isActive: false, status: null},
+    {index: 1200, time: '08:00', div: 'pm', isActive: false, status: null},
+    {index: 1260, time: '09:00', div: 'pm', isActive: false, status: null},
+    {index: 1320, time: '10:00', div: 'pm', isActive: false, status: null},
+    {index: 1380, time: '11:00', div: 'pm', isActive: false, status: null},
+  ],
 
   // schedule from server
   data: [],
 
+  selectedDates: [],
+
   oldDates: [],
   newDates: [],
 
-  // body for server request
-  select: [],
+  // body parameters for server request
+  selectedSlots: {
+    add: [],
+    delete: [],
+  },
 };
 
 const getters = {
@@ -61,12 +64,63 @@ const getters = {
     return state.newDates;
   },
 
-  select(state) {
-    return state.select;
+  selectedDates(state) {
+    return state.selectedDates;
   },
 
   slots(state) {
-    return state.slots;
+    if (state.selectedDates.length > 1) {
+      return state.slots;
+    }
+
+    const date = state.selectedDates[0];
+
+    const scheduleDate = state.data.find(scheduleDate => scheduleDate.exact_date === date);
+    const scheduleSlots = scheduleDate ? scheduleDate.slots : [];
+
+    const selectedDate = state.selectedSlots.add.find(selectedDate => selectedDate.date === date);
+    const selectedSlots = selectedDate ? selectedDate.slots : [];
+
+    return state.slots.map(slot => {
+      for (let scheduleSlot of scheduleSlots) {
+        if (scheduleSlot.exact_time_in_minutes !== slot.index) {
+          continue;
+        }
+
+        let isActive = true;
+
+        if (state.selectedSlots.delete.includes(scheduleSlot.id)) {
+          isActive = false;
+        }
+
+        return {
+          ...slot,
+          ...{
+            id: scheduleSlot.id,
+            status: state.status.OLD,
+            isActive,
+          },
+        }
+      }
+
+      for (let selectedSlot of selectedSlots) {
+        if (selectedSlot === slot.index) {
+          return {
+            ...slot,
+            ...{
+              isActive: true,
+              status: state.status.NEW,
+            },
+          }
+        }
+      }
+
+      return slot;
+    });
+  },
+
+  selectedSlots(state) {
+    return state.selectedSlots;
   },
 
   getOldSlotsByDate(state) {
@@ -97,16 +151,20 @@ const actions = {
     commit('putScheduleToStorage', payload);
   },
 
+  setDates({commit}, payload) {
+    commit('putSelectedDatesToStorage', payload);
+  },
+
   saveSelect({commit}, payload) {
     commit('putSelectedSlotsToStorage', payload);
   },
 
-  resetSlots({commit}) {
-    commit('returnSlotsToInitialState');
+  removeSlot({commit}, payload) {
+    commit('removeSlotFromStorage', payload);
   },
 
-  updateSlots({commit}, payload) {
-    commit('updateSlotsBySelectedDate', payload);
+  resetSelect({commit}) {
+    commit('returnToInitialState');
   },
 };
 
@@ -116,51 +174,71 @@ const mutations = {
     state.oldDates = schedule.map(item => item.exact_date);
   },
 
+  putSelectedDatesToStorage(state, dates) {
+    state.selectedDates = dates;
+  },
+
   putSelectedSlotsToStorage(state, slots) {
-    slots.dates.forEach(date => {
+    const slotsTime = slots.map(slot => slot.index);
+
+    state.selectedDates.forEach(date => {
       state.newDates.push(date);
 
-      const dateSlots = state.select.find(slot => slot.date === date);
+      const dateSlots = state.selectedSlots.add.find(slot => slot.date === date);
 
       if (dateSlots) {
-        dateSlots.slots = slots.slots;
+        dateSlots.slots = slotsTime;
         return;
       }
 
-      state.select.push({date, slots: slots.slots});
+      state.selectedSlots.add.push({
+        date,
+        slots: slotsTime,
+      });
     });
+
+    state.selectedDates = [];
   },
 
-  returnSlotsToInitialState(state) {
-    state.slots = slotsModel;
-  },
+  removeSlotFromStorage(state, slots) {
+    slots.forEach(slot => {
+      if (state.selectedDates.length > 1) {
+        return;
+      }
 
-  updateSlotsBySelectedDate(state, date) {
-    const scheduleDate = state.data.find(scheduleDate => scheduleDate.exact_date === date);
-    const scheduleSlots = scheduleDate ? scheduleDate.slots : [];
+      if (slot.id) {
+        state.selectedSlots.delete.push(slot.id);
+        return;
+      }
 
-    const selectedDate = state.select.find(selectedDate => selectedDate.date === date);
-    const selectedSlots = selectedDate ? selectedDate.slots : [];
+      const date = state.selectedDates[0];
 
-    state.slots = state.slots.map(slot => {
-      for (let scheduleSlot of scheduleSlots) {
-        if (scheduleSlot.exact_time_in_minutes === slot.index) {
-          return {
-            ...slot,
-            ...{isActive: true, status: state.status.OLD},
+      state.selectedSlots.add.forEach((dateSlots, key) => {
+        if (dateSlots.date === date && dateSlots.slots.includes(slot.index)) {
+          if (dateSlots.slots.length === 1) {
+            const index = state.newDates.findIndex(date => date === date);
+
+            if (index >= 0) {
+              state.newDates.splice(index, 1);
+              state.selectedSlots.add.splice(key, 1);
+            }
+          } else {
+            const index = dateSlots.slots.findIndex(dateSlot => dateSlot === slot.index);
+
+            if (index >= 0) {
+              dateSlots.slots.splice(index, 1);
+            }
           }
         }
-      }
-
-      if (selectedSlots.includes(slot.index)) {
-        return {
-          ...slot,
-          ...{isActive: true, status: state.status.NEW},
-        }
-      }
-
-      return slot;
+      });
     });
+  },
+
+  returnToInitialState(state) {
+    state.newDates = [];
+    state.selectedDates = [];
+    state.selectedSlots.add = [];
+    state.selectedSlots.delete = [];
   },
 };
 

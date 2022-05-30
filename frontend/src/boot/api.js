@@ -27,9 +27,8 @@ const instance = axios.create({
 export default boot(({store}) => {
   instance.interceptors.response.use(
     (response) => {
-      //logger(response);
+      logger(response);
 
-      //const data = JSON.parse(response.data);
       const data = typeof response.data === 'string'
         ? JSON.parse(response.data)
         : response.data;

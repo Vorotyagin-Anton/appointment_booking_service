@@ -35,7 +35,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: $white;
-  z-index: 1000;
+  z-index: 9000;
 
   &__content {
     display: flex;

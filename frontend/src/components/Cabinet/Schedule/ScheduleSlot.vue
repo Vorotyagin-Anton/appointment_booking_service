@@ -99,9 +99,9 @@ export default {
 
     const updateModel = (value) => {
       if (value) {
-        emit('add', props.timeSlot.index);
+        emit('add', props.timeSlot);
       } else {
-        emit('remove', props.timeSlot.index);
+        emit('remove', props.timeSlot);
       }
     }
 
