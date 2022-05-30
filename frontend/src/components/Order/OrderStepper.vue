@@ -4,7 +4,6 @@
       v-model="currentStep"
       vertical
       animated
-      header-nav
       color="primary"
       done-color="positive"
       active-color="primary"
@@ -27,6 +26,8 @@
 <script>
 import useOrderSteps from "src/hooks/order/useOrderSteps";
 import OrderStep from "components/Order/OrderStep";
+import {onUpdated} from "vue";
+import useMaster from "src/hooks/useMaster";
 
 export default {
   name: "OrderStepper",
@@ -44,7 +45,7 @@ export default {
       setNextStep,
       setPrevStep,
       isFirstStep,
-      isLastStep
+      isLastStep,
     }
   },
 }

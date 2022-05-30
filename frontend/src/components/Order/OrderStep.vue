@@ -4,16 +4,11 @@
     :title="stepData.title"
     icon="settings"
     :done="stepData.done"
+    :disable="buttonDisable"
   >
     <slot/>
 
     <q-stepper-navigation>
-      <q-btn
-        color="primary"
-        label="Continue"
-        v-if="!isLastStep"
-        @click="finishStep"
-      />
 
       <q-btn
         class="q-ml-sm"
@@ -23,13 +18,23 @@
         @click="returnStep"
         flat
       />
+
+      <q-btn
+        :disable="buttonDisable"
+        color="primary"
+        label="Continue"
+        v-if="!isLastStep"
+        @click="finishStep"
+      />
+
     </q-stepper-navigation>
   </q-step>
 </template>
 
 <script>
-import {ref, toRefs} from "vue";
+import {onUpdated, ref, toRefs, watch} from "vue";
 import useOrderSteps from "src/hooks/order/useOrderSteps";
+import useMaster from "src/hooks/useMaster";
 
 export default {
   name: "OrderStepperMaster",
@@ -53,7 +58,11 @@ export default {
     isLast: {
       type: Boolean,
       default: false,
-    }
+    },
+    // buttonDisable: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
 
   emits: ["finished", "return"],
@@ -63,7 +72,11 @@ export default {
 
     const {setStatusDone, setStatusProcess} = useOrderSteps();
 
+    const { orderInfo } = useMaster();
+
     const currentStep = ref(step.value);
+
+    const buttonDisable = ref(false)
 
     const finishStep = () => {
       emit("finished", currentStep.value);
@@ -82,6 +95,7 @@ export default {
       isLastStep: isLast,
       finishStep,
       returnStep,
+      buttonDisable
     }
   }
 }

@@ -22,7 +22,7 @@ export default {
   props: {
     reviews: {
       type: Array,
-      required: true,
+      //required: true,
     },
   },
 }
