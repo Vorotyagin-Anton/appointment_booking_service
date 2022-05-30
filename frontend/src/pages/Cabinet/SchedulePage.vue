@@ -51,16 +51,6 @@
         @confirm="handleConfirmation"
         @toggle="toggleDrawer"
       />
-
-      <div class="q-mini-drawer-hide schedule-drawer__btn">
-        <q-btn
-          icon="chevron_right"
-          @click="miniDrawer = true"
-          unelevated
-          round
-          dense
-        />
-      </div>
     </q-drawer>
 
     <account-footer
@@ -218,32 +208,12 @@ export default {
 }
 
 .schedule-drawer {
+  position: relative;
   padding-bottom: 70px;
 
   &__h3 {
     font-size: 18px;
     font-weight: 700;
-  }
-
-  &__btn {
-    position: absolute;
-    top: 86px;
-    right: 387px;
-    z-index: 2000;
-
-    .q-btn {
-      height: 26px;
-      width: 26px;
-      min-height: 0;
-      min-width: 0;
-      border: 1px solid $grey-4;
-      background-color: $white;
-
-      &__content {
-        font-size: 14px;
-        color: $grey-8;
-      }
-    }
   }
 }
 </style>
