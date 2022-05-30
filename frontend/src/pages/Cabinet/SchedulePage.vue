@@ -5,7 +5,7 @@
 
         <schedule-calendar
           class="schedule-page__calendar"
-          v-model="selectedDates"
+          @update="handleDatesSelection"
         />
 
         <div class="schedule-page__description">
@@ -47,7 +47,7 @@
       <schedule-slots
         class="schedule-page__slots"
         :time-slots="slots"
-        :is-dates-selected="selectedDates.length > 0"
+        :is-disabled="!isDatesSelected"
         @confirm="handleConfirmation"
         @toggle="toggleDrawer"
       />
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import useAuth from "src/hooks/auth/useAuth";
 import useSchedule from "src/hooks/auth/useSchedule";
 import AccountFooter from "components/Cabinet/Profile/AccountFooter";
@@ -104,16 +104,17 @@ export default {
       slots,
       schedule,
       selectedDates,
-      confirmSlotsSelection,
       getScheduleFromApi,
+      handleDatesSelection,
+      confirmSlotsChanges,
+      resetSelection,
     } = useSchedule();
 
-    const resetSelection = () => {
-      selectedDates.value = [];
-    }
+    const isDatesSelected = computed(() => selectedDates.value.length > 0);
 
     const handleConfirmation = (slots) => {
-      confirmSlotsSelection(selectedDates.value, slots);
+      confirmSlotsChanges(slots);
+      miniDrawer.value = true;
     };
 
     const saveChanges = () => {}
@@ -130,8 +131,12 @@ export default {
     });
 
     watch(selectedDates, () => {
-      if (selectedDates.value.length > 0 && miniDrawer.value) {
+      if (isDatesSelected.value && miniDrawer.value) {
         miniDrawer.value = false;
+      }
+
+      if (!isDatesSelected.value && !miniDrawer.value) {
+        miniDrawer.value = true;
       }
     });
 
@@ -140,10 +145,12 @@ export default {
       miniDrawer,
       toggleDrawer,
       drawerClick,
+
       loading,
       slots,
       schedule,
-      selectedDates,
+      isDatesSelected,
+      handleDatesSelection,
       handleConfirmation,
       saveChanges,
       resetSelection,

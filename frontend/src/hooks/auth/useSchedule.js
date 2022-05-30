@@ -1,6 +1,6 @@
 import {api} from "boot/api";
 import {useStore} from "vuex";
-import {computed, ref, watch} from "vue";
+import {computed} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 import logger from "src/helpers/logger";
 
@@ -9,14 +9,12 @@ export default function useSchedule() {
 
   const {loading, startLoading, finishLoading} = useLoading();
 
-  const selectedSlots = ref([]);
-  const selectedDates = ref([]);
-
   const STATUS = store.getters['schedule/status'];
   const slots = computed(() => store.getters['schedule/slots']);
   const schedule = computed(() => store.getters['schedule/data']);
   const oldDates = computed(() => store.getters['schedule/oldDates']);
   const newDates = computed(() => store.getters['schedule/newDates']);
+  const selectedDates = computed(() => store.getters['schedule/selectedDates']);
 
   const getScheduleFromApi = async (userId) => {
     try {
@@ -32,23 +30,25 @@ export default function useSchedule() {
     }
   };
 
-  const confirmSlotsSelection = async (dates, slots) => {
-    if (slots.length > 0) {
-      await store.dispatch('schedule/saveSelect', {dates, slots});
-    }
-
-    selectedDates.value = [];
+  const handleDatesSelection = async (dates) => {
+    await store.dispatch('schedule/setDates', dates);
   };
 
-  watch(selectedDates, async () => {
-    if (selectedDates.value.length === 1) {
-      await store.dispatch('schedule/updateSlots', selectedDates.value[0]);
+  const confirmSlotsChanges = async (slots) => {
+    if (slots.add.length > 0) {
+      await store.dispatch('schedule/saveSelect', slots.add);
     }
 
-    if (selectedDates.value.length === 0) {
-      await store.dispatch('schedule/resetSlots');
+    if (slots.delete.length > 0) {
+      await store.dispatch('schedule/removeSlot', slots.delete);
     }
-  });
+
+    await handleDatesSelection([]);
+  };
+
+  const resetSelection = async () => {
+    await store.dispatch('schedule/resetSelect');
+  };
 
   return {
     STATUS,
@@ -57,9 +57,10 @@ export default function useSchedule() {
     schedule,
     oldDates,
     newDates,
-    selectedSlots,
     selectedDates,
     getScheduleFromApi,
-    confirmSlotsSelection,
+    handleDatesSelection,
+    confirmSlotsChanges,
+    resetSelection,
   }
 }

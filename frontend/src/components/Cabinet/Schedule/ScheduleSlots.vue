@@ -31,13 +31,13 @@
 
       <q-item
         class="schedule-slots__columns"
-        :disable="!isDatesSelected"
+        :disable="isDisabled"
       >
         <q-item-section>
           <q-checkbox
             class="schedule-slots__checkbox"
             v-model="checkbox"
-            :disable="!isDatesSelected"
+            :disable="isDisabled"
           />
         </q-item-section>
 
@@ -52,8 +52,9 @@
         class="schedule-slots__slot"
         v-for="slot in timeSlots"
         :key="slot.index"
+        :model="checkbox"
         :time-slot="slot"
-        :is-disable="!isDatesSelected"
+        :is-disable="isDisabled"
         :is-active="slot.isActive"
         :status="slot.status"
         @add="handleSelect"
@@ -65,7 +66,7 @@
       <q-btn
         class="schedule-slots__btn"
         label="Confirm"
-        :disable="!isDatesSelected"
+        :disable="!isChangesDetected"
         @click="confirmSelection"
         unelevated
         no-caps
@@ -75,7 +76,7 @@
 </template>
 
 <script>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import ScheduleSlot from "components/Cabinet/Schedule/ScheduleSlot";
 
 export default {
@@ -91,12 +92,7 @@ export default {
       required: true,
     },
 
-    selectedSlots: {
-      type: Array,
-      default: () => ([]),
-    },
-
-    isDatesSelected: {
+    isDisabled: {
       type: Boolean,
       default: false,
     },
@@ -110,23 +106,41 @@ export default {
   setup(props, {emit}) {
     const checkbox = ref(false);
 
-    const slots = ref([]);
+    const selectedSlots = ref([]);
+    const deletedSlots = ref([]);
+
+    const isChangesDetected = computed(() => {
+      return selectedSlots.value.length > 0 || deletedSlots.value.length > 0;
+    });
 
     const handleSelect = (value) => {
-      slots.value.push(value);
+      const index = deletedSlots.value.findIndex(slot => slot.index === value.index);
+
+      if (index >= 0) {
+        deletedSlots.value.splice(index, 1);
+      } else {
+        selectedSlots.value.push(value);
+      }
     };
 
     const handleRemove = (value) => {
-      const index = slots.value.findIndex(slot => slot === value);
+      const index = selectedSlots.value.findIndex(slot => slot.index === value.index);
 
-      if (index) {
-        slots.value.splice(index, 1);
+      if (index >= 0) {
+        selectedSlots.value.splice(index, 1);
+      } else {
+        deletedSlots.value.push(value);
       }
     };
 
     const confirmSelection = () => {
-      emit('confirm', slots.value);
-      slots.value = [];
+      emit('confirm', {
+        add: selectedSlots.value,
+        delete: deletedSlots.value,
+      });
+
+      selectedSlots.value = [];
+      deletedSlots.value = [];
     };
 
     const toggleDrawer = () => {
@@ -134,8 +148,9 @@ export default {
     };
 
     return {
-      slots,
       checkbox,
+      selectedSlots,
+      isChangesDetected,
       handleSelect,
       handleRemove,
       confirmSelection,
@@ -224,11 +239,6 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
-
-    .disabled {
-      background-color: $green-3;
-      opacity: 100 !important;
-    }
   }
 
   &__btn {
