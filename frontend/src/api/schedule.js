@@ -1,10 +1,6 @@
 export default function (axios) {
   return {
     async getByUserId(userId) {
-      // return new Promise(resolve => {
-      //   setTimeout(() => resolve(schedule), 2000);
-      // })
-
       const response = await axios.get(`/api/users/workers/${userId}`);
 
       return JSON.parse(response.data.workerFreeTime);

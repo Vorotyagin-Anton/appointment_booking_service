@@ -43,14 +43,10 @@ export default function (axios) {
       await axios.get('/api/logout');
     },
 
-    async updateProfile(payload) {
-      console.log(payload);
+    async updateProfile(userId, payload) {
+      const response = await axios.patch(`/api/users/${userId}`, payload);
 
-      const response = await axios.get('/api/check-auth');
-
-      const { data } = JSON.parse(response.data);
-
-      return data;
+      return JSON.parse(response.data);
     },
   };
 }

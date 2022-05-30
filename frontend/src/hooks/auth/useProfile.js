@@ -2,9 +2,15 @@ import {ref} from "vue";
 import {api} from "boot/api";
 import {useStore} from "vuex";
 import logger from "src/helpers/logger";
+import useLoading from "src/hooks/common/useLoading";
+import useMessage from "src/hooks/auth/useMessage";
 
 export default function useProfile(user) {
   const store = useStore();
+
+  const {loading, startLoading, finishLoading} = useLoading();
+
+  const {showError, showSuccess} = useMessage();
 
   const profile = ref({
     name: user.name ?? null,
@@ -15,7 +21,6 @@ export default function useProfile(user) {
     story: user.story ?? null,
 
     // contacts
-    email: user.email,
     mobilePhoneNumber: user.mobilePhoneNumber ?? null,
     website: user.website,
     facebook: user.facebook,
@@ -37,23 +42,27 @@ export default function useProfile(user) {
 
   const updateProfile = async () => {
     try {
-      await store.dispatch('auth/startRequest');
+      startLoading();
 
       const payload = parseProfileData(profile.value);
 
-      const {user} = await api.auth.updateProfile(payload);
+      const data = await api.auth.updateProfile(user.id, payload);
 
-      window.localStorage.setItem('user', JSON.stringify(user));
+      window.localStorage.setItem('user', JSON.stringify(data));
 
-      await store.dispatch('auth/login', user);
+      await store.dispatch('auth/login', data);
+
+      await showSuccess('Profile successfully updated.')
     } catch (error) {
       logger(error);
+      await showError('Something was wrong.');
     } finally {
-      await store.dispatch('auth/finishRequest');
+      finishLoading();
     }
   };
 
   return {
+    loading,
     months,
     profile,
     updateProfile,

@@ -54,8 +54,8 @@ export default function useSchedule() {
 
       await showSuccess(data.message, 5000);
     } catch (error) {
-      await showError(error);
       logger(error);
+      await showError('Something was wrong.');
     } finally {
       finishLoading();
     }
