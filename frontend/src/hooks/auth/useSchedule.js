@@ -4,6 +4,7 @@ import {computed} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 import logger from "src/helpers/logger";
 import useMessage from "src/hooks/auth/useMessage";
+import moment from "moment";
 
 export default function useSchedule() {
   const store = useStore();
@@ -26,7 +27,18 @@ export default function useSchedule() {
 
       const data = await api.schedule.getByUserId(userId);
 
-      await store.dispatch('schedule/putSchedule', data);
+      const parsedData = data.map(item => {
+        return {
+          exact_date: moment(item.date).format('YYYY/MM/DD'),
+          slots: item.timeArray.map(time => ({
+            id: time.id,
+            exact_time_in_minutes: time.value,
+            isTimeFree: time.isTimeFree,
+          })),
+        };
+      });
+
+      await store.dispatch('schedule/putSchedule', parsedData);
     } catch (error) {
       logger(error);
     } finally {

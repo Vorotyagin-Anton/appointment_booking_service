@@ -1,9 +1,13 @@
 export default function (axios) {
   return {
     async getByUserId(userId) {
-      return new Promise(resolve => {
-        setTimeout(() => resolve(schedule), 2000);
-      })
+      // return new Promise(resolve => {
+      //   setTimeout(() => resolve(schedule), 2000);
+      // })
+
+      const response = await axios.get(`/api/users/workers/${userId}`);
+
+      return JSON.parse(response.data.workerFreeTime);
     },
 
     async updateSchedule(userId, payload) {
@@ -16,7 +20,7 @@ export default function (axios) {
 
 const schedule = [
   {
-    exact_date: '2022/05/25',
+    date: '2022/05/25',
     slots: [
       {id: 1, exact_time_in_minutes: 540},
       {id: 2, exact_time_in_minutes: 600},

@@ -29,7 +29,9 @@ export default boot(({store}) => {
     (response) => {
       logger(response);
 
-      const data = JSON.parse(response.data);
+      const data = typeof response.data === 'string'
+        ? JSON.parse(response.data)
+        : response.data;
 
       if (data.status === ERROR_RESPONSE_STATUS) {
         throw new Error(data.message ?? DEFAULT_ERROR);
