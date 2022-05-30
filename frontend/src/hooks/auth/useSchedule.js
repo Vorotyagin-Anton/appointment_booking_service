@@ -27,16 +27,7 @@ export default function useSchedule() {
 
       const data = await api.schedule.getByUserId(userId);
 
-      const parsedData = data.map(item => {
-        return {
-          exact_date: moment(item.date).format('YYYY/MM/DD'),
-          slots: item.timeArray.map(time => ({
-            id: time.id,
-            exact_time_in_minutes: time.value,
-            isTimeFree: time.isTimeFree,
-          })),
-        };
-      });
+      const parsedData = parseScheduleFromServer(data);
 
       await store.dispatch('schedule/putSchedule', parsedData);
     } catch (error) {
@@ -52,10 +43,14 @@ export default function useSchedule() {
 
       const data = await api.schedule.updateSchedule(userId, selectedSlots.value);
 
-      await showSuccess(data.message, 5000);
+      const parsedData = parseScheduleFromServer(data);
+
+      await store.dispatch('schedule/putSchedule', parsedData);
+
+      await showSuccess('Schedule successfully updated.', 5000);
     } catch (error) {
-      await showError(error);
       logger(error);
+      await showError('Something was wrong.');
     } finally {
       finishLoading();
     }
@@ -96,4 +91,17 @@ export default function useSchedule() {
     confirmSlotsChanges,
     resetSelection,
   }
+}
+
+function parseScheduleFromServer(schedule) {
+  return schedule.map(item => {
+    return {
+      exact_date: moment(item.date).format('YYYY/MM/DD'),
+      slots: item.timeArray.map(time => ({
+        id: time.id,
+        exact_time_in_minutes: time.value,
+        isTimeFree: time.isTimeFree,
+      })),
+    };
+  });
 }

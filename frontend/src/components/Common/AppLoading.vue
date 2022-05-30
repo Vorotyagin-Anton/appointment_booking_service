@@ -31,9 +31,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: $white;
   z-index: 9000;
 
@@ -42,6 +39,8 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100vw;
+    height: 100vh;
   }
 
   &__spinner {

@@ -29,7 +29,7 @@ export default {
     const model = ref(selectedDates.value);
 
     const title = computed(() => {
-      if (model.value === null) {
+      if (model.value.length === 0) {
         return 'Business Schedule';
       }
 
@@ -37,7 +37,7 @@ export default {
     });
 
     const subTitle = computed(() => {
-      if (model.value === null) {
+      if (model.value.length === 0) {
         return ' ';
       }
 

@@ -1,19 +1,17 @@
 export default function (axios) {
   return {
     async getByUserId(userId) {
-      // return new Promise(resolve => {
-      //   setTimeout(() => resolve(schedule), 2000);
-      // })
-
       const response = await axios.get(`/api/users/workers/${userId}`);
 
       return JSON.parse(response.data.workerFreeTime);
     },
 
     async updateSchedule(userId, payload) {
-      const response = await axios.patch(`/api/users/workers/${userId}/worker-available-time`, payload);
+      await axios.patch(`/api/users/workers/${userId}/worker-available-time`, payload);
 
-      return JSON.parse(response.data);
+      const response = await axios.get(`/api/users/workers/${userId}`);
+      
+      return JSON.parse(response.data.workerFreeTime);
     }
   };
 }

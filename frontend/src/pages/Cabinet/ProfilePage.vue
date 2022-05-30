@@ -1,6 +1,14 @@
 <template>
   <div class="container profile-page">
-    <div class="profile-page__wrapper">
+    <app-loading
+      v-if="loading"
+      title="Updated Loading..."
+    />
+
+    <div
+      class="profile-page__wrapper"
+      v-else
+    >
       <div class="profile-page__content">
         <h3 id="personal" class="profile-page__h3">Profile photo</h3>
 
@@ -171,7 +179,12 @@
         </div>
       </div>
     </div>
-    <account-footer class="profile-page__footer"/>
+    <account-footer
+      class="profile-page__footer"
+      @confirm="updateProfile"
+    />
+
+    <auth-alert/>
   </div>
 </template>
 
@@ -183,11 +196,15 @@ import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
 import AccountFooter from "components/Cabinet/Profile/AccountFooter";
+import AppLoading from "components/Common/AppLoading";
+import AuthAlert from "components/Auth/AuthAlert";
 
 export default {
   name: "ProfilePage",
 
   components: {
+    AuthAlert,
+    AppLoading,
     AccountField,
     AccountTextarea,
     AccountAvatar,
@@ -203,7 +220,7 @@ export default {
 
     const avatar = ref(null);
 
-    const {profile, months} = useProfile(user.value);
+    const {loading, profile, updateProfile} = useProfile(user.value);
 
     onMounted(() => {
       emit('toggle-left-drawer', {
@@ -213,10 +230,11 @@ export default {
     });
 
     return {
+      loading,
       user,
       avatar,
       profile,
-      months,
+      updateProfile,
     }
   }
 }
