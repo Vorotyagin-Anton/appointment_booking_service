@@ -125,8 +125,8 @@ export default {
       duration: 1,
 
       master_id: master.value.id,
-      time_id: time.id,
       service_id: service.id,
+      time_id: time.time_id,
     })
 
     const readySend = computed(()=>{
