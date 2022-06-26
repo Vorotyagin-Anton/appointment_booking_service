@@ -28,8 +28,7 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        EntityManagerInterface $entityManager
     ): Response
     {
         $user = new User();
@@ -38,9 +37,8 @@ class RegistrationController extends AbstractController
         $form->submit($request->request->all());
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -49,6 +47,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            // TODO use an email confirmation
             // generate a signed url and email it to the user
             /*$this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
@@ -59,16 +58,20 @@ class RegistrationController extends AbstractController
             );*/
             // do anything else you need here, like send an email
 
-            return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            return $this->json($user, Response::HTTP_CREATED, ['groups' => [
                 'userShort'
-            ]]));
+            ]]);
         }
 
-        return $this->json($serializer->serialize($form, 'json'));
+        return $this->json($form, Response::HTTP_BAD_REQUEST);
     }
 
+    // TODO use this route
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(
+        Request $request,
+        TranslatorInterface $translator
+    ): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 

@@ -23,39 +23,35 @@ use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
     #[Route(path: '/api/users', name: 'app_users_get', methods: ['GET'])]
     public function getAllUsers(
-        UserRepository $userRepository,
-        SerializerInterface $serializer
+        UserRepository $userRepository
     ): Response
     {
         $users = $userRepository->findAll();
-        return $this->json($serializer->serialize($users, 'json', ['groups' => [
+        return $this->json($users, Response::HTTP_OK, [], ['groups' => [
             'userShort'
-        ]]));
+        ]]);
     }
 
     #[Route(path: '/api/users/{id}', name: 'app_user_get', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneUser(
         int $id,
-        UserRepository $userRepository,
-        SerializerInterface $serializer
+        UserRepository $userRepository
     ): Response
     {
         $user = $userRepository->find($id);
-        return $this->json($serializer->serialize($user, 'json', ['groups' => [
+        return $this->json($user, Response::HTTP_OK, [], ['groups' => [
             'userShort'
-        ]]));
+        ]]);
     }
 
     #[Route(path: '/api/users', name: 'app_users_post', methods: ['POST'])]
     public function addUser(
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer,
         Request $request
     ): Response
     {
@@ -65,33 +61,45 @@ class UserController extends AbstractController
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
+            if (is_null($user->getIsWorker())) {
+                $user->setIsWorker(false);
+            }
+
+            if (is_null($user->getIsClient())) {
+                $user->setIsClient(false);
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->json($serializer->serialize($user, 'json', ['groups' => [
+            return $this->json($user, Response::HTTP_CREATED, [], ['groups' => [
                 'userShort'
-            ]]));
+            ]]);
         }
 
-        return $this->json($serializer->serialize($form, 'json'));
+        return $this->json($form, Response::HTTP_BAD_REQUEST);
     }
 
     #[Route(path: '/api/users/{id}', name: 'app_users_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function deleteUser(
         int $id,
-        UserRepository $userRepository,
-        SerializerInterface $serializer
+        UserRepository $userRepository
     ): Response
     {
         $user = $userRepository->find($id);
 
         if (!isset($user)) {
-            return $this->json($serializer->serialize(['error' => 'user not found'], 'json'));
+            return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        $userRepository->remove($user);
+        try {
+            $userRepository->remove($user);
+        } catch (\Exception $exception) {
+            // TODO add an error message to a log
+            return $this->json(['error' => 'server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-        return $this->json($serializer->serialize(['result' => 'ok'], 'json'));
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     #[Route(path: '/api/users/{id}', name: 'app_users_patch', requirements: ['id' => '\d+'], methods: ['PATCH'])]
@@ -99,14 +107,13 @@ class UserController extends AbstractController
         int $id,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        SerializerInterface $serializer,
         Request $request
     ): Response
     {
         $user = $userRepository->find($id);
 
         if (!$user) {
-            return $this->json($serializer->serialize(['error' => 'user not found'], 'json'));
+            return new Response('', Response::HTTP_NOT_FOUND);
         }
 
         $data = $request->toArray();
@@ -133,18 +140,15 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->json($serializer->serialize($user, 'json', ['groups' => [
-                'userShort'
-            ]]));
+            return new Response('', Response::HTTP_NO_CONTENT);
         }
 
-        return $this->json($serializer->serialize($form, 'json'));
+        return $this->json($form, Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/api/users/workers', name: 'app_users_workers', methods: ['GET'])]
     public function getWorkersOnlyByPages(
         UserRepository $userRepository,
-        SerializerInterface $serializer,
         Paginator $paginator,
         RequestStack $requestStack,
         CustomDataValidator $customDataValidator
@@ -190,30 +194,30 @@ class UserController extends AbstractController
                 'requiredDates' => $datesForFilter
             ]
         ));
-        return $this->json($serializer->serialize($result, 'json', ['groups' => [
+
+        if (empty($result['items'])) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($result, Response::HTTP_OK, [], ['groups' => [
             'userShort',
             'user_services',
             'serviceShort',
             'user_rating',
             'ratingShort'
-        ]]));
+        ]]);
     }
 
-    /**
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     */
     #[Route(path: '/api/users/workers/{id}', name: 'app_users_worker_get', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneWorker(
         int $id,
         UserRepository $userRepository,
-        SerializerInterface $serializer,
         WorkerAvailableTimeRepository $workerAvailableTimeRepository
     ): Response
     {
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
-        // TODO: remove default user response after tests
         if (!$user) {
-            $user = $userRepository->findOneBy(['isWorker' => true]);
+            return new Response('', Response::HTTP_NOT_FOUND);
         }
 
         $workerTimeCollection = $workerAvailableTimeRepository->findBy(['worker' => $user, 'isTimeFree' => true]);
@@ -221,10 +225,15 @@ class UserController extends AbstractController
             new DateTimeNormalizer(),
             new ObjectNormalizer(new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader())))
         ]);
-        $workerTimeArray = $serializerManual->normalize($workerTimeCollection, null, [
-            'groups' => ['workerAvailableTimeShort'],
-            DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
-        ]);
+        try {
+            $workerTimeArray = $serializerManual->normalize($workerTimeCollection, null, [
+                'groups' => ['workerAvailableTimeShort'],
+                DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
+            ]);
+        } catch (\Exception $exception) {
+            // TODO add an error message to a log
+            return $this->json(['error' => 'server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         $workerTimeConverted = [];
         foreach ($workerTimeArray as $workerTime) {
@@ -243,8 +252,14 @@ class UserController extends AbstractController
             ];
         }
 
-        return $this->json([
-            'worker' => $serializer->serialize($user, 'json', [
+        return $this->json(
+            [
+                'worker' => $user,
+                'workerFreeTime' => $workerTimeResponse
+            ],
+            Response::HTTP_OK,
+            [],
+            [
                 'groups' => [
                     'userShort',
                     'user_services',
@@ -260,9 +275,8 @@ class UserController extends AbstractController
                     'review_reviewer'
                 ],
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
-            ]),
-            'workerFreeTime' => json_encode($workerTimeResponse)
-        ]);
+            ]
+        );
     }
 
     #[Route(path: '/api/users/workers/{id}/worker-available-time', name: 'app_users_worker_change_available_time', requirements: ['id' => '\d+'], methods: ['PATCH'])]
@@ -270,7 +284,6 @@ class UserController extends AbstractController
         int $id,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        SerializerInterface $serializer,
         Request $request
     ): Response
     {
@@ -297,35 +310,26 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json($serializer->serialize(
-            [
-                'status' => 'success',
-                'message' => 'worker available time has been changed',
-                'data' => []
-            ],
-            'json'
-        ));
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]
     public function getClientsOnlyByPages(
         UserRepository $userRepository,
-        SerializerInterface $serializer,
         Paginator $paginator
     ): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(['isClient' => true]));
-        return $this->json($serializer->serialize($result, 'json', ['groups' => [
+        return $this->json($result, Response::HTTP_OK, [], ['groups' => [
             'userShort',
-        ]]));
+        ]]);
     }
 
     #[Route('/api/users/change-password', name: 'app_users_change_password', methods: ['PATCH'])]
     public function changePassword(
         EntityManagerInterface $em,
-        SerializerInterface $serializer,
         UserPasswordHasherInterface $passwordHasher,
         Request $request
     ): Response
@@ -345,13 +349,6 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
 
-        return $this->json($serializer->serialize(
-            [
-                'status' => 'success',
-                'message' => 'the password has been updated',
-                'data' => []
-            ],
-            'json'
-        ));
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

@@ -12,18 +12,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ApiLoginController extends AbstractController
 {
     #[Route('/api/login', name: 'app_login', methods: ['POST'])]
-    public function login(#[CurrentUser] ?User $user, SerializerInterface $serializer): Response
+    public function login(
+        #[CurrentUser] User $user
+    ): Response
     {
-        return $this->json($serializer->serialize(
-            [
-                'status' => 'success',
-                'message' => 'login success',
-                'data' => ['user' => $user]
-            ],
-            'json',
-            ['groups' => [
-                'userShort'
-            ]]
-        ));
+        return $this->json($user, Response::HTTP_OK, [], ['groups' => [
+            'userShort'
+        ]]);
     }
 }
