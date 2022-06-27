@@ -52,6 +52,8 @@ services:
     volumes:
       - ./api:/var/www/symfony_docker
       - ./api/php.dev.ini:/usr/local/etc/php/conf.d/php.ini
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - database
 
