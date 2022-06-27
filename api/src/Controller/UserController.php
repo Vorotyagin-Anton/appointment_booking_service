@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -44,6 +45,10 @@ class UserController extends AbstractController
     ): Response
     {
         $user = $userRepository->find($id);
+        if (!isset($user)) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
         return $this->json($user, Response::HTTP_OK, [], ['groups' => [
             'userShort'
         ]]);
@@ -166,15 +171,15 @@ class UserController extends AbstractController
             'dateRanges' => []
         ];
         foreach ($requiredDates as $date) {
-            if ($customDataValidator->validateDateTime($date, 'Y-m-d')) {
+            if ($customDataValidator->isDateTimeValid($date, 'Y-m-d')) {
                 $datesForFilter['singleDates'][] = $date;
                 continue;
             }
 
             $dateRange = \json_decode($date, true);
             if (
-                $customDataValidator->validateDateTime($dateRange['from'], 'Y-m-d') &&
-                $customDataValidator->validateDateTime($dateRange['to'], 'Y-m-d')
+                $customDataValidator->isDateTimeValid($dateRange['from'], 'Y-m-d') &&
+                $customDataValidator->isDateTimeValid($dateRange['to'], 'Y-m-d')
             ) {
                 $datesForFilter['dateRanges'][] = [
                     'from' => $dateRange['from'],
@@ -230,7 +235,7 @@ class UserController extends AbstractController
                 'groups' => ['workerAvailableTimeShort'],
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
             ]);
-        } catch (\Exception $exception) {
+        } catch (\Exception|ExceptionInterface $exception) {
             // TODO add an error message to a log
             return $this->json(['error' => 'server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

@@ -90,8 +90,8 @@ class OrderController extends AbstractController
             $em->persist($order);
             $em->flush();
 
-            $serviceStartTime = $customDataFormatter->convertWorkerAvailableExactTime($time->getExactTimeInMinutes());
-            $serviceEndTime = $customDataFormatter->convertWorkerAvailableExactTime(
+            $serviceStartTime = $customDataFormatter->getConvertedWorkerAvailableExactTime($time->getExactTimeInMinutes());
+            $serviceEndTime = $customDataFormatter->getConvertedWorkerAvailableExactTime(
                 $time->getExactTimeInMinutes() + $service->getDuration() * 30
             );
             $serviceDate = date_format($time->getExactDate(), 'Y-m-d');
@@ -110,7 +110,7 @@ class OrderController extends AbstractController
                 $telegramSender->sendMessage($message, $client->getTelegram(), $chatter);
             }
 
-            return $this->json($order, Response::HTTP_OK, [], ['groups' => [
+            return $this->json($order, Response::HTTP_CREATED, [], ['groups' => [
                 'orderShort'
             ]]);
         }
