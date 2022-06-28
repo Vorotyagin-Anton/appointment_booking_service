@@ -82,24 +82,33 @@
     </div>
   </div>
 
+  <OrderResponseModal :showModal="showModal">
+    <p>88888</p>
+  </OrderResponseModal>
+
 </template>
 
 <script>
 import {computed, ref, watch} from "vue"
+import axios from "axios";
 import useMaster from "src/hooks/useMaster";
 import OrderField from "components/Order/OrderField";
-import axios from "axios";
+import OrderResponseModal from "components/Common/Modal/OrderResponseModal";
 
 export default {
   name: "OrderStepperConfirm",
 
   components: {
-    OrderField
+    OrderField,
+    OrderResponseModal
   },
 
   setup() {
     const {master, mountMaster, orderInfo} = useMaster();
     mountMaster();
+
+    const showModal = ref(false)
+    const responseModalData = ref()
 
     const {date, time, service} = orderInfo.value
 
@@ -142,6 +151,15 @@ export default {
       axios.post('api/orders', order.value)
         .then(response => {
           console.log('response', JSON.parse(response.data));
+          const responseData = JSON.parse(response.data)
+
+          if (responseData.title === 'Validation Failed'){
+            console.log('ошибка валидации, передать ошибку в форму');
+          }
+          if (responseData.id) {
+            showModal.value = true
+            //console.log('показать окно с сообщением об удачной записи');
+          }
         })
         .catch(error => {
           console.log('error', error);
@@ -154,7 +172,10 @@ export default {
       master,
       hostUrl,
       readySend,
-      formattedDate, time, service
+      formattedDate, time, service,
+
+      showModal,
+      responseModalData,
     }
   }
 }
