@@ -247,7 +247,7 @@
         </div>
       </div>
     </div>
-    <account-footer
+    <profile-footer
       class="profile-page__footer"
       @confirm="updateProfile"
     />
@@ -261,7 +261,7 @@ import {ref, onMounted} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
-import AccountFooter from "components/Cabinet/Profile/AccountFooter";
+import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
 import AppLoading from "components/Common/AppLoading";
 import AuthAlert from "components/Auth/AuthAlert";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
@@ -277,7 +277,7 @@ export default {
     AccountField,
     AccountTextarea,
     AccountAvatar,
-    AccountFooter,
+    ProfileFooter,
   },
 
   emits: [
