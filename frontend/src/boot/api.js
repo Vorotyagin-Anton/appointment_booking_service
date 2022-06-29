@@ -1,3 +1,4 @@
+import {boot} from "quasar/wrappers";
 import axios from 'axios'
 import userModule from "src/api/user";
 import servicesModule from "src/api/services";
@@ -18,6 +19,10 @@ const instance = axios.create({
   }
 });
 
+export default boot(() => {
+  instance.interceptors.response.use(responseInterceptor, errorInterceptor);
+});
+
 const api = {
   user: userModule(instance),
   services: servicesModule(instance),
@@ -27,3 +32,19 @@ const api = {
 };
 
 export {api};
+
+function responseInterceptor(response) {
+  if (process.env.DEV) {
+    console.log(response.config.url, response);
+  }
+
+  return response;
+}
+
+function errorInterceptor(error) {
+  if (process.env.DEV) {
+    console.dir(error);
+  }
+
+  return Promise.reject(error);
+}
