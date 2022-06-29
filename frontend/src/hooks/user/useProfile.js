@@ -70,7 +70,7 @@ export default function useProfile() {
 
       await api.user.changePassword(user.value.id, oldPassword, newPassword);
 
-      await showSuccess('Profile successfully updated.')
+      await showSuccess('Password successfully changed.')
     } catch (error) {
       logger(error);
       await showError('Something was wrong.');

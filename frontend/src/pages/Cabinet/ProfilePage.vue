@@ -305,12 +305,14 @@ export default {
     const {pass: oldPass, passRules: oldPassRules} = usePasswordInput();
     const {pass: newPass, passRules: newPassRules, passConfirmation, passConfirmationRules} = usePasswordInput();
 
-    const submitPasswordChanges = () => {
-      console.log('test')
-      changePassword(oldPass.value, newPass.value);
+    const submitPasswordChanges = async () => {
+      await changePassword(oldPass.value, newPass.value);
+      resetPasswordChanges();
     };
 
     const resetPasswordChanges = () => {
+      passwordModal.value = false;
+
       oldPass.value = '';
       newPass.value = '';
       passConfirmation.value = '';
