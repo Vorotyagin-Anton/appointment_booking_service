@@ -35,7 +35,7 @@ export {api};
 
 function responseInterceptor(response) {
   if (process.env.DEV) {
-    console.log(response.config.url, response);
+    console.log("RESPONSE:", response.config.url, response);
   }
 
   return response;
@@ -43,7 +43,7 @@ function responseInterceptor(response) {
 
 function errorInterceptor(error) {
   if (process.env.DEV) {
-    console.dir(error);
+    console.log("ERROR:", error.config.url, error.response);
   }
 
   return Promise.reject(error);
