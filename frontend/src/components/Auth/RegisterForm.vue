@@ -1,29 +1,31 @@
 <template>
   <q-form
-    class="signup-form"
+    class="register-form"
     @submit="onSubmit"
     @reset="onReset"
   >
-    <div class="signup-form__inputs">
-      <div class="signup-form__email">
+    <div class="register-form__inputs">
+      <div class="register-form__email">
 
         <label>
-          <span class="signup-form__label">Enter your email</span>
+          <span class="register-form__label">Enter your email</span>
           <q-input
-            class="signup-form__input"
+            class="register-form__input"
             placeholder="you@example.com"
             name="name"
             v-model="email"
             :rules="emailRules"
+            :error="Boolean(error.fields.email)"
+            :error-message="error.fields.email"
             :dense="true"
             outlined
           />
         </label>
 
         <label>
-          <span class="signup-form__label">Confirm your email</span>
+          <span class="register-form__label">Confirm your email</span>
           <q-input
-            class="signup-form__input"
+            class="register-form__input"
             placeholder="you@example.com"
             v-model="emailConfirmation"
             :rules="emailConfirmationRules"
@@ -33,26 +35,28 @@
         </label>
       </div>
 
-      <div class="signup-form__password">
+      <div class="register-form__password">
 
         <label>
-          <span class="signup-form__label">Create a password</span>
+          <span class="register-form__label">Create a password</span>
           <q-input
-            class="signup-form__input"
+            class="register-form__input"
             placeholder="password"
             name="password"
             type="password"
             v-model="pass"
             :rules="passRules"
+            :error="Boolean(error.fields.password)"
+            :error-message="error.fields.password"
             :dense="true"
             outlined
           />
         </label>
 
         <label>
-          <span class="signup-form__label">Confirm your password</span>
+          <span class="register-form__label">Confirm your password</span>
           <q-input
-            class="signup-form__input"
+            class="register-form__input"
             placeholder="password"
             type="password"
             v-model="passConfirmation"
@@ -64,42 +68,42 @@
       </div>
     </div>
 
-    <div class="signup-form__checkboxes">
-      <label class="signup-form__checkbox signup-form__checkbox_master">
+    <div class="register-form__checkboxes">
+      <label class="register-form__checkbox register-form__checkbox_master">
         <q-checkbox
           v-model="isMaster"
           name="isMaster"
           :dense="true"
         />
 
-        <div class="signup-form__agrees">
+        <div class="register-form__agrees">
           Register as a master for commercial activities
         </div>
       </label>
 
-      <label class="signup-form__checkbox signup-form__checkbox_agree">
+      <label class="register-form__checkbox register-form__checkbox_agree">
         <q-checkbox
           v-model="agree"
           name="agree"
           :dense="true"
         />
 
-        <div class="signup-form__agrees">
+        <div class="register-form__agrees">
           I agree to Square’s
-          <router-link class="signup-form__link" to="main">Terms</router-link>&nbsp;
-          <router-link class="signup-form__link" to="main">Privacy Policy</router-link>
+          <router-link class="register-form__link" to="main">Terms</router-link>&nbsp;
+          <router-link class="register-form__link" to="main">Privacy Policy</router-link>
           ,
           and
-          <router-link class="signup-form__link" to="main">Terms of Service</router-link>
+          <router-link class="register-form__link" to="main">Terms of Service</router-link>
           apply.
         </div>
       </label>
     </div>
 
-    <div class="signup-form__control">
-      <div class="signup-form__btns">
+    <div class="register-form__control">
+      <div class="register-form__btns">
         <q-btn
-          class="signup-form__btn signup-form__reset"
+          class="register-form__btn register-form__reset"
           outline
           color="black"
           label="Reset"
@@ -108,7 +112,7 @@
         />
 
         <q-btn
-          class="signup-form__btn signup-form__submit"
+          class="register-form__btn register-form__submit"
           color="primary"
           label="Submit"
           type="submit"
@@ -117,11 +121,11 @@
         />
       </div>
 
-      <div class="signup-form__signin">
-        <span class="signup-form__p">Already have a Square account?</span>&nbsp;
+      <div class="register-form__signin">
+        <span class="register-form__p">Already have a Square account?</span>&nbsp;
 
         <router-link
-          class="signup-form__link"
+          class="register-form__link"
           :to="{name: 'auth.signin'}"
         >
           Sign In
@@ -134,12 +138,14 @@
 
 <script>
 import {ref} from "vue";
-import useAuth from "src/hooks/auth/useAuth";
 import useEmailInput from "src/hooks/form/useEmailInput";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
+import useRegister from "src/hooks/user/useRegister";
+import useForm from "src/hooks/common/useForm";
+import useMessage from "src/hooks/user/useMessage";
 
 export default {
-  name: "SignUpForm",
+  name: "RegisterForm",
 
   setup() {
     const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
@@ -148,11 +154,22 @@ export default {
     const agree = ref(false);
     const isMaster = ref(false);
 
-    const {isRequested, register} = useAuth();
+    const register = useRegister();
+    const {isRequested, error, submit, reset} = useForm();
+    const {showError, hide} = useMessage();
 
-    const onSubmit = () => register(email.value, pass.value, isMaster.value);
+    const onSubmit = async () => {
+      await submit(register, email.value, pass.value, isMaster.value);
+
+      if (error.value.message) {
+        await showError(error.value.message);
+      }
+    };
 
     const onReset = () => {
+      hide();
+      reset();
+
       agree.value = false;
       email.value = null;
       pass.value = null;
@@ -172,6 +189,7 @@ export default {
       agree,
       isMaster,
       isRequested,
+      error,
       onSubmit,
       onReset,
     }
@@ -180,7 +198,7 @@ export default {
 </script>
 
 <style lang="scss">
-.signup-form {
+.register-form {
   display: flex;
   flex-direction: column;
   width: 100%;

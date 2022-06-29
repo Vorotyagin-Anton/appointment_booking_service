@@ -1,5 +1,5 @@
 import {api} from "boot/api";
-import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed} from "vue";
 import {useStore} from "vuex";
 import {useRoute, useRouter} from "vue-router";
 import useMessage from "src/hooks/auth/useMessage";
@@ -20,11 +20,9 @@ export default function useAuth() {
     try {
       await store.dispatch('auth/startRequest');
 
-      const response = await api.auth.register(email, password, isMaster);
-
-      await store.dispatch('auth/login', response.user);
-
-      window.localStorage.setItem('user', JSON.stringify(response.user));
+      const user = await api.auth.register(email, password, isMaster);
+      await store.dispatch('auth/login', user);
+      window.localStorage.setItem('user', JSON.stringify(user));
 
       await router.push({name: 'cabinet'});
     } catch (error) {
@@ -39,11 +37,9 @@ export default function useAuth() {
     try {
       await store.dispatch('auth/startRequest');
 
-      const response = await api.auth.login(email, password);
-
-      await store.dispatch('auth/login', response.user);
-
-      window.localStorage.setItem('user', JSON.stringify(response.user));
+      const user = await api.auth.login(email, password);
+      await store.dispatch('auth/login', user);
+      window.localStorage.setItem('user', JSON.stringify(user));
 
       await router.push({name: 'cabinet'});
     } catch (error) {
@@ -60,11 +56,11 @@ export default function useAuth() {
 
       let user = window.localStorage.getItem('user');
 
-      if (!user) {
-        const {user} = await api.auth.authorize();
-        window.localStorage.setItem('user', JSON.stringify(user));
-      } else {
+      if (user) {
         user = JSON.parse(user);
+      } else {
+        user = await api.auth.authorize();
+        window.localStorage.setItem('user', JSON.stringify(user));
       }
 
       await store.dispatch('auth/login', user);
