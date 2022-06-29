@@ -48,7 +48,7 @@ import {useRoute} from "vue-router";
 import MainNavTab from "components/MainNav/MainNavTab";
 import DropdownCatalog from "components/MainNav/DropdownCatalog";
 import DropdownFeatures from "components/MainNav/DropdownFeatures";
-import useAuth from "src/hooks/auth/useAuth";
+import useAuth from "src/hooks/user/useAuth";
 
 const tabs = [
   {

@@ -71,8 +71,8 @@
 
 <script>
 import {computed, onMounted, ref, watch} from "vue";
-import useAuth from "src/hooks/auth/useAuth";
-import useSchedule from "src/hooks/auth/useSchedule";
+import useAuth from "src/hooks/user/useAuth";
+import useSchedule from "src/hooks/user/useSchedule";
 import AccountFooter from "components/Cabinet/Profile/AccountFooter";
 import ScheduleSlots from "components/Cabinet/Schedule/ScheduleSlots";
 import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
