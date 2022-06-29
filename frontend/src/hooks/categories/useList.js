@@ -10,7 +10,7 @@ export default function useList() {
 
   const categories = computed(() => store.getters['categories/items']);
 
-  const getCategoriesFromApi = async () => {
+  const getFromApi = async () => {
     try {
       startLoading();
 
@@ -23,15 +23,9 @@ export default function useList() {
     }
   };
 
-  onMounted(async () => {
-    if (categories.value.length === 0) {
-      await getCategoriesFromApi();
-    }
-  });
-
   return {
     loading,
     categories,
-    getCategoriesFromApi,
+    getFromApi,
   }
 }
