@@ -40,19 +40,87 @@
           />
         </div>
 
-        <h3 class="profile-page__h3">Password</h3>
+        <div class="change-password">
+          <h3 class="profile-page__h3">Password</h3>
 
-        <p class="profile-page__p">
-          A strong password contains a mix of numbers, letters, and symbols. It is hard to
-          guess, does not resemble a real word, and is only used for this account.
-        </p>
+          <p class="profile-page__p">
+            A strong password contains a mix of numbers, letters, and symbols. It is hard to
+            guess, does not resemble a real word, and is only used for this account.
+          </p>
 
-        <q-btn
-          class="profile-page__btn"
-          label="Update password"
-          color="primary"
-          no-caps
-        />
+          <q-btn
+            class="profile-page__btn"
+            label="Update password"
+            color="primary"
+            no-caps
+            @click="openPasswordModal"
+          />
+
+          <q-dialog class="password-modal" v-model="passwordModal">
+            <q-card class="password-modal__card">
+              <q-card-section>
+                <div class="text-h6 password-modal__header">Change Password</div>
+
+                <label>
+                  <span class="password-modal__label">Enter old password</span>
+                  <q-input
+                    class="password-modal__input"
+                    placeholder="Old password"
+                    type="password"
+                    v-model="oldPass"
+                    :rules="oldPassRules"
+                    :dense="true"
+                    outlined
+                  />
+                </label>
+
+                <label>
+                  <span class="password-modal__label">Create a new password</span>
+                  <q-input
+                    class="password-modal__input"
+                    placeholder="New password"
+                    type="password"
+                    v-model="newPass"
+                    :rules="newPassRules"
+                    :dense="true"
+                    outlined
+                  />
+                </label>
+
+                <label>
+                  <span class="password-modal__label">Confirm new password</span>
+                  <q-input
+                    class="password-modal__input"
+                    placeholder="Password confirmation"
+                    type="password"
+                    v-model="passConfirmation"
+                    :rules="passConfirmationRules"
+                    :dense="true"
+                    outlined
+                  />
+                </label>
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn
+                  flat
+                  outline
+                  label="Cancel"
+                  v-close-popup
+                  @click="resetPasswordChanges"
+                />
+
+                <q-btn
+                  flat
+                  label="Submit"
+                  color="primary"
+                  v-close-popup
+                  @click="submitPasswordChanges"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </div>
 
         <h3 class="profile-page__h3">2-step verification</h3>
 
@@ -190,14 +258,15 @@
 
 <script>
 import {ref, onMounted} from "vue";
-import useAuth from "src/hooks/auth/useAuth";
-import useProfile from "src/hooks/auth/useProfile";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
 import AccountFooter from "components/Cabinet/Profile/AccountFooter";
 import AppLoading from "components/Common/AppLoading";
 import AuthAlert from "components/Auth/AuthAlert";
+import usePasswordInput from "src/hooks/form/usePasswordInput";
+import useAuth from "src/hooks/user/useAuth";
+import useProfile from "src/hooks/user/useProfile";
 
 export default {
   name: "ProfilePage",
@@ -220,7 +289,7 @@ export default {
 
     const avatar = ref(null);
 
-    const {loading, profile, updateProfile} = useProfile(user.value);
+    const {loading, profile, updateProfile, changePassword} = useProfile(user.value);
 
     onMounted(() => {
       emit('toggle-left-drawer', {
@@ -229,12 +298,45 @@ export default {
       });
     });
 
+    const passwordModal = ref(false);
+
+    const openPasswordModal = () => passwordModal.value = true;
+
+    const {pass: oldPass, passRules: oldPassRules} = usePasswordInput();
+    const {pass: newPass, passRules: newPassRules, passConfirmation, passConfirmationRules} = usePasswordInput();
+
+    const submitPasswordChanges = () => {
+      console.log('test')
+      changePassword(oldPass.value, newPass.value);
+    };
+
+    const resetPasswordChanges = () => {
+      oldPass.value = '';
+      newPass.value = '';
+      passConfirmation.value = '';
+    };
+
     return {
       loading,
       user,
       avatar,
       profile,
       updateProfile,
+
+      passwordModal,
+      openPasswordModal,
+
+      oldPass,
+      oldPassRules,
+
+      newPass,
+      newPassRules,
+      passConfirmation,
+      passConfirmationRules,
+
+      changePassword,
+      submitPasswordChanges,
+      resetPasswordChanges,
     }
   }
 }
@@ -327,6 +429,21 @@ export default {
     &:hover {
       color: $primary;
     }
+  }
+}
+
+.password-modal {
+  &__card {
+    width: 450px;
+    padding: 0 15px;
+  }
+
+  &__header {
+    margin: 10px 0 15px;
+  }
+
+  &__input {
+    margin-top: 5px;
   }
 }
 </style>
