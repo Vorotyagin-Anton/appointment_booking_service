@@ -19,6 +19,9 @@
         class="login-form__input"
         placeholder="Email address"
         v-model="email"
+        :rules="emailRules"
+        :error="Boolean(error.fields.email)"
+        :error-message="error.fields.email"
         outlined
       />
 
@@ -27,6 +30,9 @@
         placeholder="Password"
         type="password"
         v-model="pass"
+        :rules="[passRules[0]]"
+        :error="Boolean(error.fields.password)"
+        :error-message="error.fields.password"
         outlined
       />
     </div>
@@ -53,23 +59,36 @@
 <script>
 import useEmailInput from "src/hooks/form/useEmailInput";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
-import useAuth from "src/hooks/auth/useAuth";
+import useLogin from "src/hooks/user/useLogin";
+import useForm from "src/hooks/common/useForm";
+import useMessage from "src/hooks/user/useMessage";
 
 export default {
   name: "LoginForm",
 
   setup() {
-    const {email} = useEmailInput();
-    const {pass} = usePasswordInput();
+    const {email, emailRules} = useEmailInput();
+    const {pass, passRules} = usePasswordInput();
 
-    const {isRequested, login} = useAuth();
+    const {isRequested, error, submit} = useForm();
+    const login = useLogin();
+    const {showError} = useMessage();
 
-    const onSubmit = () => login(email.value, pass.value);
+    const onSubmit = async () => {
+      await submit(login, email.value, pass.value);
+
+      if (error.value.message) {
+        await showError(error.value.message);
+      }
+    };
 
     return {
-      email,
-      pass,
       isRequested,
+      email,
+      emailRules,
+      pass,
+      passRules,
+      error,
       onSubmit,
     }
   }

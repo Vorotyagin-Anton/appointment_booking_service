@@ -3,41 +3,44 @@ import {api} from "boot/api";
 import {useStore} from "vuex";
 import logger from "src/helpers/logger";
 import useLoading from "src/hooks/common/useLoading";
-import useMessage from "src/hooks/auth/useMessage";
+import useMessage from "src/hooks/user/useMessage";
+import useAuth from "src/hooks/user/useAuth";
 
-export default function useProfile(user) {
+export default function useProfile() {
   const store = useStore();
 
   const {loading, startLoading, finishLoading} = useLoading();
 
   const {showError, showSuccess} = useMessage();
 
+  const {user} = useAuth();
+
   const profile = ref({
-    name: user.name ?? null,
-    surname: user.surname ?? null,
-    middlename: user.middlename ?? null,
+    name: user.value.name ?? null,
+    surname: user.value.surname ?? null,
+    middlename: user.value.middlename ?? null,
 
     // business
-    story: user.story ?? null,
+    story: user.value.story ?? null,
 
     // contacts
-    mobilePhoneNumber: user.mobilePhoneNumber ?? null,
-    website: user.website,
-    facebook: user.facebook,
-    instagram: user.instagram,
-    telegram: user.telegram,
+    mobilePhoneNumber: user.value.mobilePhoneNumber ?? null,
+    website: user.value.website,
+    facebook: user.value.facebook,
+    instagram: user.value.instagram,
+    telegram: user.value.telegram,
 
     // address
-    state: user.state ?? null,
-    city: user.city ?? null,
-    code: user.code ?? null,
-    street: user.street ?? null,
-    home: user.home ?? null,
+    state: user.value.state ?? null,
+    city: user.value.city ?? null,
+    code: user.value.code ?? null,
+    street: user.value.street ?? null,
+    home: user.value.home ?? null,
 
     // birth
-    month: user.month ? getMonthById(user.birth.month) : null,
-    day: user.day ?? null,
-    year: user.year ?? null,
+    month: user.value.month ? getMonthById(user.value.month) : null,
+    day: user.value.day ?? null,
+    year: user.value.year ?? null,
   });
 
   const updateProfile = async () => {
@@ -46,7 +49,7 @@ export default function useProfile(user) {
 
       const payload = parseProfileData(profile.value);
 
-      const data = await api.auth.updateProfile(user.id, payload);
+      const data = await api.user.updateProfile(user.value.id, payload);
 
       window.localStorage.setItem('user', JSON.stringify(data));
 
@@ -61,11 +64,26 @@ export default function useProfile(user) {
     }
   };
 
+  const changePassword = async (oldPassword, newPassword) => {
+    try {
+      startLoading();
+
+      await api.user.changePassword(user.value.id, oldPassword, newPassword);
+
+      await showSuccess('Profile successfully updated.')
+    } catch (error) {
+      logger(error);
+      await showError('Something was wrong.');
+    } finally {
+      finishLoading();
+    }
+  };
+
   return {
     loading,
-    months,
     profile,
     updateProfile,
+    changePassword,
   }
 }
 
@@ -75,7 +93,7 @@ function parseProfileData(profile) {
   Object
     .entries(profile)
     .forEach(([prop, value]) => {
-      if (value === null || value.trim().length === 0) {
+      if (value === null) {
         return;
       }
 
@@ -89,11 +107,11 @@ function parseProfileData(profile) {
   return data;
 }
 
-function getMonthById(id) {
+export function getMonthById(id) {
   return months.find(month => month.value === id);
 }
 
-const months = [
+export const months = [
   {label: '01 - January', value: 1},
   {label: '02 - February', value: 2},
   {label: '03 - March', value: 3},

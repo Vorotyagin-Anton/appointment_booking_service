@@ -13,7 +13,7 @@
 import LoginForm from "components/Auth/LoginForm";
 
 export default {
-  name: "SignInPage",
+  name: "LoginPage",
 
   components: {
     LoginForm,
