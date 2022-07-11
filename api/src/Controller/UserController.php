@@ -336,14 +336,28 @@ class UserController extends AbstractController
     public function changePassword(
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        Request $request
+        Request $request,
+        #[CurrentUser] ?User $currentUser
     ): Response
     {
         $data = json_decode($request->getContent());
         $userId = $data->userId;
         $userNewPassword = $data->newPassword;
+        $userOldPassword = $data->oldPassword;
 
         $user = $em->getRepository(User::class)->findOneBy(['id' => $userId]);
+        if (!$user) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        if ($user !== $currentUser) {
+            return new Response('', Response::HTTP_FORBIDDEN);
+        }
+
+        if (!$passwordHasher->isPasswordValid($user, $userOldPassword)) {
+            return $this->json(['error' => 'Invalid credentials.'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $user->setPassword(
             $passwordHasher->hashPassword(
                 $user,
