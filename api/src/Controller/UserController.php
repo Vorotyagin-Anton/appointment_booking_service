@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -145,7 +146,9 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return $this->json($user, Response::HTTP_CREATED, [], ['groups' => [
+                'userShort'
+            ]]);
         }
 
         return $this->json($form, Response::HTTP_BAD_REQUEST);
@@ -293,6 +296,10 @@ class UserController extends AbstractController
     ): Response
     {
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+        if (!$user) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
         $data = $request->toArray();
 
         foreach ($data['delete'] as $timeForDeleteId) {
@@ -315,7 +322,9 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return new Response('', Response::HTTP_NO_CONTENT);
+        return $this->json($user, Response::HTTP_CREATED, [], ['groups' => [
+            'userShort'
+        ]]);
     }
 
     #[Route('/api/users/clients', name: 'app_users_clients', methods: ['GET'])]
