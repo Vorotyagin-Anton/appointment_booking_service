@@ -38,17 +38,17 @@
 <script>
 import {ref} from "vue";
 import ProfileTypeItem from "components/Auth/Profile/ProfileTypeItem";
-import useMessage from "src/hooks/auth/useMessage";
+import useMessage from "src/hooks/user/useMessage";
 
 const types = [
   {
-    id: 1,
+    id: 'client',
     title: 'Individual',
     promo: 'Creating orders, tracking reservations, contacts with masters and other customers.',
     icon: 'person_outline',
   },
   {
-    id: 2,
+    id: 'worker',
     title: 'Business',
     promo: 'One-Person business, Sole proprietor, LLC, Corporation.',
     icon: 'business',
@@ -76,11 +76,14 @@ export default {
 
     const next = () => {
       if (selectedId.value === null) {
-        showError('Please choose type of your account.', 5000);
+        showError('Please choose type of your account.', 3000);
         return;
       }
 
-      emit('next');
+      emit('next', {
+        // isClient: selectedId.value === 'client',
+        // isWorker: selectedId.value === 'worker',
+      });
 
       hide();
     }
