@@ -98,6 +98,9 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
+    "jacklul/monolog-telegram": {
+        "version": "2.1.0"
+    },
     "knplabs/knp-components": {
         "version": "v3.5.0"
     },
