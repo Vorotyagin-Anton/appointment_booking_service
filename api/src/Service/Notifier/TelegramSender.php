@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Notifier;
 
 use Symfony\Component\Notifier\Bridge\Telegram\TelegramOptions;
 use Symfony\Component\Notifier\ChatterInterface;
