@@ -3,7 +3,7 @@ import {api} from "boot/api";
 import {useStore} from "vuex";
 import logger from "src/helpers/logger";
 import useLoading from "src/hooks/common/useLoading";
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
 import useAuth from "src/hooks/user/useAuth";
 
 export default function useProfile() {

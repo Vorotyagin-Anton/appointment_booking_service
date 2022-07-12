@@ -68,7 +68,7 @@
 <script>
 import useList from "src/hooks/categories/useList";
 import useSelect from "src/hooks/form/useSelect";
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
 import {onMounted} from "vue";
 
 export default {

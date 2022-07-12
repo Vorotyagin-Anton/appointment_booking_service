@@ -38,7 +38,7 @@
 <script>
 import {ref} from "vue";
 import ProfileTypeItem from "components/Auth/Profile/ProfileTypeItem";
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
 
 const types = [
   {

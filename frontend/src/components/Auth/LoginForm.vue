@@ -61,7 +61,7 @@ import useEmailInput from "src/hooks/form/useEmailInput";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
 import useLogin from "src/hooks/user/useLogin";
 import useForm from "src/hooks/common/useForm";
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
 
 export default {
   name: "LoginForm",

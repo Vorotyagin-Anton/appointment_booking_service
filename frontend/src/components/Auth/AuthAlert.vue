@@ -20,7 +20,7 @@
 
 <script>
 
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
 
 export default {
   name: "AlertAlert",

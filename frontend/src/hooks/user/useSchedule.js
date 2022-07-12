@@ -3,7 +3,7 @@ import {useStore} from "vuex";
 import {computed} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 import logger from "src/helpers/logger";
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
 import moment from "moment";
 
 export default function useSchedule() {
