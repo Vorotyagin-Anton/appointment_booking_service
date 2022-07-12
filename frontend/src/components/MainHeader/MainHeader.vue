@@ -66,7 +66,8 @@
 </template>
 
 <script>
-import useAuth from "src/hooks/auth/useAuth";
+import useAuth from "src/hooks/user/useAuth";
+import useLogout from "src/hooks/user/useLogout";
 import MainHeaderHeading from "components/MainHeader/MainHeaderHeading";
 
 export default {
@@ -77,7 +78,8 @@ export default {
   },
 
   setup() {
-    const {isAuthorized, logout} = useAuth();
+    const {isAuthorized} = useAuth();
+    const logout = useLogout();
 
     return {
       isAuthorized,

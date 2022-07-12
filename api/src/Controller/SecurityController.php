@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class SecurityController extends AbstractController
 {
@@ -17,29 +16,16 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/api/check-auth', name: 'check_auth', methods: ['GET'])]
-    public function checkAuth(#[CurrentUser] ?User $user, SerializerInterface $serializer): Response
+    public function checkAuth(
+        #[CurrentUser] ?User $user
+    ): Response
     {
-        if (null === $user) {
-            return $this->json($serializer->serialize(
-                [
-                    'status' => 'error',
-                    'message' => 'there is no authorized user',
-                    'data' => []
-                ],
-                'json'
-            ));
+        if (!isset($user)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
         }
 
-        return $this->json($serializer->serialize(
-            [
-                'status' => 'success',
-                'message' => 'there is an authorized user',
-                'data' => ['user' => $user]
-            ],
-            'json',
-            ['groups' => [
-                'userShort'
-            ]]
-        ));
+        return $this->json($user, Response::HTTP_OK, [], ['groups' => [
+            'userShort'
+        ]]);
     }
 }

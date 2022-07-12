@@ -33,7 +33,7 @@
 
 <script>
 import {computed, ref, toRef, watch} from "vue";
-import useSchedule from "src/hooks/auth/useSchedule";
+import useSchedule from "src/hooks/user/useSchedule";
 
 export default {
   name: "ScheduleSlot",

@@ -53,7 +53,7 @@
       />
     </q-drawer>
 
-    <account-footer
+    <profile-footer
       class="profile-page__footer"
       :is-save-disabled="!isSlotsSelected"
       @confirm="saveChanges"
@@ -71,9 +71,9 @@
 
 <script>
 import {computed, onMounted, ref, watch} from "vue";
-import useAuth from "src/hooks/auth/useAuth";
-import useSchedule from "src/hooks/auth/useSchedule";
-import AccountFooter from "components/Cabinet/Profile/AccountFooter";
+import useAuth from "src/hooks/user/useAuth";
+import useSchedule from "src/hooks/user/useSchedule";
+import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
 import ScheduleSlots from "components/Cabinet/Schedule/ScheduleSlots";
 import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
 import AuthAlert from "components/Auth/AuthAlert";
@@ -86,7 +86,7 @@ export default {
     AppLoading,
     ScheduleCalendar,
     ScheduleSlots,
-    AccountFooter,
+    ProfileFooter,
     AuthAlert,
   },
 

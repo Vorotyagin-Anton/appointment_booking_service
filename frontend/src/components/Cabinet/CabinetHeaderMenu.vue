@@ -62,14 +62,16 @@
 </template>
 
 <script>
-import useAuth from "src/hooks/auth/useAuth";
 import {computed} from "vue";
+import useAuth from "src/hooks/user/useAuth";
+import useLogout from "src/hooks/user/useLogout";
 
 export default {
   name: "CabinetHeaderMenu",
 
   setup() {
-    const {user, logout} = useAuth();
+    const {user} = useAuth();
+    const logout = useLogout();
 
     const userName = computed(() => {
       if (!user.value) {

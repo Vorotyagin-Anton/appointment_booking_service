@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import useAuth from "src/hooks/auth/useAuth";
 import {onMounted} from "vue";
+import useAuth from "src/hooks/user/useAuth";
 
 export default {
   name: 'App',

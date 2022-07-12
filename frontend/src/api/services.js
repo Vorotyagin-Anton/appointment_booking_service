@@ -3,7 +3,7 @@ export default function (axios) {
     async get() {
       const response = await axios.get('/api/services');
 
-      return JSON.parse(response.data);
+      return response.data;
     },
   };
 }

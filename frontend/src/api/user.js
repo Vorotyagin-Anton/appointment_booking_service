@@ -7,36 +7,28 @@ export default function (axios) {
       formData.append('plainPassword', password);
       formData.append('isWorker', isMaster);
 
-      const params = {
+      const response = await axios.post('/api/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      };
+      });
 
-      const response = await axios.post('/api/register', formData, params);
-
-      return JSON.parse(response.data);
+      return response.data;
     },
 
     async login(email, password) {
-      const payload = {
+      const response = await axios.post('/api/login', {
         username: email,
         password,
-      };
+      });
 
-      const response = await axios.post('/api/login', payload);
-
-      const { data } = JSON.parse(response.data);
-
-      return data
+      return response.data
     },
 
     async authorize() {
       const response = await axios.get('/api/check-auth');
 
-      const { data } = JSON.parse(response.data);
-
-      return data;
+      return response.data;
     },
 
     async logout() {
@@ -46,7 +38,15 @@ export default function (axios) {
     async updateProfile(userId, payload) {
       const response = await axios.patch(`/api/users/${userId}`, payload);
 
-      return JSON.parse(response.data);
+      return response.data;
+    },
+
+    async changePassword(userId, oldPassword, newPassword) {
+      await axios.patch('/api/users/change-password', {
+        userId,
+        oldPassword,
+        newPassword,
+      });
     },
   };
 }

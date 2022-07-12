@@ -2,55 +2,30 @@ import authGuard from "src/router/guards/authGuard";
 import guestGuard from "src/router/guards/guestGuard";
 
 export default [
-  // AUTH
   {
     name: 'auth',
     path: '/auth',
 
     children: [
-      // SIGNIN
       {
         name: 'auth.signin',
         path: '/signin',
-
         beforeEnter: [guestGuard],
-
         meta: {
           guards: ['guest'],
         },
-
-        component: () => import('pages/SignInPage.vue'),
+        component: () => import('pages/Auth/LoginPage.vue'),
       },
-
-      // SIGNUP
       {
         name: 'auth.signup',
         path: '/signup',
-
         beforeEnter: [guestGuard],
-
         meta: {
           guards: ['guest'],
         },
-
-        component: () => import('pages/SignUpPage.vue'),
-      },
-
-      // PROFILE
-      {
-        name: 'auth.profile',
-        path: 'profile',
-
-        beforeEnter: [authGuard],
-
-        meta: {
-          guards: ['auth'],
-        },
-
-        component: () => import('pages/Cabinet/ProfileCreationPage.vue'),
+        component: () => import('pages/Auth/RegisterPage.vue'),
       },
     ],
-
     component: () => import('layouts/AuthLayout.vue'),
   },
 
