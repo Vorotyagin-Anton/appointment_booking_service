@@ -36,7 +36,7 @@ class Paginator
         $totalPages = ceil($totalItems/$offset);
 
         return [
-            'items' => $pagination,
+            'items' => $pagination->getItems(),
             'currentPage' => $page,
             'offset' => $offset,
             'totalItems' => $totalItems,

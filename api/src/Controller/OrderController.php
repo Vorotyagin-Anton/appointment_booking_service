@@ -16,26 +16,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Notifier\ChatterInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class OrderController extends AbstractController
 {
     #[Route(path: 'api/orders', name: 'app_orders', methods: ['GET'])]
-    public function index(OrderRepository $orderRepository, SerializerInterface $serializer): Response
+    public function index(
+        OrderRepository $orderRepository
+    ): Response
     {
         $orders = $orderRepository->findAll();
-        return $this->json($serializer->serialize($orders, 'json', ['groups' => [
+        return $this->json($orders, Response::HTTP_OK, [], ['groups' => [
             'orderShort',
             'order_client',
             'order_worker',
             'userShort'
-        ]]));
+        ]]);
     }
 
     #[Route(path: 'api/orders', name: 'app_orders_post', methods: ['POST'])]
     public function addOrder(
         EntityManagerInterface $em,
-        SerializerInterface $serializer,
         Request $request,
         TelegramSender $telegramSender,
         CustomDataFormatter $customDataFormatter,
@@ -89,8 +89,8 @@ class OrderController extends AbstractController
             $em->persist($order);
             $em->flush();
 
-            $serviceStartTime = $customDataFormatter->convertWorkerAvailableExactTime($time->getExactTimeInMinutes());
-            $serviceEndTime = $customDataFormatter->convertWorkerAvailableExactTime(
+            $serviceStartTime = $customDataFormatter->getConvertedWorkerAvailableExactTime($time->getExactTimeInMinutes());
+            $serviceEndTime = $customDataFormatter->getConvertedWorkerAvailableExactTime(
                 $time->getExactTimeInMinutes() + $service->getDuration() * 30
             );
             $serviceDate = date_format($time->getExactDate(), 'Y-m-d');
@@ -109,11 +109,11 @@ class OrderController extends AbstractController
                 $telegramSender->sendMessage($message, $client->getTelegram(), $chatter);
             }
 
-            return $this->json($serializer->serialize($order, 'json', ['groups' => [
+            return $this->json($order, Response::HTTP_CREATED, [], ['groups' => [
                 'orderShort'
-            ]]));
+            ]]);
         }
 
-        return $this->json($serializer->serialize($form, 'json'));
+        return $this->json($form, Response::HTTP_BAD_REQUEST);
     }
 }

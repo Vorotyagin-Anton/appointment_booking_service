@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import useList from "src/hooks/categories/useList";
 import AppSection from "components/Common/AppSection";
 import AppSectionHeader from "components/Common/AppSectionHeader";
@@ -95,7 +95,7 @@ export default {
   },
 
   setup() {
-    const {categories} = useList();
+    const {categories, getFromApi} = useList();
 
     const categoryList = computed(() => {
       return categories.value.map((category, key) => ({
@@ -130,6 +130,12 @@ export default {
     watch(categoryList, () => {
       if (categoryList.value.length > 0) {
         category.value = categoryList.value[0];
+      }
+    });
+
+    onMounted(async () => {
+      if (categories.value.length === 0) {
+        await getFromApi();
       }
     });
 

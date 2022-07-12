@@ -3,7 +3,7 @@ export default function (axios) {
     async get() {
       const response = await axios.get('/api/service-categories');
 
-      return JSON.parse(response.data);
+      return response.data;
     },
   };
 }

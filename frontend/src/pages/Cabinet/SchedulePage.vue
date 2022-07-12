@@ -5,7 +5,7 @@
 
         <schedule-calendar
           class="schedule-page__calendar"
-          v-model="selectedDates"
+          @update="handleDatesSelection"
         />
 
         <div class="schedule-page__description">
@@ -47,45 +47,47 @@
       <schedule-slots
         class="schedule-page__slots"
         :time-slots="slots"
-        :is-dates-selected="selectedDates.length > 0"
+        :is-disabled="!isDatesSelected"
         @confirm="handleConfirmation"
         @toggle="toggleDrawer"
       />
-
-      <div class="q-mini-drawer-hide schedule-drawer__btn">
-        <q-btn
-          icon="chevron_right"
-          @click="miniDrawer = true"
-          unelevated
-          round
-          dense
-        />
-      </div>
     </q-drawer>
 
-    <account-footer
+    <profile-footer
       class="profile-page__footer"
+      :is-save-disabled="!isSlotsSelected"
       @confirm="saveChanges"
       @reset="resetSelection"
+    />
+
+    <auth-alert/>
+
+    <app-loading
+      v-if="loading"
+      :title="loadingTitle"
     />
   </div>
 </template>
 
 <script>
-import {onMounted, ref, watch} from "vue";
-import useAuth from "src/hooks/auth/useAuth";
-import useSchedule from "src/hooks/auth/useSchedule";
-import AccountFooter from "components/Cabinet/Profile/AccountFooter";
+import {computed, onMounted, ref, watch} from "vue";
+import useAuth from "src/hooks/user/useAuth";
+import useSchedule from "src/hooks/user/useSchedule";
+import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
 import ScheduleSlots from "components/Cabinet/Schedule/ScheduleSlots";
 import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
+import AuthAlert from "components/Auth/AuthAlert";
+import AppLoading from "components/Common/AppLoading";
 
 export default {
   name: "SchedulePage",
 
   components: {
+    AppLoading,
     ScheduleCalendar,
     ScheduleSlots,
-    AccountFooter,
+    ProfileFooter,
+    AuthAlert,
   },
 
   emits: [
@@ -93,6 +95,8 @@ export default {
   ],
 
   setup(props, {emit}) {
+    const loadingTitle = ref('');
+
     const drawer = ref(true);
     const miniDrawer = ref(true);
 
@@ -114,19 +118,30 @@ export default {
       slots,
       schedule,
       selectedDates,
-      confirmSlotsSelection,
+      selectedSlots,
       getScheduleFromApi,
+      updateScheduleInApi,
+      handleDatesSelection,
+      confirmSlotsChanges,
+      resetSelection,
     } = useSchedule();
 
-    const resetSelection = () => {
-      selectedDates.value = [];
-    }
+    const isDatesSelected = computed(() => selectedDates.value.length > 0);
+
+    const isSlotsSelected = computed(() => {
+      return selectedSlots.value.add.length > 0 || selectedSlots.value.delete.length > 0;
+    });
 
     const handleConfirmation = (slots) => {
-      confirmSlotsSelection(selectedDates.value, slots);
+      confirmSlotsChanges(slots);
+      miniDrawer.value = true;
     };
 
-    const saveChanges = () => {}
+    const saveChanges = () => {
+      loadingTitle.value = 'Update Schedule...';
+      updateScheduleInApi(user.value.id);
+      resetSelection();
+    }
 
     onMounted(() => {
       emit('toggle-left-drawer', {
@@ -135,25 +150,35 @@ export default {
       });
 
       if (schedule.value.length === 0) {
-        getScheduleFromApi(user.id);
+        loadingTitle.value = 'Loading Schedule...';
+        getScheduleFromApi(user.value.id);
       }
     });
 
     watch(selectedDates, () => {
-      if (selectedDates.value.length > 0 && miniDrawer.value) {
+      if (isDatesSelected.value && miniDrawer.value) {
         miniDrawer.value = false;
+      }
+
+      if (!isDatesSelected.value && !miniDrawer.value) {
+        miniDrawer.value = true;
       }
     });
 
     return {
+      loading,
+      loadingTitle,
+
       drawer,
       miniDrawer,
       toggleDrawer,
       drawerClick,
-      loading,
+
       slots,
       schedule,
-      selectedDates,
+      isDatesSelected,
+      isSlotsSelected,
+      handleDatesSelection,
       handleConfirmation,
       saveChanges,
       resetSelection,
@@ -218,32 +243,12 @@ export default {
 }
 
 .schedule-drawer {
+  position: relative;
   padding-bottom: 70px;
 
   &__h3 {
     font-size: 18px;
     font-weight: 700;
-  }
-
-  &__btn {
-    position: absolute;
-    top: 86px;
-    right: 387px;
-    z-index: 2000;
-
-    .q-btn {
-      height: 26px;
-      width: 26px;
-      min-height: 0;
-      min-width: 0;
-      border: 1px solid $grey-4;
-      background-color: $white;
-
-      &__content {
-        font-size: 14px;
-        color: $grey-8;
-      }
-    }
   }
 }
 </style>

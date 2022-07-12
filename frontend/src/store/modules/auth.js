@@ -12,7 +12,7 @@ const getters = {
   isAuthorized(state) {
     return state.isAuthorized;
   },
-  
+
   isRequested(state) {
     return state.isRequested;
   },
@@ -28,11 +28,11 @@ const actions = {
     commit('putUserToState', null);
     commit('setAuthorizedStatus', false);
   },
-  
+
   startRequest({commit}) {
     commit('setRequestedStatus', true);
   },
-  
+
   finishRequest({commit}) {
     commit('setRequestedStatus', false);
   }

@@ -13,32 +13,23 @@
 </template>
 
 <script>
-import {computed, ref, toRef, watch} from "vue";
-import useSchedule from "src/hooks/auth/useSchedule";
+import {computed, ref, watch} from "vue";
+import useSchedule from "src/hooks/user/useSchedule";
 
 export default {
   name: "ScheduleCalendar",
 
-  props: {
-    modelValue: {
-      type: Array,
-      required: true,
-    }
-  },
-
   emits: [
-    'update:model-value',
+    'update',
   ],
 
   setup(props, {emit}) {
-    const model = ref(props.modelValue);
+    const {oldDates, newDates, selectedDates} = useSchedule();
 
-    const selectedDates = toRef(props, 'modelValue');
-
-    const {oldDates, newDates} = useSchedule();
+    const model = ref(selectedDates.value);
 
     const title = computed(() => {
-      if (model.value === null) {
+      if (model.value.length === 0) {
         return 'Business Schedule';
       }
 
@@ -46,7 +37,7 @@ export default {
     });
 
     const subTitle = computed(() => {
-      if (model.value === null) {
+      if (model.value.length === 0) {
         return ' ';
       }
 
@@ -71,7 +62,7 @@ export default {
 
     const handleDateSelect = (value, reason, details) => {
       const dates = parseDate(value, details);
-      emit('update:model-value', dates);
+      emit('update', dates);
     };
 
     watch(selectedDates, () => {

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import useAuth from "src/hooks/auth/useAuth";
+import useAuth from "src/hooks/user/useAuth";
 import AuthHeader from "components/Auth/AuthHeader";
 import AuthAlert from "components/Auth/AuthAlert";
 import AppLoading from "components/Common/AppLoading";
