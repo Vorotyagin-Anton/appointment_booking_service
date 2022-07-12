@@ -46,8 +46,7 @@
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import MainNavTab from "components/MainNav/MainNavTab";
-import DropdownCatalog from "components/MainNav/DropdownCatalog";
-import DropdownFeatures from "components/MainNav/DropdownFeatures";
+import MainNavCatalog from "components/MainNav/MainNavCatalog";
 import useAuth from "src/hooks/user/useAuth";
 
 const tabs = [
@@ -62,13 +61,11 @@ const tabs = [
     title: 'Catalog',
     routes: ['masters'],
     selectable: false,
-    child: DropdownCatalog,
+    child: MainNavCatalog,
   },
   {
     name: 'features',
     title: 'Features',
-    selectable: false,
-    child: DropdownFeatures,
   },
   {
     name: 'pricing',
@@ -77,7 +74,6 @@ const tabs = [
   {
     name: 'faq',
     title: 'FAQ',
-    to: {path: '/', hash: '#faq'},
   }
 ];
 
