@@ -4,6 +4,13 @@
     @submit="onSubmit"
     @reset="onReset"
   >
+    <app-alert
+      :visible="visible"
+      :message="message"
+      :type="type"
+      @hide="hide"
+    />
+
     <div class="register-form__inputs">
       <div class="register-form__email">
 
@@ -131,9 +138,14 @@ import usePasswordInput from "src/hooks/form/usePasswordInput";
 import useRegister from "src/hooks/user/useRegister";
 import useForm from "src/hooks/common/useForm";
 import useMessage from "src/hooks/common/useMessage";
+import AppAlert from "components/Common/AppAlert";
 
 export default {
   name: "RegisterForm",
+
+  components: {
+    AppAlert,
+  },
 
   setup() {
     const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
@@ -142,14 +154,16 @@ export default {
     const agree = ref(false);
 
     const register = useRegister();
+
     const {isRequested, error, submit, reset} = useForm();
-    const {showError, hide} = useMessage();
+
+    const {visible, type, message, showError, hide} = useMessage();
 
     const onSubmit = async () => {
       await submit(register, email.value, pass.value);
 
       if (error.value.message) {
-        await showError(error.value.message);
+        await showError(error.value.message, 5000);
       }
     };
 
@@ -165,6 +179,11 @@ export default {
     };
 
     return {
+      visible,
+      type,
+      message,
+      hide,
+
       email,
       emailRules,
       emailConfirmation,

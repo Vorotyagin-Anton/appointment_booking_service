@@ -1,3 +1,47 @@
+<script setup>
+import {defineEmits, ref} from "vue";
+import ProfileTypeItem from "components/Auth/Profile/ProfileTypeItem";
+
+const types = [
+  {
+    id: 'client',
+    title: 'Individual',
+    promo: 'Creating orders, tracking reservations, contacts with masters and other customers.',
+    icon: 'person_outline',
+  },
+  {
+    id: 'worker',
+    title: 'Business',
+    promo: 'One-Person business, Sole proprietor, LLC, Corporation.',
+    icon: 'business',
+  },
+];
+
+const emit = defineEmits(['next', 'prev', 'error']);
+
+const selectedId = ref(null);
+
+const handleSelect = (id) => selectedId.value = id;
+
+const prev = () => emit('prev');
+
+const next = () => {
+  if (selectedId.value === null) {
+    emit('error', {
+      message: 'Please choose type of your account.',
+      lifetime: 3000,
+    });
+
+    return;
+  }
+
+  emit('next', {
+    // isClient: selectedId.value === 'client',
+    // isWorker: selectedId.value === 'worker',
+  });
+};
+</script>
+
 <template>
   <div class="profile-type">
     <div class="profile-type__content">
@@ -34,72 +78,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import {ref} from "vue";
-import ProfileTypeItem from "components/Auth/Profile/ProfileTypeItem";
-import useMessage from "src/hooks/common/useMessage";
-
-const types = [
-  {
-    id: 'client',
-    title: 'Individual',
-    promo: 'Creating orders, tracking reservations, contacts with masters and other customers.',
-    icon: 'person_outline',
-  },
-  {
-    id: 'worker',
-    title: 'Business',
-    promo: 'One-Person business, Sole proprietor, LLC, Corporation.',
-    icon: 'business',
-  },
-];
-
-export default {
-  name: "ProfileType",
-
-  components: {
-    ProfileTypeItem,
-  },
-
-  emits: [
-    'next',
-    'prev',
-  ],
-
-  setup(props, { emit }) {
-    const selectedId = ref(null);
-
-    const handleSelect = (id) => selectedId.value = id;
-
-    const {showError, hide} = useMessage();
-
-    const next = () => {
-      if (selectedId.value === null) {
-        showError('Please choose type of your account.', 3000);
-        return;
-      }
-
-      emit('next', {
-        // isClient: selectedId.value === 'client',
-        // isWorker: selectedId.value === 'worker',
-      });
-
-      hide();
-    }
-
-    const prev = () => emit('prev');
-
-    return {
-      types,
-      selectedId,
-      handleSelect,
-      next,
-      prev,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .profile-type {

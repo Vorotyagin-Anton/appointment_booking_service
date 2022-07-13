@@ -1,3 +1,14 @@
+<script setup>
+import useProfile from "src/hooks/user/useProfile";
+
+const emit = defineEmits(['next', 'prev']);
+
+const {profile} = useProfile();
+
+const next = () => emit('next', profile.value);
+const prev = () => emit('prev');
+</script>
+
 <template>
   <div class="profile-form">
     <div class="profile-form__content">
@@ -98,19 +109,6 @@
         </div>
 
         <div class="profile-form-settings__row">
-          <div class="profile-form-settings__col profile-form-settings__email">
-            <div class="profile-form-settings__label">Email address</div>
-
-            <q-input
-              class="profile-form-settings__input"
-              type="email"
-              outlined
-              dense
-              v-model="profile.email"
-              placeholder="Email"
-            />
-          </div>
-
           <div class="profile-form-settings__col profile-form-settings__phone">
             <div class="profile-form-settings__label">Phone number</div>
 
@@ -118,8 +116,59 @@
               class="profile-form-settings__input"
               outlined
               dense
-              v-model="profile.phone"
+              v-model="profile.mobilePhoneNumber"
               placeholder="(000) 000-0000"
+            />
+          </div>
+
+          <div class="profile-form-settings__col profile-form-settings__telegram">
+            <div class="profile-form-settings__label">Telegram</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              outlined
+              dense
+              v-model="profile.telegram"
+              placeholder="Telegram"
+            />
+          </div>
+        </div>
+
+        <div class="profile-form-settings__row">
+          <div class="profile-form-settings__col profile-form-settings__website">
+            <div class="profile-form-settings__label">Website</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              type="text"
+              outlined
+              dense
+              v-model="profile.website"
+              placeholder="Website"
+            />
+          </div>
+
+          <div class="profile-form-settings__col profile-form-settings__facebook">
+            <div class="profile-form-settings__label">Facebook</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              outlined
+              dense
+              v-model="profile.facebook"
+              placeholder="Facebook"
+            />
+          </div>
+
+          <div class="profile-form-settings__col profile-form-settings__instagram">
+            <div class="profile-form-settings__label">Instagram</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              outlined
+              dense
+              v-model="profile.instagram"
+              placeholder="Instagram"
             />
           </div>
         </div>
@@ -146,29 +195,6 @@
     </div>
   </div>
 </template>
-<script>
-import useProfile from "src/hooks/user/useProfile";
-export default {
-  name: "profile-form",
-
-  emits: [
-    'next',
-    'prev',
-  ],
-
-  setup(props, {emit}) {
-    const {profile} = useProfile();
-    const next = () => emit('next', profile.value);
-    const prev = () => emit('prev');
-
-    return {
-      profile,
-      next,
-      prev,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .profile-form {
@@ -296,11 +322,24 @@ export default {
     margin-right: 0;
   }
 
-  &__email {
+  &__telegram {
     flex: 1;
+    margin-right: 0;
   }
 
   &__phone {
+    flex: 1;
+  }
+
+  &__website {
+    flex: 1;
+  }
+
+  &__facebook {
+    flex: 1;
+  }
+
+  &__instagram {
     flex: 1;
     margin-right: 0;
   }

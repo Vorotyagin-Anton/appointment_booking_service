@@ -3,13 +3,17 @@
     class="login-form"
     @submit="onSubmit"
   >
+    <app-alert
+      :visible="visible"
+      :message="message"
+      :type="type"
+      @hide="hide"
+    />
+
     <div class="login-form__to-register">
       <span class="login-form__p">New to Square?</span>&nbsp;
 
-      <router-link
-        class="login-form__link"
-        :to="{name: 'auth.signup'}"
-      >
+      <router-link class="login-form__link" :to="{name: 'auth.signup'}">
         Sign up
       </router-link>
     </div>
@@ -37,10 +41,7 @@
       />
     </div>
 
-    <router-link
-      class="login-form__link"
-      :to="{name: 'main'}"
-    >
+    <router-link class="login-form__link" :to="{name: 'main'}">
       Forgot password?
     </router-link>
 
@@ -52,7 +53,6 @@
       :disable="isRequested"
       no-caps
     />
-
   </q-form>
 </template>
 
@@ -62,27 +62,38 @@ import usePasswordInput from "src/hooks/form/usePasswordInput";
 import useLogin from "src/hooks/user/useLogin";
 import useForm from "src/hooks/common/useForm";
 import useMessage from "src/hooks/common/useMessage";
+import AppAlert from "components/Common/AppAlert";
 
 export default {
   name: "LoginForm",
+
+  components: {
+    AppAlert,
+  },
 
   setup() {
     const {email, emailRules} = useEmailInput();
     const {pass, passRules} = usePasswordInput();
 
     const {isRequested, error, submit} = useForm();
+
     const login = useLogin();
-    const {showError} = useMessage();
+
+    const {visible, type, message, showError, hide} = useMessage();
 
     const onSubmit = async () => {
       await submit(login, email.value, pass.value);
 
       if (error.value.message) {
-        await showError(error.value.message);
+        showError(error.value.message, 3000);
       }
     };
 
     return {
+      visible,
+      type,
+      message,
+      hide,
       isRequested,
       email,
       emailRules,
