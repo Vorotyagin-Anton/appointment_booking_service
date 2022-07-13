@@ -36,8 +36,8 @@ const next = () => {
   }
 
   emit('next', {
-    // isClient: selectedId.value === 'client',
-    // isWorker: selectedId.value === 'worker',
+    isClient: selectedId.value === 'client',
+    isWorker: selectedId.value === 'worker',
   });
 };
 </script>
