@@ -9,7 +9,7 @@ use App\Entity\WorkerAvailableTime;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
 use App\Service\CustomDataFormatter;
-use App\Service\TelegramSender;
+use App\Service\Notifier\TelegramSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
