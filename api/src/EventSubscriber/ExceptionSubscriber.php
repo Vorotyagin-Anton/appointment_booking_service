@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ExceptionSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private LoggerInterface $telegramLogger
+        private LoggerInterface $telegramDebugLogger
     )
     {
     }
@@ -23,7 +23,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::EXCEPTION => [
                 ['processException', 10],
-                ['logException', 0]
+                ['logException', 20]
             ],
         ];
     }
@@ -31,7 +31,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public function processException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
-        $telegramMessage = $exception->getMessage();
         $response = new Response();
 
         if ($exception instanceof AccessDeniedException) {
@@ -41,15 +40,27 @@ class ExceptionSubscriber implements EventSubscriberInterface
             ]));
 
             $event->setResponse($response);
-            $telegramMessage .= $exception->getTraceAsString();
         }
-
-        $this->telegramLogger->error($telegramMessage);
     }
 
     public function logException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
-        $this->telegramLogger->error($exception->getMessage());
+        $exceptionMessage = $exception->getMessage();
+        $exceptionTrace = $exception->getTrace();
+        $exceptionClassName = $exception::class;
+
+        if ($exception instanceof \Error) {
+            $this->telegramDebugLogger
+                ->critical("$exceptionClassName: $exceptionMessage at {$exception->getFile()}:{$exception->getLine()}");
+            return;
+        }
+
+        if ($exception instanceof AccessDeniedException) {
+            $this->telegramDebugLogger->info($exceptionMessage, $exceptionTrace);
+            return;
+        }
+
+        $this->telegramDebugLogger->critical("$exceptionClassName: $exceptionMessage", $exceptionTrace);
     }
 }

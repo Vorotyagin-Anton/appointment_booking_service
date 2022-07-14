@@ -1,11 +1,12 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - telegram_debug
     handlers:
-        telegram:
+        telegram_debug:
             type: service
             id: telegram_debug_handler
-            channels: ["app"]
+            channels: ["telegram_debug"]
 
 when@dev:
     monolog:
@@ -14,7 +15,7 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: warning
-                channels: ["!event"]
+                channels: ["!event", "!telegram_debug"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -51,11 +52,11 @@ when@prod:
                 handler: nested
                 excluded_http_codes: [404, 405]
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+                channels: ["!telegram_debug"]
             nested:
                 type: stream
-                path: php://stderr
-                level: debug
-                formatter: monolog.formatter.json
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: error
             console:
                 type: console
                 process_psr_3_messages: false

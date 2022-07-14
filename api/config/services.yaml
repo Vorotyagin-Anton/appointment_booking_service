@@ -35,7 +35,7 @@ services:
         arguments:
             - '%env(TELEGRAM_DEBUG_TOKEN)%'
             - '%env(TELEGRAM_DEBUG_CHANNEL)%'
-            - 'ERROR'
+            - 'DEBUG'
         calls:
             - method: setFormatter
               arguments:
