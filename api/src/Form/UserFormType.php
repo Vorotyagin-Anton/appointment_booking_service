@@ -31,6 +31,8 @@ class UserFormType extends AbstractType
             ->add('facebook')
             ->add('instagram')
             ->add('telegram')
+            ->add('isWorker')
+            ->add('isClient')
         ;
     }
 

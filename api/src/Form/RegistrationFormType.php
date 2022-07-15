@@ -40,8 +40,6 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('isWorker')
-            ->add('isClient')
         ;
     }
 
