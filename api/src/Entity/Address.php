@@ -29,7 +29,7 @@ class Address
     #[Groups(['addressShort'])]
     private $street;
 
-    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['addressShort'])]
     private $code;
 

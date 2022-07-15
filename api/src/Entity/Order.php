@@ -51,7 +51,6 @@ class Order
     private $clientTelegram;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clientOrders')]
-    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['order_client'])]
     private $client;
 

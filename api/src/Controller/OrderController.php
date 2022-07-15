@@ -20,10 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     #[Route(path: 'api/orders', name: 'app_orders', methods: ['GET'])]
-    public function index(
+    public function getAllOrders(
         OrderRepository $orderRepository
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $orders = $orderRepository->findAll();
         return $this->json($orders, Response::HTTP_OK, [], ['groups' => [
             'orderShort',
@@ -47,32 +49,11 @@ class OrderController extends AbstractController
         $form->submit($data);
 
         if ($form->isValid()) {
-            if (isset($data['client_id'])) {
-                $client = $em->getRepository(User::class)->findOneBy(['id' => $data['client_id']]);
-            } else {
-                $client = new User();
-                $client->setIsWorker(false);
-                $client->setIsClient(true);
-                $client->setName($data['client_name']);
-                $client->setMobilePhoneNumber($data['phone']);
-                $client->setTelegram($data['telegram']);
-
-                $user = $em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
-                if (!isset($user)) {
-                    $client->setEmail($data['email']);
-                } else {
-                    $client->setEmail('default@default.default');
-                }
-
-                $em->persist($client);
-            }
-
             $worker = $em->getRepository(User::class)->findOneBy(['id' => $data['master_id']]);
             $service = $em->getRepository(Service::class)->findOneBy(['id' => $data['service_id']]);
             $time = $em->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $data['time_id']]);
 
             $order = new Order();
-            $order->setClient($client);
             $order->setClientName($data['client_name']);
             $order->setClientEmail($data['email']);
             $order->setClientPhone($data['phone']);
@@ -96,17 +77,17 @@ class OrderController extends AbstractController
             $serviceDate = date_format($time->getExactDate(), 'Y-m-d');
             if ($worker->getTelegram()) {
                 $message = <<<STR
-                К Вам записался {$client->getName()} (tg: {$client->getTelegram()}) на $serviceDate $serviceStartTime-$serviceEndTime.
+                К Вам записался {$data['client_name']} (tg: {$data['telegram']}) на $serviceDate $serviceStartTime-$serviceEndTime.
                 Услуга - {$service->getName()}.
                 STR;
                 $telegramSender->sendMessage($message, $worker->getTelegram(), $chatter);
             }
-            if ($client->getTelegram()) {
+            if (isset($data['telegram'])) {
                 $message = <<<STR
                 Вы записались к {$worker->getName()} (м.т.: {$worker->getMobilePhoneNumber()}) на $serviceDate $serviceStartTime-$serviceEndTime.
                 Услуга - {$service->getName()}, стоимость - {$service->getPrice()} рублей.
                 STR;
-                $telegramSender->sendMessage($message, $client->getTelegram(), $chatter);
+                $telegramSender->sendMessage($message, $data['telegram'], $chatter);
             }
 
             return $this->json($order, Response::HTTP_CREATED, [], ['groups' => [
