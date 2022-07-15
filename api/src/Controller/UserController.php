@@ -12,6 +12,7 @@ use App\Service\CustomDataValidator;
 use App\Service\Paginator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,6 +34,8 @@ class UserController extends AbstractController
         UserRepository $userRepository
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $users = $userRepository->findAll();
         return $this->json($users, Response::HTTP_OK, [], ['groups' => [
             'userShort'
@@ -45,6 +48,8 @@ class UserController extends AbstractController
         UserRepository $userRepository
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $user = $userRepository->find($id);
         if (!isset($user)) {
             return new Response('', Response::HTTP_NOT_FOUND);
@@ -61,6 +66,8 @@ class UserController extends AbstractController
         Request $request
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $user = new User();
 
         $form = $this->createForm(UserFormType::class, $user, ['csrf_protection' => false]);
@@ -92,18 +99,15 @@ class UserController extends AbstractController
         UserRepository $userRepository
     ): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $user = $userRepository->find($id);
 
         if (!isset($user)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        try {
-            $userRepository->remove($user);
-        } catch (\Exception $exception) {
-            // TODO add an error message to a log
-            return $this->json(['error' => 'server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $userRepository->remove($user);
 
         return new Response('', Response::HTTP_NO_CONTENT);
     }
@@ -113,13 +117,18 @@ class UserController extends AbstractController
         int $id,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        Request $request
+        Request $request,
+        #[CurrentUser] ?User $currentUser
     ): Response
     {
         $user = $userRepository->find($id);
 
         if (!$user) {
             return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        if ($user !== $currentUser) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
         $data = $request->toArray();
@@ -216,11 +225,17 @@ class UserController extends AbstractController
         ]]);
     }
 
-    #[Route(path: '/api/users/workers/{id}', name: 'app_users_worker_get', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route(
+        path: '/api/users/workers/{id}',
+        name: 'app_users_worker_get',
+        requirements: ['id' => '\d+'],
+        methods: ['GET']
+    )]
     public function getOneWorker(
         int $id,
         UserRepository $userRepository,
-        WorkerAvailableTimeRepository $workerAvailableTimeRepository
+        WorkerAvailableTimeRepository $workerAvailableTimeRepository,
+        LoggerInterface $telegramDebugLogger
     ): Response
     {
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
@@ -239,8 +254,8 @@ class UserController extends AbstractController
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
             ]);
         } catch (\Exception|ExceptionInterface $exception) {
-            // TODO add an error message to a log
-            return $this->json(['error' => 'server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $workerTimeArray = [];
+            $telegramDebugLogger->error($exception->getMessage(), $exception->getTrace());
         }
 
         $workerTimeConverted = [];
@@ -287,23 +302,36 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route(path: '/api/users/workers/{id}/worker-available-time', name: 'app_users_worker_change_available_time', requirements: ['id' => '\d+'], methods: ['PATCH'])]
+    #[Route(
+        path: '/api/users/workers/{id}/worker-available-time',
+        name: 'app_users_worker_change_available_time',
+        requirements: ['id' => '\d+'],
+        methods: ['PATCH']
+    )]
     public function changeWorkerAvailableTime(
         int $id,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        Request $request
+        Request $request,
+        #[CurrentUser] ?User $currentUser
     ): Response
     {
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
+
         if (!$user) {
             return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        if ($user !== $currentUser) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
         $data = $request->toArray();
 
         foreach ($data['delete'] as $timeForDeleteId) {
-            $timeForDelete = $entityManager->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $timeForDeleteId]);
+            $timeForDelete = $entityManager
+                ->getRepository(WorkerAvailableTime::class)
+                ->findOneBy(['id' => $timeForDeleteId]);
             $user->removeWorkerAvailableTime($timeForDelete);
         }
         $entityManager->persist($user);
