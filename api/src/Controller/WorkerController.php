@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\WorkerAvailableTime;
 use App\Repository\UserRepository;
 use App\Repository\WorkerAvailableTimeRepository;
+use App\Repository\WorkerRepository;
 use App\Service\CustomDataValidator;
 use App\Service\Paginator;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -28,9 +29,9 @@ class WorkerController extends AbstractController
 {
     #[Route('/api/users/workers', name: 'app_users_workers', methods: ['GET'])]
     public function getWorkersOnlyByPages(
-        UserRepository $userRepository,
-        Paginator $paginator,
-        RequestStack $requestStack,
+        WorkerRepository    $workerRepository,
+        Paginator           $paginator,
+        RequestStack        $requestStack,
         CustomDataValidator $customDataValidator
     ): Response
     {
@@ -63,8 +64,7 @@ class WorkerController extends AbstractController
             }
         }
 
-        $result = $paginator->getPaginationResult($userRepository->getQueryBuilderBy(
-            ['isWorker' => true],
+        $result = $paginator->getPaginationResult($workerRepository->getDQLQueryWithFilters(
             [
                 'categories' => $categories,
                 'services' => $services,
