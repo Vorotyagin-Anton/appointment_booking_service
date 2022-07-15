@@ -50,7 +50,7 @@ class ReviewFixture extends Fixture implements DependentFixtureInterface
             $review->setText($this->faker->text());
             $review->setWorker($worker);
             $firstReviewer->addReview($review);
-            $worker->addGettedReview($review);
+            $worker->addReview($review);
             $manager->persist($review);
 
             $review = new Review();
@@ -59,7 +59,7 @@ class ReviewFixture extends Fixture implements DependentFixtureInterface
             $review->setText($this->faker->text());
             $review->setWorker($worker);
             $secondReviewer->addReview($review);
-            $worker->addGettedReview($review);
+            $worker->addReview($review);
             $manager->persist($review);
         }
 

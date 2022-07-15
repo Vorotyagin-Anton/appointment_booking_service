@@ -15,7 +15,7 @@ class WorkerAvailableTime
     #[Groups(['workerAvailableTimeShort'])]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workerAvailableTimes')]
+    #[ORM\ManyToOne(targetEntity: Worker::class, inversedBy: 'availableTimes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['workerAvailableTime_worker'])]
     private $worker;
@@ -41,12 +41,12 @@ class WorkerAvailableTime
         return $this->id;
     }
 
-    public function getWorker(): ?User
+    public function getWorker(): ?Worker
     {
         return $this->worker;
     }
 
-    public function setWorker(?User $worker): self
+    public function setWorker(?Worker $worker): self
     {
         $this->worker = $worker;
 

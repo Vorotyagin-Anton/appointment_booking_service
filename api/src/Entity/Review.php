@@ -27,11 +27,11 @@ class Review
     #[Groups(['reviewShort'])]
     private $date;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'reviews')]
     #[Groups(['review_reviewer'])]
     private $reviewer;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'gettedReviews')]
+    #[ORM\ManyToOne(targetEntity: Worker::class, inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['review_worker'])]
     private $worker;
@@ -77,24 +77,24 @@ class Review
         return $this;
     }
 
-    public function getReviewer(): ?User
+    public function getReviewer(): ?Client
     {
         return $this->reviewer;
     }
 
-    public function setReviewer(?User $reviewer): self
+    public function setReviewer(?Client $reviewer): self
     {
         $this->reviewer = $reviewer;
 
         return $this;
     }
 
-    public function getWorker(): ?User
+    public function getWorker(): ?Worker
     {
         return $this->worker;
     }
 
-    public function setWorker(?User $worker): self
+    public function setWorker(?Worker $worker): self
     {
         $this->worker = $worker;
 

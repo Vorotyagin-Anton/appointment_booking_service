@@ -23,7 +23,7 @@ class Rating
     #[Groups(['ratingShort'])]
     private $voices;
 
-    #[ORM\OneToOne(inversedBy: 'rating', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'rating', targetEntity: Worker::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private $worker;
 
@@ -56,12 +56,12 @@ class Rating
         return $this;
     }
 
-    public function getWorker(): ?User
+    public function getWorker(): ?Worker
     {
         return $this->worker;
     }
 
-    public function setWorker(User $worker): self
+    public function setWorker(Worker $worker): self
     {
         $this->worker = $worker;
 

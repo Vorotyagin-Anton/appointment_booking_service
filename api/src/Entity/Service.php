@@ -32,7 +32,7 @@ class Service
     #[Groups(['serviceShort'])]
     private $pathToPhoto;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "services")]
+    #[ORM\ManyToMany(targetEntity: Worker::class, mappedBy: "services")]
     #[Groups(['service_workers'])]
     private $workers;
 
@@ -112,14 +112,14 @@ class Service
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, Worker>
      */
     public function getWorkers(): Collection
     {
         return $this->workers;
     }
 
-    public function addWorker(User $worker): self
+    public function addWorker(Worker $worker): self
     {
         if (!$this->workers->contains($worker)) {
             $this->workers[] = $worker;
@@ -129,7 +129,7 @@ class Service
         return $this;
     }
 
-    public function removeWorker(User $worker): self
+    public function removeWorker(Worker $worker): self
     {
         if ($this->workers->removeElement($worker)) {
             $worker->removeService($this);

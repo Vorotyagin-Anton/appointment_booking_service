@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\InheritanceType("SINGLE_TABLE")]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -58,13 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['userShort'])]
     private $story;
 
-    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: "workers")]
-    #[ORM\JoinTable(name: "users_services")]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    #[ORM\InverseJoinColumn(name: "service_id", referencedColumnName: "id")]
-    #[Groups(['user_services'])]
-    private $services;
-
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['userShort'])]
     private $roles = [];
@@ -76,45 +70,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: WorkerAvailableTime::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Groups(['user_workerAvailableTimes'])]
-    private $workerAvailableTimes;
-
-    #[ORM\OneToOne(mappedBy: 'worker', targetEntity: Rating::class, cascade: ['persist', 'remove'])]
-    #[Groups(['user_rating'])]
-    private $rating;
-
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Career::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Groups(['user_career'])]
-    private $career;
-
-    #[ORM\OneToMany(mappedBy: 'reviewer', targetEntity: Review::class, cascade: ['persist'])]
-    #[Groups(['user_reviews'])]
-    private $reviews;
-
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Review::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Groups(['user_gettedReviews'])]
-    private $gettedReviews;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['userShort'])]
-    private $speciality;
-
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Order::class)]
-    #[Groups(['user_clientOrders'])]
-    private $clientOrders;
-
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Order::class)]
-    #[Groups(['user_workerOrders'])]
-    private $workerOrders;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
     private $telegram;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['userShort'])]
-    private $website;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['userShort'])]
@@ -130,13 +88,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->workerAvailableTimes = new ArrayCollection();
-        $this->services = new ArrayCollection();
-        $this->career = new ArrayCollection();
-        $this->reviews = new ArrayCollection();
-        $this->gettedReviews = new ArrayCollection();
-        $this->clientOrders = new ArrayCollection();
-        $this->workerOrders = new ArrayCollection();
         $this->addresses = new ArrayCollection();
     }
 
@@ -254,33 +205,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Service>
-     */
-    public function getServices(): Collection
-    {
-        return $this->services;
-    }
-
-    public function addService(Service $service): self
-    {
-        if (!$this->services->contains($service)) {
-            $this->services[] = $service;
-            $service->addWorker($this);
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): self
-    {
-        if ($this->services->removeElement($service)) {
-            $service->removeWorker($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * The public representation of the user (e.g. a username, an email address, etc.)
      *
      * @see UserInterface
@@ -356,210 +280,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, WorkerAvailableTime>
-     */
-    public function getWorkerAvailableTimes(): Collection
-    {
-        return $this->workerAvailableTimes;
-    }
-
-    public function addWorkerAvailableTime(WorkerAvailableTime $workerAvailableTime): self
-    {
-        if (!$this->workerAvailableTimes->contains($workerAvailableTime)) {
-            $this->workerAvailableTimes[] = $workerAvailableTime;
-            $workerAvailableTime->setWorker($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWorkerAvailableTime(WorkerAvailableTime $workerAvailableTime): self
-    {
-        $this->workerAvailableTimes->removeElement($workerAvailableTime);
-
-        return $this;
-    }
-
-    public function getRating(): ?Rating
-    {
-        return $this->rating;
-    }
-
-    public function setRating(Rating $rating): self
-    {
-        // set the owning side of the relation if necessary
-        if ($rating->getWorker() !== $this) {
-            $rating->setWorker($this);
-        }
-
-        $this->rating = $rating;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Career>
-     */
-    public function getCareer(): Collection
-    {
-        return $this->career;
-    }
-
-    public function addCareer(Career $career): self
-    {
-        if (!$this->career->contains($career)) {
-            $this->career[] = $career;
-            $career->setWorker($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCareer(Career $career): self
-    {
-        if ($this->career->removeElement($career)) {
-            // set the owning side to null (unless already changed)
-            if ($career->getWorker() === $this) {
-                $career->setWorker(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Review>
-     */
-    public function getReviews(): Collection
-    {
-        return $this->reviews;
-    }
-
-    public function addReview(Review $review): self
-    {
-        if (!$this->reviews->contains($review)) {
-            $this->reviews[] = $review;
-            $review->setReviewer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReview(Review $review): self
-    {
-        if ($this->reviews->removeElement($review)) {
-            // set the owning side to null (unless already changed)
-            if ($review->getReviewer() === $this) {
-                $review->setReviewer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Review>
-     */
-    public function getGettedReviews(): Collection
-    {
-        return $this->gettedReviews;
-    }
-
-    public function addGettedReview(Review $gettedReview): self
-    {
-        if (!$this->gettedReviews->contains($gettedReview)) {
-            $this->gettedReviews[] = $gettedReview;
-            $gettedReview->setWorker($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGettedReview(Review $gettedReview): self
-    {
-        if ($this->gettedReviews->removeElement($gettedReview)) {
-            // set the owning side to null (unless already changed)
-            if ($gettedReview->getWorker() === $this) {
-                $gettedReview->setWorker(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getSpeciality(): ?string
-    {
-        return $this->speciality;
-    }
-
-    public function setSpeciality(?string $speciality): self
-    {
-        $this->speciality = $speciality;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getClientOrders(): Collection
-    {
-        return $this->clientOrders;
-    }
-
-    public function addClientOrder(Order $clientOrder): self
-    {
-        if (!$this->clientOrders->contains($clientOrder)) {
-            $this->clientOrders[] = $clientOrder;
-            $clientOrder->setClient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClientOrder(Order $clientOrder): self
-    {
-        if ($this->clientOrders->removeElement($clientOrder)) {
-            // set the owning side to null (unless already changed)
-            if ($clientOrder->getClient() === $this) {
-                $clientOrder->setClient(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getWorkerOrders(): Collection
-    {
-        return $this->workerOrders;
-    }
-
-    public function addWorkerOrder(Order $workerOrder): self
-    {
-        if (!$this->workerOrders->contains($workerOrder)) {
-            $this->workerOrders[] = $workerOrder;
-            $workerOrder->setWorker($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWorkerOrder(Order $workerOrder): self
-    {
-        if ($this->workerOrders->removeElement($workerOrder)) {
-            // set the owning side to null (unless already changed)
-            if ($workerOrder->getWorker() === $this) {
-                $workerOrder->setWorker(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getTelegram(): ?string
     {
         return $this->telegram;
@@ -568,18 +288,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTelegram(?string $telegram): self
     {
         $this->telegram = $telegram;
-
-        return $this;
-    }
-
-    public function getWebsite(): ?string
-    {
-        return $this->website;
-    }
-
-    public function setWebsite(?string $website): self
-    {
-        $this->website = $website;
 
         return $this;
     }

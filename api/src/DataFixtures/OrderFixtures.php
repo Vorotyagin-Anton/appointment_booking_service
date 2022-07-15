@@ -48,7 +48,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         $services = $randomWorker->getServices()->toArray();
         $randomService = $services[array_rand($services)];
 
-        $times = $randomWorker->getWorkerAvailableTimes()->toArray();
+        $times = $randomWorker->getAvailableTimes()->toArray();
         $randomTime = $times[array_rand($times)];
 
         $order = new Order();

@@ -27,8 +27,7 @@ final class Version20220715081809 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE address ALTER code TYPE SMALLINT');
+        $this->addSql('ALTER TABLE address ALTER code TYPE INT');
         $this->addSql('ALTER TABLE address ALTER code DROP DEFAULT');
     }
 }

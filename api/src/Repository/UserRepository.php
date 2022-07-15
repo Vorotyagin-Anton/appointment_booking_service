@@ -92,7 +92,7 @@ class UserRepository extends ServiceEntityRepository
 
         if (isset($filters['requiredDates'])) {
             $builder
-                ->join('u.workerAvailableTimes', 'wat')
+                ->join('u.availableTimes', 'wat')
                 ->andWhere($builder->expr()->eq("wat.isTimeFree", ":isTimeFree"))
                 ->setParameter('isTimeFree', true);
 
