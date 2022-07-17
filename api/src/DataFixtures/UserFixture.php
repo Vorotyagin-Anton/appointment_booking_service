@@ -4,11 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Address;
 use App\Entity\Career;
-use App\Entity\Client;
 use App\Entity\Rating;
 use App\Entity\Service;
-use App\Entity\User;
-use App\Entity\Worker;
+use App\Entity\User\Client;
+use App\Entity\User\User;
+use App\Entity\User\Worker;
 use App\Entity\WorkerAvailableTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;

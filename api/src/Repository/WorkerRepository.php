@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Worker;
+use App\Entity\User\Worker;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;

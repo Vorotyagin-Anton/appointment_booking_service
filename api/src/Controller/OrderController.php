@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Entity\Service;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Entity\WorkerAvailableTime;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;

@@ -1,7 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
+use App\Entity\Career;
+use App\Entity\Order;
+use App\Entity\Rating;
+use App\Entity\Review;
+use App\Entity\Service;
+use App\Entity\WorkerAvailableTime;
 use App\Repository\WorkerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

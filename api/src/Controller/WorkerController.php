@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Entity\WorkerAvailableTime;
 use App\Repository\UserRepository;
 use App\Repository\WorkerAvailableTimeRepository;

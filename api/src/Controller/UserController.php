@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Address;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;

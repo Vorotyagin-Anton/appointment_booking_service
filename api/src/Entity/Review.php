@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\User\Client;
+use App\Entity\User\Worker;
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;

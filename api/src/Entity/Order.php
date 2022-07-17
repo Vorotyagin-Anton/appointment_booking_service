@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\User\Client;
+use App\Entity\User\Worker;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

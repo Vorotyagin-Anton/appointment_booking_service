@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Order;
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
