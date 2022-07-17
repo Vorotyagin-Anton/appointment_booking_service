@@ -26,7 +26,7 @@ class WorkerAvailableTime
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     #[Groups(['workerAvailableTimeShort'])]
-    private $isTimeFree;
+    private $isTimeFree = true;
 
     #[ORM\Column(type: 'date')]
     #[Groups(['workerAvailableTimeShort'])]

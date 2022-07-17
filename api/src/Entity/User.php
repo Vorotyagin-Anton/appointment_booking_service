@@ -37,11 +37,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     #[Groups(['userShort'])]
-    private $isWorker;
+    private $isWorker = false;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     #[Groups(['userShort'])]
-    private $isClient;
+    private $isClient = false;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     #[Groups(['userShort'])]
@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => 'uploads/photo/dummy.jpg'])]
     #[Groups(['userShort'])]
-    private $pathToPhoto;
+    private $pathToPhoto = 'uploads/photo/dummy.jpg';
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['userShort'])]
