@@ -21,7 +21,7 @@ export default function useStepper(steps) {
       return;
     }
 
-    currentStep.value += 1;
+    currentStep.value += step;
   };
 
   const prevStep = (step = 1) => {
@@ -29,7 +29,7 @@ export default function useStepper(steps) {
       return;
     }
 
-    currentStep.value -= 1;
+    currentStep.value -= step;
   };
 
   return {

@@ -6,13 +6,11 @@
       </div>
 
       <q-list class="faq__list">
-
         <faq-section-item
           v-for="item in items"
           :key="item.label"
           :item="item"
         />
-
       </q-list>
     </div>
   </section>
@@ -54,7 +52,7 @@ const items = [
 ];
 
 export default {
-  name: "FaqComponent",
+  name: "FaqSection",
 
   components: {
     FaqSectionItem,

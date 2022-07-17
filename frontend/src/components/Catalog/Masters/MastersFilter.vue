@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import useCategories from "src/hooks/categories/useList";
 import useServices from "src/hooks/services/useList";
 import useSelect from "src/hooks/form/useSelect";
@@ -83,7 +83,7 @@ export default {
     const calendarSubtitle = computed(() => days.value.length === 0 ? ' ' : null);
 
     // CATEGORIES
-    const {categories} = useCategories();
+    const {categories, getFromApi} = useCategories();
 
     const {
       itemsList: categoriesList,
@@ -110,6 +110,12 @@ export default {
       selectedServices.value = [];
       days.value = [];
     }
+
+    onMounted(() => {
+      if (categories.value.length === 0) {
+        getFromApi();
+      }
+    });
 
     return {
       days,

@@ -7,7 +7,7 @@
     <featured-masters/>
     <pricing-section/>
     <connect-section/>
-    <faq-component/>
+    <faq-section/>
   </q-page>
 </template>
 
@@ -16,7 +16,7 @@ import PromoSection from "components/Sections/PromoSection";
 import FeaturedMasters from "components/Sections/FeaturedMasters";
 import InvitationSection from "components/Sections/InvitationSection";
 import ConnectSection from "components/Sections/ConnectSection";
-import FaqComponent from "components/Sections/FaqSection";
+import FaqSection from "components/Sections/FaqSection";
 import CategoriesSection from "components/Sections/CategoriesSection";
 import OffersSection from "components/Sections/OffersSection";
 import PricingSection from "components/Sections/PricingSection";
@@ -32,7 +32,7 @@ export default {
     FeaturedMasters,
     InvitationSection,
     ConnectSection,
-    FaqComponent,
+    FaqSection,
   },
 }
 </script>

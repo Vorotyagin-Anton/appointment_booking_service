@@ -33,6 +33,8 @@
       </div>
     </div>
   </div>
+
+  <faq-section/>
 </template>
 
 <script>
@@ -44,6 +46,7 @@ import MastersSorting from "components/Catalog/Masters/MastersSorting";
 import MastersList from "components/Catalog/Masters/MastersList";
 import MastersFilter from "components/Catalog/Masters/MastersFilter";
 import SearchInput from "components/Common/SearchInput";
+import FaqSection from "components/Sections/FaqSection";
 
 export default {
   name: "MastersPage",
@@ -54,6 +57,7 @@ export default {
     MastersList,
     SearchInput,
     MastersFilter,
+    FaqSection,
   },
 
   setup() {

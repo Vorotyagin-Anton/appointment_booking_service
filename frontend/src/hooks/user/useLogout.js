@@ -12,7 +12,11 @@ export default function useLogout() {
 
     window.localStorage.removeItem('user');
 
-    if (route.matched.some(record => record?.meta.guards.includes('auth'))) {
+    const isGuardedRoute = route.matched.some(record => {
+      return record.meta.guards?.includes('auth');
+    });
+
+    if (isGuardedRoute) {
       await router.push({name: 'main'});
     }
 

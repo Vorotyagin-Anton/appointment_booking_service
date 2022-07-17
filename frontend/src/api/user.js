@@ -1,11 +1,10 @@
 export default function (axios) {
   return {
-    async register(email, password, isMaster) {
+    async register(email, password) {
       const formData = new FormData();
 
       formData.append('email', email);
       formData.append('plainPassword', password);
-      formData.append('isWorker', isMaster);
 
       const response = await axios.post('/api/register', formData, {
         headers: {

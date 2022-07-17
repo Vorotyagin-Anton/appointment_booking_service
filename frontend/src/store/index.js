@@ -7,7 +7,6 @@ import masters from "src/store/modules/masters";
 import master from "src/store/modules/master";
 import services from "src/store/modules/services";
 import order from "src/store/modules/order";
-import navigation from "src/store/modules/navigation";
 import breadcrumbs from "src/store/modules/breadcrumbs";
 import categories from "src/store/modules/categories";
 import schedule from "src/store/modules/schedule"
@@ -30,7 +29,6 @@ export default store(function (/* { ssrContext } */) {
       master,
       services,
       order,
-      navigation,
       breadcrumbs,
       categories,
       schedule,

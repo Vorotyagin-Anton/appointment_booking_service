@@ -1,17 +1,10 @@
 import {api} from "boot/api";
-import {useStore} from "vuex";
 import {computed} from "vue";
-import useLoading from "src/hooks/common/useLoading";
-import logger from "src/helpers/logger";
-import useMessage from "src/hooks/user/useMessage";
+import {useStore} from "vuex";
 import moment from "moment";
 
 export default function useSchedule() {
   const store = useStore();
-
-  const {loading, startLoading, finishLoading} = useLoading();
-
-  const {showError, showSuccess} = useMessage();
 
   const STATUS = store.getters['schedule/status'];
   const slots = computed(() => store.getters['schedule/slots']);
@@ -22,38 +15,15 @@ export default function useSchedule() {
   const selectedSlots = computed(() => store.getters['schedule/selectedSlots']);
 
   const getScheduleFromApi = async (userId) => {
-    try {
-      startLoading();
-
-      const data = await api.schedule.getByUserId(userId);
-
-      const parsedData = parseScheduleFromServer(data);
-
-      await store.dispatch('schedule/putSchedule', parsedData);
-    } catch (error) {
-      logger(error);
-    } finally {
-      finishLoading();
-    }
+    const data = await api.schedule.getByUserId(userId);
+    const parsedData = parseScheduleFromServer(data);
+    await store.dispatch('schedule/putSchedule', parsedData);
   };
 
   const updateScheduleInApi = async (userId) => {
-    try {
-      startLoading();
-
-      const data = await api.schedule.updateSchedule(userId, selectedSlots.value);
-
-      const parsedData = parseScheduleFromServer(data);
-
-      await store.dispatch('schedule/putSchedule', parsedData);
-
-      await showSuccess('Schedule successfully updated.', 5000);
-    } catch (error) {
-      logger(error);
-      await showError('Something was wrong.');
-    } finally {
-      finishLoading();
-    }
+    const data = await api.schedule.updateSchedule(userId, selectedSlots.value);
+    const parsedData = parseScheduleFromServer(data);
+    await store.dispatch('schedule/putSchedule', parsedData);
   };
 
   const handleDatesSelection = async (dates) => {
@@ -78,7 +48,6 @@ export default function useSchedule() {
 
   return {
     STATUS,
-    loading,
     slots,
     schedule,
     oldDates,

@@ -68,7 +68,8 @@
 <script>
 import useList from "src/hooks/categories/useList";
 import useSelect from "src/hooks/form/useSelect";
-import useMessage from "src/hooks/auth/useMessage";
+import useMessage from "src/hooks/common/useMessage";
+import {onMounted} from "vue";
 
 export default {
   name: "ProfileCategory",
@@ -79,7 +80,7 @@ export default {
   ],
 
   setup(props, {emit}) {
-    const {categories} = useList();
+    const {categories, getFromApi} = useList();
 
     const {filteredItems, selectedItems, filterFn} = useSelect(categories);
 
@@ -97,6 +98,12 @@ export default {
     }
 
     const prev = () => emit('prev');
+
+    onMounted(async () => {
+      if (categories.value.length === 0) {
+        await getFromApi();
+      }
+    });
 
     return {
       filteredItems,

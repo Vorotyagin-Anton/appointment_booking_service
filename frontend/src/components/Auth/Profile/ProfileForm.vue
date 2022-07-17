@@ -1,3 +1,14 @@
+<script setup>
+import useProfile from "src/hooks/user/useProfile";
+
+const emit = defineEmits(['next', 'prev']);
+
+const {profile} = useProfile();
+
+const next = () => emit('next', profile.value);
+const prev = () => emit('prev');
+</script>
+
 <template>
   <div class="profile-form">
     <div class="profile-form__content">
@@ -19,7 +30,7 @@
               class="profile-form-settings__input"
               outlined
               dense
-              v-model="profile.firstName"
+              v-model="profile.name"
               placeholder="First name"
             />
           </div>
@@ -29,7 +40,7 @@
               class="profile-form-settings__input"
               outlined
               dense
-              v-model="profile.lastName"
+              v-model="profile.surname"
               placeholder="Last name"
             />
           </div>
@@ -98,55 +109,6 @@
         </div>
 
         <div class="profile-form-settings__row">
-          <div class="profile-form-settings__col profile-form-settings__month">
-            <div class="profile-form-settings__label">Date of birth</div>
-
-            <q-select
-              class="profile-form-settings__input"
-              outlined
-              dense
-              options-dense
-              v-model="profile.month"
-              :options="months"
-              label="Select month..."
-            />
-          </div>
-
-          <div class="profile-form-settings__col profile-form-settings__day">
-            <q-input
-              class="profile-form-settings__input"
-              outlined
-              dense
-              v-model="profile.day"
-              placeholder="DD"
-            />
-          </div>
-
-          <div class="profile-form-settings__col profile-form-settings__year">
-            <q-input
-              class="profile-form-settings__input"
-              outlined
-              dense
-              v-model="profile.year"
-              placeholder="YYYY"
-            />
-          </div>
-        </div>
-
-        <div class="profile-form-settings__row">
-          <div class="profile-form-settings__col profile-form-settings__email">
-            <div class="profile-form-settings__label">Email address</div>
-
-            <q-input
-              class="profile-form-settings__input"
-              type="email"
-              outlined
-              dense
-              v-model="profile.email"
-              placeholder="Email"
-            />
-          </div>
-
           <div class="profile-form-settings__col profile-form-settings__phone">
             <div class="profile-form-settings__label">Phone number</div>
 
@@ -154,8 +116,59 @@
               class="profile-form-settings__input"
               outlined
               dense
-              v-model="profile.phone"
+              v-model="profile.mobilePhoneNumber"
               placeholder="(000) 000-0000"
+            />
+          </div>
+
+          <div class="profile-form-settings__col profile-form-settings__telegram">
+            <div class="profile-form-settings__label">Telegram</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              outlined
+              dense
+              v-model="profile.telegram"
+              placeholder="Telegram"
+            />
+          </div>
+        </div>
+
+        <div class="profile-form-settings__row">
+          <div class="profile-form-settings__col profile-form-settings__website">
+            <div class="profile-form-settings__label">Website</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              type="text"
+              outlined
+              dense
+              v-model="profile.website"
+              placeholder="Website"
+            />
+          </div>
+
+          <div class="profile-form-settings__col profile-form-settings__facebook">
+            <div class="profile-form-settings__label">Facebook</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              outlined
+              dense
+              v-model="profile.facebook"
+              placeholder="Facebook"
+            />
+          </div>
+
+          <div class="profile-form-settings__col profile-form-settings__instagram">
+            <div class="profile-form-settings__label">Instagram</div>
+
+            <q-input
+              class="profile-form-settings__input"
+              outlined
+              dense
+              v-model="profile.instagram"
+              placeholder="Instagram"
             />
           </div>
         </div>
@@ -182,55 +195,6 @@
     </div>
   </div>
 </template>
-<script>
-// TODO: add form validation 
-
-import {useRouter} from "vue-router";
-import useProfile from "src/hooks/auth/useProfile";
-
-const months = [
-  {label: '01 - January', value: 1},
-  {label: '02 - February', value: 2},
-  {label: '03 - March', value: 3},
-  {label: '04 - April', value: 4},
-  {label: '05 - May', value: 5},
-  {label: '06 - June', value: 6},
-  {label: '07 - July', value: 7},
-  {label: '08 - August', value: 8},
-  {label: '09 - September', value: 9},
-  {label: '10 - October', value: 10},
-  {label: '11 - November', value: 11},
-  {label: '12 - December', value: 12},
-];
-
-export default {
-  name: "profile-form",
-
-  emits: [
-    'prev',
-  ],
-
-  setup(props, {emit}) {
-    const router = useRouter();
-
-    const {profile, updateProfile} = useProfile();
-
-    const next = async () => {
-      await updateProfile();
-      await router.push({name: 'cabinet'});
-    };
-
-    const prev = () => emit('prev');
-
-    return {
-      months,
-      profile,
-      next,
-      prev,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .profile-form {
@@ -358,11 +322,24 @@ export default {
     margin-right: 0;
   }
 
-  &__email {
+  &__telegram {
     flex: 1;
+    margin-right: 0;
   }
 
   &__phone {
+    flex: 1;
+  }
+
+  &__website {
+    flex: 1;
+  }
+
+  &__facebook {
+    flex: 1;
+  }
+
+  &__instagram {
     flex: 1;
     margin-right: 0;
   }
