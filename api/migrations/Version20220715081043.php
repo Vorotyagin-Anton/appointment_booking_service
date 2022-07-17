@@ -28,7 +28,6 @@ final class Version20220715081043 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE "order" ALTER client_id SET NOT NULL');
         $this->addSql('ALTER TABLE address ALTER code TYPE INT');
         $this->addSql('ALTER TABLE address ALTER code DROP DEFAULT');
     }
