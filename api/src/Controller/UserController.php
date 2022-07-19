@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Address;
 use App\Entity\User\User;
 use App\Form\UserFormType;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use App\Repository\WorkerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,11 +106,21 @@ class UserController extends AbstractController
         int $id,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
+        ClientRepository $clientRepository,
+        WorkerRepository $workerRepository,
         Request $request,
         #[CurrentUser] ?User $currentUser
     ): Response
     {
-        $user = $userRepository->find($id);
+        $postData = $request->toArray();
+
+        if (isset($postData['isWorker']) && $postData['isWorker']) {
+            $user = $workerRepository->find($id);
+        } else if (isset($postData['isClient']) && $postData['isClient']) {
+            $user = $clientRepository->find($id);
+        } else {
+            $user = $userRepository->find($id);
+        }
 
         if (!$user) {
             return new Response('', Response::HTTP_NOT_FOUND);
@@ -118,25 +130,24 @@ class UserController extends AbstractController
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
-        $data = $request->toArray();
         $userAddress = $user->getAddresses()->toArray()[0] ?? null;
         if (!$userAddress) {
             $userAddress = new Address();
             $user->addAddress($userAddress);
         }
-        $userAddress->setState($data['state'] ?? null);
-        unset($data['state']);
-        $userAddress->setCity($data['city'] ?? null);
-        unset($data['city']);
-        $userAddress->setStreet($data['street'] ?? null);
-        unset($data['street']);
-        $userAddress->setHome($data['home'] ?? null);
-        unset($data['home']);
-        $userAddress->setCode(intval($data['code'] ?? null));
-        unset($data['code']);
+        $userAddress->setState($postData['state'] ?? null);
+        unset($postData['state']);
+        $userAddress->setCity($postData['city'] ?? null);
+        unset($postData['city']);
+        $userAddress->setStreet($postData['street'] ?? null);
+        unset($postData['street']);
+        $userAddress->setHome($postData['home'] ?? null);
+        unset($postData['home']);
+        $userAddress->setCode(intval($postData['code'] ?? null));
+        unset($postData['code']);
 
         $form = $this->createForm(UserFormType::class, $user, ['csrf_protection' => false]);
-        $form->submit($data, false);
+        $form->submit($postData, false);
 
         if ($form->isValid()) {
             $entityManager->persist($user);
