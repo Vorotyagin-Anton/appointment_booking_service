@@ -5,9 +5,7 @@ namespace App\Controller;
 use App\Entity\Address;
 use App\Entity\User\User;
 use App\Form\UserFormType;
-use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
-use App\Repository\WorkerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,21 +104,11 @@ class UserController extends AbstractController
         int $id,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        ClientRepository $clientRepository,
-        WorkerRepository $workerRepository,
         Request $request,
         #[CurrentUser] ?User $currentUser
     ): Response
     {
-        $postData = $request->toArray();
-
-        if (isset($postData['isWorker']) && $postData['isWorker']) {
-            $user = $workerRepository->find($id);
-        } else if (isset($postData['isClient']) && $postData['isClient']) {
-            $user = $clientRepository->find($id);
-        } else {
-            $user = $userRepository->find($id);
-        }
+        $user = $userRepository->find($id);
 
         if (!$user) {
             return new Response('', Response::HTTP_NOT_FOUND);
@@ -130,6 +118,8 @@ class UserController extends AbstractController
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
+        // TODO smells bad
+        $postData = $request->toArray();
         $userAddress = $user->getAddresses()->toArray()[0] ?? null;
         if (!$userAddress) {
             $userAddress = new Address();

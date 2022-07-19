@@ -44,10 +44,6 @@ class Worker extends User
     #[Groups(['workerShort'])]
     private $speciality;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['userShort'])]
-    private $website;
-
     #[ORM\OneToMany(mappedBy: 'worker', targetEntity: Order::class)]
     #[Groups(['worker_orders'])]
     private $orders;
@@ -203,18 +199,6 @@ class Worker extends User
     public function setSpeciality(?string $speciality): self
     {
         $this->speciality = $speciality;
-
-        return $this;
-    }
-
-    public function getWebsite(): ?string
-    {
-        return $this->website;
-    }
-
-    public function setWebsite(?string $website): self
-    {
-        $this->website = $website;
 
         return $this;
     }

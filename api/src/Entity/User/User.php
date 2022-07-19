@@ -87,6 +87,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_addresses'])]
     private $addresses;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['userShort'])]
+    private $website;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -340,6 +344,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->addresses->removeElement($address)) {
             $address->removeRelatedUser($this);
         }
+
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
 
         return $this;
     }
