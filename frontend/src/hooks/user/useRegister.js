@@ -7,7 +7,8 @@ export default function useRegister() {
   const router = useRouter();
 
   return async (email, password) => {
-    const user = await api.user.register(email, password);
+    await api.user.register(email, password);
+    const user = await api.user.login(email, password);
 
     await store.dispatch('auth/login', user);
 
