@@ -107,7 +107,7 @@ export default {
     const slideList = computed(() => {
       return categories.value.map((category, key) => ({
         ...category,
-        ...{img: process.env.API_HOST + category.pathToPhoto},
+        ...{img: process.env.HOST + category.pathToPhoto},
       }));
     });
 

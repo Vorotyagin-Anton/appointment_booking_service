@@ -20,7 +20,7 @@ export default {
 
   setup(props) {
     return {
-      source: process.env.API_HOST + '/uploads/photo/' + props.src,
+      source: process.env.HOST + '/uploads/photo/' + props.src,
     }
   },
 }
