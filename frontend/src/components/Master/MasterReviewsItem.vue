@@ -46,7 +46,7 @@ export default {
   },
 
   setup(props) {
-    const hostUrl = 'http://localhost:8081';
+    const hostUrl = process.env.HOST;
     const data = toRef(props, 'review');
 
     return {

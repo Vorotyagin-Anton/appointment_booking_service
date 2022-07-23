@@ -81,7 +81,7 @@ export default {
   },
 
   setup(){
-    const hostUrl = 'http://localhost:8081'
+    const hostUrl = process.env.HOST
     return{
       hostUrl,
     }

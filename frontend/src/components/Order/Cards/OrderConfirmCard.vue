@@ -103,7 +103,7 @@ export default {
 
     const {date, time, service} = orderInfo.value
 
-    const hostUrl = 'http://localhost:8081'
+    const hostUrl = process.env.HOST;
 
     //форматировние даты для вывода в карточку
     const dateToString = (string) => {
