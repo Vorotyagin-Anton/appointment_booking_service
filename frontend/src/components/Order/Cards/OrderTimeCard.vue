@@ -89,10 +89,10 @@ export default {
     mountMaster();
 
     if (orderInfo.value.date !== null){
-      console.log('orderInfo.value.date', orderInfo.value.date)
-      console.log('date', date)
-      console.log('selectedDate', selectedDate)
-      console.log('panelDate', panelDate)
+      // console.log('orderInfo.value.date', orderInfo.value.date)
+      // console.log('date', date)
+      // console.log('selectedDate', selectedDate)
+      // console.log('panelDate', panelDate)
 
       date.value = orderInfo.value.date
       panelDate.value = orderInfo.value.date

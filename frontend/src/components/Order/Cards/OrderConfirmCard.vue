@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <OrderResponseModal :showModal="showModal">
+  <OrderResponseModal v-model="showModal">
     <p>88888</p>
   </OrderResponseModal>
 
@@ -94,6 +94,7 @@ import axios from "axios";
 import useMaster from "src/hooks/useMaster";
 import OrderField from "components/Order/OrderField";
 import OrderResponseModal from "components/Common/Modal/OrderResponseModal";
+import useOrderModal from "src/hooks/order/useOrderModal";
 
 export default {
   name: "OrderStepperConfirm",
@@ -105,6 +106,8 @@ export default {
 
   setup() {
     const {master, mountMaster, orderInfo} = useMaster();
+    const {closeOrderModal} = useOrderModal();
+
     mountMaster();
 
     const showModal = ref(false)
@@ -147,18 +150,19 @@ export default {
     })
 
     const sendOrder = () => {
-      console.log('order.value', order.value)
+      //console.log('order.value', order.value)
       axios.post('api/orders', order.value)
         .then(response => {
-          console.log('response', JSON.parse(response.data));
-          const responseData = JSON.parse(response.data)
+          console.log('response', response.data);
+          const responseData = response.data
 
           if (responseData.title === 'Validation Failed'){
             console.log('ошибка валидации, передать ошибку в форму');
           }
           if (responseData.id) {
-            showModal.value = true
-            //console.log('показать окно с сообщением об удачной записи');
+            // closeOrderModal();
+            showModal.value = true;
+            console.log('показать окно с сообщением об удачной записи');
           }
         })
         .catch(error => {

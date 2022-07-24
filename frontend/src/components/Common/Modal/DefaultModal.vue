@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, toRef, watch} from 'vue'
 export default {
   name: "ModalDefault",
 
@@ -33,6 +33,10 @@ export default {
 
   setup(props){
     const showModalLocal = ref(props.showModal)
+
+    watch([props.showModal], ()=>{
+      console.log('showModalLocal', showModalLocal.value);
+    })
 
     return {
       showModalLocal,
