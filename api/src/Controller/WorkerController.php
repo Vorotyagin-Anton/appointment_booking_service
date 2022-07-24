@@ -83,6 +83,8 @@ class WorkerController extends AbstractController
             'userShort',
             'workerShort',
             'worker_services',
+            'workerServiceShort',
+            'workerService_service',
             'serviceShort',
             'worker_rating',
             'ratingShort'
@@ -151,6 +153,8 @@ class WorkerController extends AbstractController
                     'userShort',
                     'workerShort',
                     'worker_services',
+                    'workerServiceShort',
+                    'workerService_service',
                     'serviceShort',
                     'service_category',
                     'serviceCategoryShort',

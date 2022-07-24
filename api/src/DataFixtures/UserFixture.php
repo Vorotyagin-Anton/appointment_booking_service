@@ -10,6 +10,7 @@ use App\Entity\User\Client;
 use App\Entity\User\User;
 use App\Entity\User\Worker;
 use App\Entity\WorkerAvailableTime;
+use App\Entity\WorkerService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,6 +100,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
         $service = $this->em->getRepository(Service::class)->findAll();
         $workerAvailableTimeVariants = [540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080];
+        $workerServicePriceVariants = [100, 200, 350, 450, 600, 700, 870, 911, 1024];
         $workerAvailableDates = [];
         for ($i = 0; $i < 50; $i++) {
             $workerAvailableDates[] = $this->faker->dateTimeBetween('-3 months', '+3 month');
@@ -108,9 +110,15 @@ class UserFixture extends Fixture implements DependentFixtureInterface
             $user->setRoles(['ROLE_WORKER']);
             $user->setSpeciality($this->faker->jobTitle());
 
-            $user->addService($service[array_rand($service)]);
-            $user->addService($service[array_rand($service)]);
-            $user->addService($service[array_rand($service)]);
+            for ($i = 0; $i < 3; $i++) {
+                $workerService = new WorkerService();
+                $workerService->setService($service[array_rand($service)]);
+                $workerService->setDuration(1);
+                $workerService->setPrice($workerServicePriceVariants[array_rand($workerServicePriceVariants)]);
+                $workerService->setDescription($this->faker->text());
+
+                $user->addService($workerService);
+            }
 
             foreach ($workerAvailableDates as $workerAvailableDate) {
                 foreach ($workerAvailableTimeVariants as $availableTime) {
