@@ -41,7 +41,7 @@ class Worker extends User
     #[Groups(['worker_orders'])]
     private $orders;
 
-    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: WorkerService::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: WorkerService::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['worker_services'])]
     private $services;
 
