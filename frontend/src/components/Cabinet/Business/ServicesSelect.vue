@@ -24,6 +24,7 @@ onMounted(async () => {
     outlined
     use-input
     standout
+    :loading="loading"
     v-model="selectedItems"
     :options="filteredItems"
     @update:model-value="handleSelect"
@@ -35,8 +36,7 @@ onMounted(async () => {
 .services-select {
   display: flex;
   justify-content: center;
-  width: 500px;
-  margin-bottom: 25px;
+  width: 350px;
 
   &__select {
     width: 100%;
