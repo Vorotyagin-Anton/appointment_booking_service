@@ -78,7 +78,7 @@ export default {
   setup(props, {emit}) {
      //console.log(props.master);
 
-    const hostUrl = 'http://localhost:8081'
+    const hostUrl = process.env.HOST;
 
     // const rating = ref({
     //   max: 5,
