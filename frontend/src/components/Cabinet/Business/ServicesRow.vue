@@ -63,7 +63,7 @@
   }
 
   &__name {
-    flex: 2;
+    flex: 3;
   }
 
   &__image {
@@ -77,7 +77,7 @@
   &__duration,
   &__price,
   &__actions {
-    flex: 1;
+    flex: 2;
   }
 
   &__checkbox {

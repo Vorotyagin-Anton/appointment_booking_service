@@ -1,27 +1,35 @@
 <script setup>
+import {ref} from "vue";
 import ServicesRow from "components/Cabinet/Business/ServicesRow";
 import ServicesModal from "components/Cabinet/Business/ServicesModal";
-import {ref} from "vue";
+import ServicesRowContent from "components/Cabinet/Business/ServicesRowContent";
+
+const props = defineProps({
+  services: {
+    type: Array,
+    required: true,
+  },
+});
 
 const emit = defineEmits([
   'toggle', 'remove',
 ]);
 
-const props = defineProps({
-  services: {type: Array, required: true},
-});
-
-const service = ref(null);
-
 const serviceModal = ref(false);
+const currentService = ref(null);
 
-const openServiceModal = (payload) => {
-  service.value = payload;
+const openServiceModal = (service) => {
+  currentService.value = service;
   serviceModal.value = true;
 }
 
-const removeService = (id) => emit('remove', id);
-const toggleServiceStatus = (id) => emit('toggle', id);
+const removeService = (id) => {
+  emit('remove', id);
+};
+
+const toggleService = (payload) => {
+  emit('toggle', payload);
+};
 </script>
 
 <template>
@@ -50,68 +58,19 @@ const toggleServiceStatus = (id) => emit('toggle', id);
       </template>
     </services-row>
 
-    <ServicesRow v-for="service in services" :key="service.name">
-      <template v-slot:status>
-        <q-checkbox
-          class="service-table__checkbox"
-          v-model="service.active"
-          @click="() => toggleServiceStatus(service.id)"
-        />
-      </template>
-
-      <template v-slot:name>
-        <span class="services-table__col">
-          {{ service.name }}
-        </span>
-      </template>
-
-      <template v-slot:duration>
-        <span class="services-table__col">
-          {{ service.duration ?? "30" }} min
-        </span>
-      </template>
-
-      <template v-slot:price>
-        <span class="services-table__col">
-          $ {{ service.price ?? "0.00" }}
-        </span>
-      </template>
-
-      <template v-slot:description>
-        <span class="services-table__col services-table__description">
-          {{ service.description }}
-        </span>
-      </template>
-
-      <template v-slot:image>
-        <q-img
-          class="services-table__img"
-          :src="service.pathToPhoto"
-        />
-      </template>
-
-      <template v-slot:actions>
-        <div class="services-table__col services-table__actions">
-          <span
-            class="material-icons services-table__icon services-table__edit"
-            @click="() => openServiceModal(service)"
-          >
-            edit
-          </span>
-          <span
-            class="material-icons services-table__icon services-table__delete"
-            @click="() => removeService(service.id)"
-          >
-            delete
-          </span>
-        </div>
-      </template>
-    </ServicesRow>
+    <services-row-content
+      v-for="service in services"
+      :key="service.name"
+      :service="service"
+      @select="openServiceModal"
+      @toggle="toggleService"
+      @remove="removeService"
+    />
   </div>
 
   <ServicesModal
     v-model="serviceModal"
-    :service="service"
+    :service="currentService"
   />
 </template>
 
@@ -145,8 +104,9 @@ const toggleServiceStatus = (id) => emit('toggle', id);
   }
 
   &__icon {
-    font-size: 22px;
-    margin-right: 10px;
+    font-size: 20px;
+    margin-left: 5px;
+    margin-right: 8px;
     cursor: pointer;
     transition: all .3s;
 
