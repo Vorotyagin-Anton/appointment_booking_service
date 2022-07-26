@@ -1,9 +1,9 @@
 <script setup>
-import {ref} from "vue";
+import {ref, onMounted} from "vue";
 import AppAlert from "components/Common/AppAlert";
 import AppLoading from "components/Common/AppLoading";
-import ServicesSelect from "components/Cabinet/Business/Services/ServicesSelect";
-import ServicesTable from "components/Cabinet/Business/Services/ServicesTable";
+import ServicesSelect from "components/Cabinet/Business/ServicesSelect";
+import ServicesTable from "components/Cabinet/Business/ServicesTable";
 import useLoading from "src/hooks/common/useLoading";
 import useMessage from "src/hooks/common/useMessage";
 import logger from "src/helpers/logger";
@@ -34,10 +34,13 @@ const submit = async () => {
     finishLoading();
   }
 };
+
+const emit = defineEmits(['toggle-left-drawer']);
+onMounted(() => emit('toggle-left-drawer', {isOpen: true, isOverlay: false}));
 </script>
 
 <template>
-  <div class="container business-page">
+  <div class="business-page">
     <app-alert
       :visible="visible"
       :message="message"
@@ -67,9 +70,8 @@ const submit = async () => {
 <style lang="scss">
 .business-page {
   &__wrapper {
-    padding: 35px 65px 0 35px;
+    padding: 35px 55px;
     display: flex;
-    justify-content: center;
   }
 
   &__content {

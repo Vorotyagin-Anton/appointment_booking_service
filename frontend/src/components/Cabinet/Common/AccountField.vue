@@ -12,9 +12,13 @@
 
     <q-input
       class="account-field__input"
+      :class="{'account-field__input_disabled': disable}"
       v-model="model"
       :type="type"
       :placeholder="placeholder"
+      :disable="disable"
+      :min="min"
+      :max="max"
       square
       @focus="focus"
       @blur="blur"
@@ -24,7 +28,7 @@
 </template>
 
 <script>
-import {ref} from "vue";
+import {ref, toRef, watch} from "vue";
 
 export default {
   name: "ProfileAccountField",
@@ -48,7 +52,20 @@ export default {
     placeholder: {
       type: String,
       default: '',
-    }
+    },
+
+    disable: {
+      type: Boolean,
+      default: false,
+    },
+
+    min: {
+      type: Number,
+    },
+
+    max: {
+      type: Number,
+    },
   },
 
   emits: [
@@ -61,8 +78,10 @@ export default {
     const blur = () => isFocused.value = false;
 
     const model = ref(props.modelValue);
-
+    const modelRef = toRef(props, 'modelValue');
     const updateModel = (value) => emit('update:modelValue', value);
+
+    watch([modelRef], () => model.value = props.modelValue);
 
     return {
       model,
@@ -126,8 +145,15 @@ export default {
     }
 
     .q-field__native::placeholder {
-      color: $grey-6;
+      color: $grey-8;
+      font-weight: 400;
       font-size: 12px;
+    }
+
+    &_disabled {
+      background-color: #d9d9d9;
+      background-image: repeating-linear-gradient(135deg, transparent, transparent 1px, #fff 1px, #fff 5px, transparent 5px, transparent 6px, #fff 6px, #fff 10px);
+      background-size: 7px 7px;
     }
   }
 
