@@ -67,7 +67,7 @@ export default {
   setup(props, {emit}) {
     const model = ref(props.modelValue);
 
-    const avatar = process.env.API_HOST + props.photo;
+    const avatar = process.env.HOST + props.photo;
 
     const updateModel = (value) => {
       emit('update:modelValue', value);
