@@ -1,7 +1,14 @@
 <script setup>
-import {ref, toRef, watch} from "vue";
+import {computed, ref, toRef, watch} from "vue";
+import AppAlert from "components/Common/AppAlert";
+import AppLoading from "components/Common/AppLoading";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
+import useLoading from "src/hooks/common/useLoading";
+import useMessage from "src/hooks/common/useMessage";
+import logger from "src/helpers/logger";
+import formatDuration from "src/filters/formatDuration";
+import formatPrice from "src/filters/formatPrice";
 
 const props = defineProps({
   modelValue: {type: Boolean, required: true},
@@ -17,6 +24,9 @@ const updateModel = (value) => emit('update:modelValue', value);
 watch([modelRef], () => model.value = props.modelValue);
 
 // Service data
+const defDuration = computed(() => formatDuration(props.service.duration ?? 1));
+const defPrice = computed(() => formatPrice(props.service.price ?? "0.00"));
+
 const duration = ref(null);
 const price = ref(null);
 const description = ref(null);
@@ -31,20 +41,43 @@ const resetChanges = () => {
   image.value = null;
 }
 
-const submitChanges = () => {
-  const payload = {
-    id: props.service.id,
-    duration: duration.value,
-    price: price.value,
-    description: description.value,
-    image: image.value,
-  };
+const {loading, startLoading, finishLoading} = useLoading();
+const {visible, type, message, showError, showSuccess, hide} = useMessage();
 
-  console.log(payload);
+const submitChanges = async () => {
+  try {
+    startLoading();
+
+    const payload = {
+      id: props.service.id,
+      duration: duration.value,
+      price: price.value,
+      description: description.value,
+      image: image.value,
+    };
+
+    console.log(payload);
+
+    showSuccess('Profile successfully updated.', 5000);
+  } catch (error) {
+    logger(error);
+    showError('Something was wrong.', 5000);
+  } finally {
+    finishLoading();
+  }
 };
 </script>
 
 <template>
+  <app-alert
+    :visible="visible"
+    :message="message"
+    :type="type"
+    @hide="hide"
+  />
+
+  <app-loading v-if="loading" title="Loading..."/>
+
   <q-dialog
     class="services-modal"
     v-model="model"
@@ -70,7 +103,7 @@ const submitChanges = () => {
           :max="48"
           label="Duration"
           v-model="duration"
-          :placeholder="service.duration ?? '30 min'"
+          :placeholder="defDuration"
         />
 
         <account-field
@@ -79,7 +112,7 @@ const submitChanges = () => {
           :min="0"
           label="Price"
           v-model="price"
-          :placeholder="'$ ' + (service.price ?? '00.0')"
+          :placeholder="'$ ' + defPrice"
         />
 
         <account-textarea
