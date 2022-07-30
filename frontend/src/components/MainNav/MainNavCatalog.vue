@@ -1,23 +1,23 @@
 <template>
   <q-menu
-    class="dropdown-catalog"
+    class="main-nav-catalog"
     square
     :transition-duration="200"
   >
     <q-list
-      class="dropdown-catalog__content"
+      class="main-nav-catalog__content"
       style="min-width: 200px"
       dense
     >
       <q-item clickable>
-        <q-item-section class="dropdown-catalog__link">Categories</q-item-section>
+        <q-item-section class="main-nav-catalog__link">Categories</q-item-section>
 
         <q-item-section side>
           <q-icon name="keyboard_arrow_right"/>
         </q-item-section>
 
         <q-menu
-          class="dropdown-catalog"
+          class="main-nav-catalog"
           anchor="top end"
           self="top left"
           square
@@ -29,7 +29,7 @@
               dense
               clickable
             >
-              <q-item-section class="dropdown-catalog__category">{{ category.name }}</q-item-section>
+              <q-item-section class="main-nav-catalog__link">{{ category.name }}</q-item-section>
             </q-item>
           </q-list>
         </q-menu>
@@ -41,7 +41,7 @@
       <q-item v-close-popup clickable>
         <q-item-section>
           <router-link
-            class="dropdown-catalog__link"
+            class="main-nav-catalog__link"
             :to="{name: 'main'}"
           >
             Services
@@ -52,7 +52,7 @@
       <q-item v-close-popup clickable>
         <q-item-section>
           <router-link
-            class="dropdown-catalog__link"
+            class="main-nav-catalog__link"
             :to="{name: 'masters'}"
           >
             Masters
@@ -67,7 +67,7 @@
 import useList from "src/hooks/categories/useList";
 
 export default {
-  name: "DropdownCatalog",
+  name: "MainNavCatalog",
 
   setup() {
     const {categories} = useList();
@@ -80,23 +80,17 @@ export default {
 </script>
 
 <style lang="scss">
-.dropdown-catalog {
-  padding: 15px 0;
-  border-top: 1px solid $grey-4;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, .06) 0 1px 2px 0;
+.main-nav-catalog {
+  min-width: 250px;
+  padding: 25px 0 15px;
 
   &__link {
+    min-width: 160px;
     padding: 5px 0;
     color: $dark;
     font-size: 15px;
-  }
-
-  &__category {
-    padding: 5px 10px;
-
-    &::first-letter {
-      text-transform: capitalize;
-    }
+    font-weight: 400;
+    text-transform: capitalize;
   }
 }
 </style>

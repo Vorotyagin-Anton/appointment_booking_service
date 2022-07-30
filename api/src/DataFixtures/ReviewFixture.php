@@ -2,21 +2,14 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Career;
-use App\Entity\Rating;
 use App\Entity\Review;
-use App\Entity\Service;
-use App\Entity\User;
-use App\Entity\WorkerAvailableTime;
+use App\Entity\User\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ReviewFixture extends Fixture implements DependentFixtureInterface
 {
@@ -50,7 +43,7 @@ class ReviewFixture extends Fixture implements DependentFixtureInterface
             $review->setText($this->faker->text());
             $review->setWorker($worker);
             $firstReviewer->addReview($review);
-            $worker->addGettedReview($review);
+            $worker->addReview($review);
             $manager->persist($review);
 
             $review = new Review();
@@ -59,7 +52,7 @@ class ReviewFixture extends Fixture implements DependentFixtureInterface
             $review->setText($this->faker->text());
             $review->setWorker($worker);
             $secondReviewer->addReview($review);
-            $worker->addGettedReview($review);
+            $worker->addReview($review);
             $manager->persist($review);
         }
 

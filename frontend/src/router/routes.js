@@ -1,5 +1,7 @@
 import authGuard from "src/router/guards/authGuard";
 import guestGuard from "src/router/guards/guestGuard";
+import profileCreatedGuard from "src/router/guards/profileCreatedGuard";
+import profileNotCreatedGuard from "src/router/guards/profileNotCreatedGuard";
 
 export default [
   {
@@ -9,7 +11,7 @@ export default [
     children: [
       {
         name: 'auth.signin',
-        path: '/signin',
+        path: 'signin',
         beforeEnter: [guestGuard],
         meta: {
           guards: ['guest'],
@@ -18,12 +20,18 @@ export default [
       },
       {
         name: 'auth.signup',
-        path: '/signup',
+        path: 'signup',
         beforeEnter: [guestGuard],
         meta: {
           guards: ['guest'],
         },
         component: () => import('pages/Auth/RegisterPage.vue'),
+      },
+      {
+        name: 'auth.profile',
+        path: 'profile',
+        beforeEnter: [authGuard, profileCreatedGuard],
+        component: () => import('pages/Auth/ProfilePage.vue'),
       },
     ],
     component: () => import('layouts/AuthLayout.vue'),
@@ -50,7 +58,7 @@ export default [
         component: () => import('pages/Cabinet/SchedulePage.vue'),
       }
     ],
-    beforeEnter: [authGuard],
+    beforeEnter: [authGuard, profileNotCreatedGuard],
     meta: {
       guards: ['auth'],
     },

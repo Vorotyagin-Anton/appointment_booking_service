@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\Worker;
 use App\Repository\WorkerAvailableTimeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,7 +16,7 @@ class WorkerAvailableTime
     #[Groups(['workerAvailableTimeShort'])]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workerAvailableTimes')]
+    #[ORM\ManyToOne(targetEntity: Worker::class, inversedBy: 'availableTimes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['workerAvailableTime_worker'])]
     private $worker;
@@ -26,7 +27,7 @@ class WorkerAvailableTime
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     #[Groups(['workerAvailableTimeShort'])]
-    private $isTimeFree;
+    private $isTimeFree = true;
 
     #[ORM\Column(type: 'date')]
     #[Groups(['workerAvailableTimeShort'])]
@@ -41,12 +42,12 @@ class WorkerAvailableTime
         return $this->id;
     }
 
-    public function getWorker(): ?User
+    public function getWorker(): ?Worker
     {
         return $this->worker;
     }
 
-    public function setWorker(?User $worker): self
+    public function setWorker(?Worker $worker): self
     {
         $this->worker = $worker;
 

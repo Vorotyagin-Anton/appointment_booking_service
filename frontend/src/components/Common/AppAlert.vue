@@ -1,54 +1,31 @@
+<script setup>
+const props = defineProps({
+  visible: {type: Boolean, required: true},
+  message: {type: String, required: true},
+  type: {type: String, required: true},
+});
+
+const emit = defineEmits(['hide']);
+const hide = () => emit('hide');
+</script>
+
 <template>
   <div
-    class="container auth-alert"
-    :class="[type, {'auth-alert_active': isVisible}]"
+    class="container app-alert"
+    :class="['app-alert__' + type, {'app-alert_active': visible}]"
   >
-    <div class="auth-alert__content">
-      <div class="auth-alert__message">
-        {{ message }}
-      </div>
+    <div class="app-alert__content">
+      <div class="app-alert__message">{{ message }}</div>
 
-      <span
-        class="material-icons auth-alert__close"
-        @click="hide"
-      >
+      <span class="material-icons app-alert__close" @click="hide">
         close
       </span>
     </div>
   </div>
 </template>
 
-<script>
-
-import useMessage from "src/hooks/user/useMessage";
-
-export default {
-  name: "AlertAlert",
-
-  setup() {
-    const {
-      isVisible,
-      message,
-      lifetime,
-      hide,
-      makeClassByType,
-    } = useMessage();
-
-    const type = makeClassByType('auth-alert__');
-
-    return {
-      isVisible,
-      type,
-      message,
-      lifetime,
-      hide,
-    }
-  }
-}
-</script>
-
 <style lang="scss">
-.auth-alert {
+.app-alert {
   position: fixed;
   top: 0;
   left: 0;
@@ -58,7 +35,7 @@ export default {
   justify-content: center;
   transition: transform 300ms, background-color 300ms;
   transform: translateY(-100%);
-  z-index: 9999;
+  z-index: 5000;
 
   &_active {
     transform: translateY(0);

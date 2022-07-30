@@ -1,3 +1,10 @@
+<script setup>
+import AppImage from "components/Common/AppImage";
+
+const emit = defineEmits(['next', 'prev']);
+const next = () => emit('next');
+</script>
+
 <template>
   <div class="profile-intro">
     <div class="profile-intro__content">
@@ -24,31 +31,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import AppImage from "components/Common/AppImage";
-
-export default {
-  name: "ProfileIntro",
-
-  components: {
-    AppImage,
-  },
-
-  emits: [
-    'next',
-    'prev',
-  ],
-
-  setup(props, {emit}) {
-    const next = () => emit('next');
-
-    return {
-      next,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .profile-intro {

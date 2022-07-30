@@ -28,3 +28,18 @@ services:
             - name: 'kernel.event_listener'
               event: 'Symfony\Component\Security\Http\Event\LogoutEvent'
               dispatcher: security.event_dispatcher.main
+
+    # telegram sender for monolog
+    telegram_debug_handler:
+        class: jacklul\MonologTelegramHandler\TelegramHandler
+        arguments:
+            - '%env(TELEGRAM_DEBUG_TOKEN)%'
+            - '%env(TELEGRAM_DEBUG_CHANNEL)%'
+            - 'DEBUG'
+        calls:
+            - method: setFormatter
+              arguments:
+                  - '@telegram_debug_formatter'
+
+    telegram_debug_formatter:
+        class: jacklul\MonologTelegramHandler\TelegramFormatter

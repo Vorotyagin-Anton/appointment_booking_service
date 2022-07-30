@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\Worker;
 use App\Repository\CareerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,7 +32,7 @@ class Career
     #[Groups(['careerShort'])]
     private $place;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'career')]
+    #[ORM\ManyToOne(targetEntity: Worker::class, cascade: ['persist'], inversedBy: 'career')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['career_worker'])]
     private $worker;
@@ -89,12 +90,12 @@ class Career
         return $this;
     }
 
-    public function getWorker(): ?User
+    public function getWorker(): ?Worker
     {
         return $this->worker;
     }
 
-    public function setWorker(?User $worker): self
+    public function setWorker(?Worker $worker): self
     {
         $this->worker = $worker;
 

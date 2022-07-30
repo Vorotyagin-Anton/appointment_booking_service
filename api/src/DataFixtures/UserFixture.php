@@ -6,7 +6,9 @@ use App\Entity\Address;
 use App\Entity\Career;
 use App\Entity\Rating;
 use App\Entity\Service;
-use App\Entity\User;
+use App\Entity\User\Client;
+use App\Entity\User\User;
+use App\Entity\User\Worker;
 use App\Entity\WorkerAvailableTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -66,7 +68,11 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
     private function getUser(): User
     {
-        $user = new User();
+        if ($this->faker->boolean()) {
+            $user = new Worker();
+        } else {
+            $user = new Client();
+        }
 
         $user->setEmail($this->faker->email());
         $user->setMobilePhoneNumber('7' . $this->faker->numberBetween(100000000, 999999999));
@@ -74,10 +80,6 @@ class UserFixture extends Fixture implements DependentFixtureInterface
         $user->setName($this->faker->firstName());
         $user->setMiddlename($this->faker->firstName());
 
-        $fakerBoolean = $this->faker->boolean();
-
-        $user->setIsClient($fakerBoolean);
-        $user->setIsWorker(!$fakerBoolean);
         $user->setPathToPhoto(\array_pop($this->fakeImagePaths));
         $user->setStory($this->faker->text());
         $user->setTelegram('310345945');
@@ -116,7 +118,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
                     $workerAvailableTime->setExactDate($workerAvailableDate);
                     $workerAvailableTime->setExactTimeInMinutes($availableTime);
                     $workerAvailableTime->setIsTimeFree($this->faker->boolean(75));
-                    $user->addWorkerAvailableTime($workerAvailableTime);
+                    $user->addAvailableTime($workerAvailableTime);
                 }
             }
 

@@ -5,6 +5,7 @@ import servicesModule from "src/api/services";
 import mastersModule from "src/api/masters";
 import categoriesModule from "src/api/categories";
 import scheduleModule from "src/api/schedule";
+import logModule from "src/api/log";
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -29,6 +30,7 @@ const api = {
   masters: mastersModule(instance),
   categories: categoriesModule(instance),
   schedule: scheduleModule(instance),
+  log: logModule(instance),
 };
 
 export {api};
@@ -43,7 +45,7 @@ function responseInterceptor(response) {
 
 function errorInterceptor(error) {
   if (process.env.DEV) {
-    console.log("ERROR:", error.config.url, error.response);
+    console.log("API ERROR:", error.config.url, error.response);
   }
 
   return Promise.reject(error);

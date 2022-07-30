@@ -1,14 +1,88 @@
+<script setup>
+import {ref, onMounted} from "vue";
+import AccountField from "components/Cabinet/Common/AccountField";
+import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
+import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
+import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
+import AppLoading from "components/Common/AppLoading";
+import AppAlert from "components/Common/AppAlert";
+import usePasswordInput from "src/hooks/form/usePasswordInput";
+import useAuth from "src/hooks/user/useAuth";
+import useProfile from "src/hooks/user/useProfile";
+import useMessage from "src/hooks/common/useMessage";
+import logger from "src/helpers/logger";
+import useLoading from "src/hooks/common/useLoading";
+
+const {user} = useAuth();
+
+const avatar = ref(null);
+
+const {loading, startLoading, finishLoading} = useLoading();
+const {visible, type, message, showError, showSuccess, hide} = useMessage();
+const {profile, updateProfile, changePassword} = useProfile(user.value);
+
+const submitProfileChanges = async () => {
+  try {
+    startLoading();
+    await updateProfile();
+    showSuccess('Profile successfully updated.', 5000);
+  } catch (error) {
+    logger(error);
+    showError('Something was wrong.', 5000);
+  } finally {
+    finishLoading();
+  }
+};
+
+const passwordModal = ref(false);
+const openPasswordModal = () => passwordModal.value = true;
+
+const {pass: oldPass, passRules: oldPassRules} = usePasswordInput();
+const {pass: newPass, passRules: newPassRules, passConfirmation, passConfirmationRules} = usePasswordInput();
+
+const submitPasswordChanges = async () => {
+  try {
+    startLoading();
+    await changePassword(oldPass.value, newPass.value);
+    showSuccess('Password successfully changed.', 5000)
+  } catch (error) {
+    logger(error);
+    showError('Something was wrong.', 5000);
+  } finally {
+    finishLoading();
+    resetPasswordChanges();
+  }
+};
+
+const resetPasswordChanges = () => {
+  oldPass.value = '';
+  newPass.value = '';
+  passConfirmation.value = '';
+  passwordModal.value = false;
+};
+
+const emit = defineEmits(['toggle-left-drawer'])
+
+onMounted(() => {
+  emit('toggle-left-drawer', {
+    isOpen: false,
+    isOverlay: true,
+  });
+});
+</script>
+
 <template>
   <div class="container profile-page">
-    <app-loading
-      v-if="loading"
-      title="Updated Loading..."
+    <app-alert
+      :visible="visible"
+      :message="message"
+      :type="type"
+      @hide="hide"
     />
 
-    <div
-      class="profile-page__wrapper"
-      v-else
-    >
+    <app-loading v-if="loading" title="Updated Loading..."/>
+
+    <div v-else class="profile-page__wrapper">
       <div class="profile-page__content">
         <h3 id="personal" class="profile-page__h3">Profile photo</h3>
 
@@ -125,7 +199,8 @@
         <h3 class="profile-page__h3">2-step verification</h3>
 
         <p class="profile-page__p">
-          Add an extra layer of security to your account. A verification code will be required each time someone logs in to
+          Add an extra layer of security to your account. A verification code will be required each time someone logs in
+          to
           Square Dashboard or a Square mobile app to confirm they are the account holder.
           <router-link
             class="profile-page__link"
@@ -247,102 +322,9 @@
         </div>
       </div>
     </div>
-    <profile-footer
-      class="profile-page__footer"
-      @confirm="updateProfile"
-    />
-
-    <auth-alert/>
+    <profile-footer class="profile-page__footer" @confirm="submitProfileChanges"/>
   </div>
 </template>
-
-<script>
-import {ref, onMounted} from "vue";
-import AccountField from "components/Cabinet/Common/AccountField";
-import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
-import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
-import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
-import AppLoading from "components/Common/AppLoading";
-import AuthAlert from "components/Auth/AuthAlert";
-import usePasswordInput from "src/hooks/form/usePasswordInput";
-import useAuth from "src/hooks/user/useAuth";
-import useProfile from "src/hooks/user/useProfile";
-
-export default {
-  name: "ProfilePage",
-
-  components: {
-    AuthAlert,
-    AppLoading,
-    AccountField,
-    AccountTextarea,
-    AccountAvatar,
-    ProfileFooter,
-  },
-
-  emits: [
-    'toggle-left-drawer',
-  ],
-
-  setup(props, {emit}) {
-    const {user} = useAuth();
-
-    const avatar = ref(null);
-
-    const {loading, profile, updateProfile, changePassword} = useProfile(user.value);
-
-    onMounted(() => {
-      emit('toggle-left-drawer', {
-        isOpen: false,
-        isOverlay: true,
-      });
-    });
-
-    const passwordModal = ref(false);
-
-    const openPasswordModal = () => passwordModal.value = true;
-
-    const {pass: oldPass, passRules: oldPassRules} = usePasswordInput();
-    const {pass: newPass, passRules: newPassRules, passConfirmation, passConfirmationRules} = usePasswordInput();
-
-    const submitPasswordChanges = async () => {
-      await changePassword(oldPass.value, newPass.value);
-      resetPasswordChanges();
-    };
-
-    const resetPasswordChanges = () => {
-      passwordModal.value = false;
-
-      oldPass.value = '';
-      newPass.value = '';
-      passConfirmation.value = '';
-    };
-
-    return {
-      loading,
-      user,
-      avatar,
-      profile,
-      updateProfile,
-
-      passwordModal,
-      openPasswordModal,
-
-      oldPass,
-      oldPassRules,
-
-      newPass,
-      newPassRules,
-      passConfirmation,
-      passConfirmationRules,
-
-      changePassword,
-      submitPasswordChanges,
-      resetPasswordChanges,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .profile-page {

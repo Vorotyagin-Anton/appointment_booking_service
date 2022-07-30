@@ -4,6 +4,13 @@
     @submit="onSubmit"
     @reset="onReset"
   >
+    <app-alert
+      :visible="visible"
+      :message="message"
+      :type="type"
+      @hide="hide"
+    />
+
     <div class="register-form__inputs">
       <div class="register-form__email">
 
@@ -69,18 +76,6 @@
     </div>
 
     <div class="register-form__checkboxes">
-      <label class="register-form__checkbox register-form__checkbox_master">
-        <q-checkbox
-          v-model="isMaster"
-          name="isMaster"
-          :dense="true"
-        />
-
-        <div class="register-form__agrees">
-          Register as a master for commercial activities
-        </div>
-      </label>
-
       <label class="register-form__checkbox register-form__checkbox_agree">
         <q-checkbox
           v-model="agree"
@@ -142,27 +137,33 @@ import useEmailInput from "src/hooks/form/useEmailInput";
 import usePasswordInput from "src/hooks/form/usePasswordInput";
 import useRegister from "src/hooks/user/useRegister";
 import useForm from "src/hooks/common/useForm";
-import useMessage from "src/hooks/user/useMessage";
+import useMessage from "src/hooks/common/useMessage";
+import AppAlert from "components/Common/AppAlert";
 
 export default {
   name: "RegisterForm",
+
+  components: {
+    AppAlert,
+  },
 
   setup() {
     const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
     const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
 
     const agree = ref(false);
-    const isMaster = ref(false);
 
     const register = useRegister();
+
     const {isRequested, error, submit, reset} = useForm();
-    const {showError, hide} = useMessage();
+
+    const {visible, type, message, showError, hide} = useMessage();
 
     const onSubmit = async () => {
-      await submit(register, email.value, pass.value, isMaster.value);
+      await submit(register, email.value, pass.value);
 
       if (error.value.message) {
-        await showError(error.value.message);
+        await showError(error.value.message, 5000);
       }
     };
 
@@ -178,6 +179,11 @@ export default {
     };
 
     return {
+      visible,
+      type,
+      message,
+      hide,
+
       email,
       emailRules,
       emailConfirmation,
@@ -187,7 +193,6 @@ export default {
       passConfirmation,
       passConfirmationRules,
       agree,
-      isMaster,
       isRequested,
       error,
       onSubmit,

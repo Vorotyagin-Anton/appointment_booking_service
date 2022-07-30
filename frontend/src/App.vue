@@ -11,7 +11,6 @@ export default {
 
   setup() {
     const {authorize} = useAuth();
-
     onMounted(() => authorize())
   },
 }

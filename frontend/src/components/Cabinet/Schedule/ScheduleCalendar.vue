@@ -111,7 +111,7 @@ function parseDate(value, details) {
 <style lang="scss">
 .schedule-calendar {
   width: 800px;
-  height: 800px;
+  height: 900px;
   border-radius: 0;
   box-shadow: none;
   border-bottom: 1px solid $grey-4;
@@ -138,7 +138,7 @@ function parseDate(value, details) {
   }
 
   .q-date__calendar-days-container {
-    height: 100%;
+    height: 90%;
 
     .q-date__calendar-item {
       padding: 0;

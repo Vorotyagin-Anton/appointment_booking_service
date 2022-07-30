@@ -39,7 +39,10 @@ export default route(function ({store, ssrContext}) {
   });
 
   router.beforeEach((to, from) => {
-     to.meta.isAuthorized = store.getters['auth/isAuthorized'];
+    to.meta.isAuthorized = store.getters['auth/isAuthorized'];
+
+    const profile = store.getters['auth/user'];
+    to.meta.isProfileCreated = profile?.isClient || profile?.isWorker;
   });
 
   return router;

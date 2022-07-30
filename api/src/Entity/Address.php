@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\User;
 use App\Repository\AddressRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,7 +30,7 @@ class Address
     #[Groups(['addressShort'])]
     private $street;
 
-    #[ORM\Column(type: 'smallint', nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['addressShort'])]
     private $code;
 

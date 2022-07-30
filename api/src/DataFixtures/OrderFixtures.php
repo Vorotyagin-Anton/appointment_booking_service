@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Order;
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,7 +48,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         $services = $randomWorker->getServices()->toArray();
         $randomService = $services[array_rand($services)];
 
-        $times = $randomWorker->getWorkerAvailableTimes()->toArray();
+        $times = $randomWorker->getAvailableTimes()->toArray();
         $randomTime = $times[array_rand($times)];
 
         $order = new Order();

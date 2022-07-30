@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\User\Client;
+use App\Entity\User\Worker;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -50,12 +52,11 @@ class Order
     #[Groups(['orderShort'])]
     private $clientTelegram;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'clientOrders')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'orders')]
     #[Groups(['order_client'])]
     private $client;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workerOrders')]
+    #[ORM\ManyToOne(targetEntity: Worker::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['order_worker'])]
     private $worker;
@@ -74,12 +75,12 @@ class Order
         return $this->id;
     }
 
-    public function getClient(): ?User
+    public function getClient(): ?Client
     {
         return $this->client;
     }
 
-    public function setClient(User $client): self
+    public function setClient(Client $client): self
     {
         $this->client = $client;
 
@@ -122,12 +123,12 @@ class Order
         return $this;
     }
 
-    public function getWorker(): ?User
+    public function getWorker(): ?Worker
     {
         return $this->worker;
     }
 
-    public function setWorker(User $worker): self
+    public function setWorker(Worker $worker): self
     {
         $this->worker = $worker;
 

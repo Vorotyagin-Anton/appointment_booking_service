@@ -28,7 +28,7 @@ export default function useAuth() {
 
       await store.dispatch('auth/login', user);
 
-      if (route.matched.some(record => record?.meta.guards.includes('guest'))) {
+      if (route.matched.some(record => record.meta.guards?.includes('guest'))) {
         await router.push({name: 'cabinet'});
       }
     } catch (error) {

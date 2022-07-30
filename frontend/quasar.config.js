@@ -27,6 +27,7 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
     boot: [
       'api',
+      'logger',
     ],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
@@ -53,9 +54,7 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'history', // available values: 'hash', 'history'
 
       env: {
-        API_HOST: ctx.dev
-          ? 'http://localhost:8081'
-          : 'http://localhost:8080', // process.env.API_HOST
+        HOST: 'http://abs.local',
       },
 
       // transpile: false,
@@ -90,7 +89,7 @@ module.exports = configure(function (ctx) {
       server: {
         type: 'http'
       },
-      port: 8080,
+      port: 80,
       open: true, // opens browser window automatically
 
       proxy: {
