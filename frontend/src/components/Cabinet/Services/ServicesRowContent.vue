@@ -2,8 +2,8 @@
 import {computed, ref} from "vue";
 import formatPrice from "src/filters/formatPrice";
 import formatDuration from "src/filters/formatDuration";
-import ServicesRow from "components/Cabinet/Business/ServicesRow";
-import ServicesRowPlaceholder from "components/Cabinet/Business/ServicesRowPlaceholder";
+import ServicesRow from "components/Cabinet/Services/ServicesRow";
+import ServicesRowPlaceholder from "components/Cabinet/Services/ServicesRowPlaceholder";
 
 const props = defineProps({
   service: {

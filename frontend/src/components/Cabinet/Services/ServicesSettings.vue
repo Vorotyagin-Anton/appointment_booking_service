@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
-import ServicesSelect from "components/Cabinet/Business/ServicesSelect";
-import ServicesTable from "components/Cabinet/Business/ServicesTable";
+import ServicesSelect from "components/Cabinet/Services/ServicesSelect";
+import ServicesTable from "components/Cabinet/Services/ServicesTable";
 
 const props = defineProps({
   userServices: {
@@ -48,14 +48,6 @@ const removeService = (id) => {
       @toggle="toggleService"
       @remove="removeService"
     />
-
-    <div class="services-settings__btns">
-      <q-btn
-        label="Submit changes"
-        color="primary"
-        unelevated
-      />
-    </div>
   </div>
 </template>
 
@@ -73,10 +65,6 @@ const removeService = (id) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  &__btns {
-    margin-top: 15px;
   }
 }
 </style>

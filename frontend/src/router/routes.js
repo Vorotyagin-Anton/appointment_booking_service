@@ -53,9 +53,9 @@ export default [
         component: () => import('pages/Cabinet/ProfilePage.vue'),
       },
       {
-        name: 'cabinet.business',
-        path: 'business',
-        component: () => import('pages/Cabinet/BusinessPage.vue'),
+        name: 'cabinet.services',
+        path: 'services',
+        component: () => import('pages/Cabinet/ServicesPage.vue'),
       },
       {
         name: 'cabinet.schedule',

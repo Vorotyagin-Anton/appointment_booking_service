@@ -1,10 +1,12 @@
 <script setup>
 import {onMounted} from "vue";
-import ServicesSettings from "components/Cabinet/Business/ServicesSettings";
+import ServicesSettings from "components/Cabinet/Services/ServicesSettings";
 
 const emit = defineEmits([
   'toggle-left-drawer',
 ]);
+
+
 
 onMounted(() => {
   emit('toggle-left-drawer', {

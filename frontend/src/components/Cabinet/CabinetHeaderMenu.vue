@@ -35,9 +35,9 @@ const userName = computed(() => {
         <q-item-section>
           <router-link
             class="cabinet-header-menu__link"
-            :to="{name: 'cabinet.business'}"
+            :to="{name: 'cabinet.profile'}"
           >
-            Business
+            Profile
           </router-link>
         </q-item-section>
       </q-item>
@@ -46,9 +46,9 @@ const userName = computed(() => {
         <q-item-section>
           <router-link
             class="cabinet-header-menu__link"
-            :to="{name: 'cabinet.profile'}"
+            :to="{name: 'cabinet.services'}"
           >
-            Profile settings
+            Services settings
           </router-link>
         </q-item-section>
       </q-item>

@@ -1,8 +1,8 @@
 <script setup>
 import {ref} from "vue";
-import ServicesRow from "components/Cabinet/Business/ServicesRow";
-import ServicesModal from "components/Cabinet/Business/ServicesModal";
-import ServicesRowContent from "components/Cabinet/Business/ServicesRowContent";
+import ServicesRow from "components/Cabinet/Services/ServicesRow";
+import ServicesModal from "components/Cabinet/Services/ServicesModal";
+import ServicesRowContent from "components/Cabinet/Services/ServicesRowContent";
 
 const props = defineProps({
   services: {
