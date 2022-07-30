@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import {computed, ref, watch} from "vue"
+import {computed, ref, watch, toRef} from "vue"
 import axios from "axios";
 import useMaster from "src/hooks/useMaster";
 import OrderField from "components/Order/OrderField";
@@ -110,7 +110,7 @@ export default {
 
     mountMaster();
 
-    const showModal = ref(false)
+    const showModal = ref(true)
     const responseModalData = ref()
 
     const {date, time, service} = orderInfo.value
