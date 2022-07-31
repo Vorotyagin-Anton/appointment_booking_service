@@ -2,7 +2,7 @@ import {api} from "boot/api";
 import {computed} from "vue";
 import {useStore} from "vuex";
 import {useRoute, useRouter} from "vue-router";
-import logger from "src/helpers/logger";
+import logger from "src/logger";
 
 export default function useAuth() {
   const store = useStore();

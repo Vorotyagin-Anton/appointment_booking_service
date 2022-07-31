@@ -8,7 +8,7 @@ import ScheduleSlots from "components/Cabinet/Schedule/ScheduleSlots";
 import ScheduleCalendar from "components/Cabinet/Schedule/ScheduleCalendar";
 import AppLoading from "components/Common/AppLoading";
 import AppAlert from "components/Common/AppAlert";
-import logger from "src/helpers/logger";
+import logger from "src/logger";
 import useLoading from "src/hooks/common/useLoading";
 
 const emit = defineEmits(['toggle-left-drawer']);

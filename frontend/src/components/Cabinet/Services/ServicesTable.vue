@@ -1,77 +1,58 @@
 <script setup>
-import {ref} from "vue";
 import ServicesRow from "components/Cabinet/Services/ServicesRow";
-import ServicesModal from "components/Cabinet/Services/ServicesModal";
 import ServicesRowContent from "components/Cabinet/Services/ServicesRowContent";
 
 const props = defineProps({
   services: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
 
 const emit = defineEmits([
-  'toggle', 'remove',
+  'select', 'toggle', 'remove',
 ]);
 
-const serviceModal = ref(false);
-const currentService = ref(null);
-
-const openServiceModal = (service) => {
-  currentService.value = service;
-  serviceModal.value = true;
-}
-
-const removeService = (id) => {
-  emit('remove', id);
-};
-
-const toggleService = (payload) => {
-  emit('toggle', payload);
-};
+const selectService = (id) => emit('select', id);
+const removeService = (id) => emit('remove', id);
+const toggleService = (id) => emit('toggle', id);
 </script>
 
 <template>
   <div class="services-table">
     <services-row>
       <template v-slot:status>
-        <span class="services-table__col services-table__title">Active</span>
+        <span class="services-table__col">Status</span>
       </template>
       <template v-slot:name>
-        <span class="services-table__col services-table__title">Name</span>
+        <span class="services-table__col">Name</span>
       </template>
       <template v-slot:duration>
-        <span class="services-table__col services-table__title">Duration</span>
+        <span class="services-table__col">Duration</span>
       </template>
       <template v-slot:price>
-        <span class="services-table__col services-table__title">Price</span>
+        <span class="services-table__col">Price</span>
       </template>
       <template v-slot:description>
-        <span class="services-table__col services-table__title">Description</span>
+        <span class="services-table__col">Description</span>
       </template>
       <template v-slot:image>
-        <span class="services-table__col services-table__title">Image</span>
+        <span class="services-table__col">Image</span>
       </template>
       <template v-slot:actions>
-        <span class="services-table__col services-table__title">Actions</span>
+        <span class="services-table__col">Actions</span>
       </template>
     </services-row>
 
     <services-row-content
-      v-for="service in services"
-      :key="service.name"
-      :service="service"
-      @select="openServiceModal"
+      v-for="id in services.ids"
+      :key="id"
+      :service="services.entities[id]"
+      @select="selectService"
       @toggle="toggleService"
       @remove="removeService"
     />
   </div>
-
-  <ServicesModal
-    v-model="serviceModal"
-    :service="currentService"
-  />
 </template>
 
 <style lang="scss">
@@ -84,43 +65,7 @@ const toggleService = (payload) => {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-  }
-
-  &__title {
     font-weight: 500;
-  }
-
-  &__description {
-    white-space: pre-line;
-  }
-
-  &__img {
-    max-height: 40px;
-    cursor: pointer;
-  }
-
-  &__actions {
-    justify-content: flex-end;
-  }
-
-  &__icon {
-    font-size: 20px;
-    margin-left: 5px;
-    margin-right: 8px;
-    cursor: pointer;
-    transition: all .3s;
-
-    &:active {
-      transform: scale(.8);
-    }
-  }
-
-  &__edit {
-    color: $primary;
-  }
-
-  &__delete {
-    color: $red-7;
   }
 }
 </style>

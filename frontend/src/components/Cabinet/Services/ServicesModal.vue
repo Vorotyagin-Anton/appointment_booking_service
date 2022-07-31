@@ -1,152 +1,132 @@
 <script setup>
-import {computed, ref, toRef, watch} from "vue";
-import AppAlert from "components/Common/AppAlert";
-import AppLoading from "components/Common/AppLoading";
+import {ref, toRef, watch} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
-import useLoading from "src/hooks/common/useLoading";
-import useMessage from "src/hooks/common/useMessage";
-import logger from "src/helpers/logger";
-import formatDuration from "src/filters/formatDuration";
-import formatPrice from "src/filters/formatPrice";
+import ServicesSelect from "components/Cabinet/Services/ServicesSelect";
+import useWorkerServices from "src/hooks/services/useWorkerServices";
 
 const props = defineProps({
-  modelValue: {type: Boolean, required: true},
-  service: {type: Object},
+  modelValue: {
+    type: Boolean,
+    required: true,
+  },
+
+  serviceId: Number,
+
+  action: {
+    validator: (value) => ['create', 'update'].includes(value),
+    required: true,
+  },
+
+  onSubmit: {
+    type: Function,
+    required: true,
+  }
 });
 
-// Modal window
-const model = ref(props.modelValue);
-const modelRef = toRef(props, 'modelValue');
-const emit = defineEmits(['update:modelValue']);
-const updateModel = (value) => emit('update:modelValue', value);
+const emit = defineEmits([
+  'update:modelValue', 'hide',
+]);
 
-watch([modelRef], () => model.value = props.modelValue);
+const initialServiceValue = {
+  duration: 1,
+  price: 0,
+  description: null,
+  service: {name: null},
+};
 
-// Service data
-const defDuration = computed(() => formatDuration(props.service.duration ?? 1));
-const defPrice = computed(() => formatPrice(props.service.price ?? "0.00"));
+const modal = ref(props.modelValue);
+const modalRef = toRef(props, 'modelValue');
+watch([modalRef], () => modal.value = props.modelValue);
 
-const duration = ref(null);
-const price = ref(null);
-const description = ref(null);
-const image = ref(null);
+const {workerServices} = useWorkerServices();
 
-const updateImage = (file) => image.value = file;
+const service = ref(props.serviceId
+  ? Object.assign({}, workerServices.value.entities[props.serviceId])
+  : initialServiceValue
+);
+
+const handleServiceSelect = (selectedService) => {
+  service.value.service = selectedService;
+};
+
+const updateModel = (value) => {
+  emit('update:modelValue', value);
+};
+
+const hideModal = () => {
+  emit('hide');
+};
 
 const resetChanges = () => {
-  duration.value = null;
-  price.value = null;
-  description.value = null;
-  image.value = null;
-}
-
-const {loading, startLoading, finishLoading} = useLoading();
-const {visible, type, message, showError, showSuccess, hide} = useMessage();
-
-const submitChanges = async () => {
-  try {
-    startLoading();
-
-    const payload = {
-      id: props.service.id,
-      duration: duration.value,
-      price: price.value,
-      description: description.value,
-      image: image.value,
-    };
-
-    console.log(payload);
-
-    showSuccess('Profile successfully updated.', 5000);
-  } catch (error) {
-    logger(error);
-    showError('Something was wrong.', 5000);
-  } finally {
-    finishLoading();
-  }
+  service.value = Object.assign({}, workerServices.value.entities[props.serviceId]);
 };
 </script>
 
 <template>
-  <app-alert
-    :visible="visible"
-    :message="message"
-    :type="type"
-    @hide="hide"
-  />
-
-  <app-loading v-if="loading" title="Loading..."/>
-
   <q-dialog
     class="services-modal"
-    v-model="model"
+    v-model="modal"
     @update:model-value="updateModel"
+    @hide="hideModal"
   >
     <q-card class="services-modal__card">
-      <q-card-section>
+      <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">Service options</div>
+        <q-space/>
+        <q-btn icon="close" flat round dense v-close-popup/>
+      </q-card-section>
+
+      <q-card-section v-if="action === 'create'" class="services-modal__section">
+        <services-select @select="handleServiceSelect"/>
       </q-card-section>
 
       <q-card-section class="services-modal__section">
         <account-field
           class="services-modal__field"
           label="Name"
-          :placeholder="service.name"
-          :disable="true"
+          v-model="service.service.name"
+          disable
         />
 
-        <account-field
-          class="services-modal__field"
-          type="number"
-          :min="1"
-          :max="48"
-          label="Duration"
-          v-model="duration"
-          :placeholder="defDuration"
-        />
+        <div class="services-modal__duration">
+          <span class="services-modal__note-icon" style="top: 13px; left: 64px">*</span>
+
+          <account-field
+            class="services-modal__field"
+            type="number"
+            :min="1"
+            :max="48"
+            label="Duration"
+            v-model="service.duration"
+          />
+        </div>
 
         <account-field
           class="services-modal__field"
           type="number"
           :min="0"
           label="Price"
-          v-model="price"
-          :placeholder="'$ ' + defPrice"
+          v-model="service.price"
         />
 
         <account-textarea
           class="services-modal__field"
           label="Description"
-          v-model="description"
-          :placeholder="service.description ?? 'Enter a brief about service. Short descriptions are the most effective.'"
+          v-model="service.description"
+          placeholder="Enter a brief about service. Short descriptions are the most effective."
         />
 
-        <div class="services-modal__photo service-modal-photo">
-          <q-img
-            class="service-modal-photo__img"
-            :src="service.pathToPhoto"
-          >
-            <div v-if="image" class="absolute-bottom text-body1 text-center">
-              {{ image.name }}
-            </div>
-          </q-img>
-
-          <q-file
-            class="service-modal-photo__file"
-            v-model="image"
-            @update:model-value="updateImage"
-          />
-
-          <div class="service-modal-photo__descr">
-            <span class="material-icons service-modal-photo__icon">add_a_photo</span>
-            <span class="services-modal__span service-modal-photo__title">Upload photo</span>
-          </div>
+        <div class="text-caption text-grey services-modal__note">
+          <span class="services-modal__note-icon" style="top: 0; left: 0;">*</span>
+          The duration field specifies the duration of the service. The minimum duration is 30 minutes. By increasing
+          the value by one, 30 minutes arrive at the service time.
         </div>
       </q-card-section>
 
       <q-card-actions align="right">
         <q-btn
+          v-if="action === 'update'"
           class="services-modal__btn"
           outline
           label="Reset"
@@ -155,10 +135,10 @@ const submitChanges = async () => {
 
         <q-btn
           class="services-modal__btn"
-          label="Submit"
+          :label="action === 'update' ? 'Update' : 'Create'"
           color="primary"
           v-close-popup
-          @click="submitChanges"
+          @click="() => onSubmit(service)"
         />
       </q-card-actions>
     </q-card>
@@ -184,33 +164,19 @@ const submitChanges = async () => {
   &__btn {
     width: 150px;
   }
-}
 
-.service-modal-photo {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &__file {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
+  &__duration {
+    position: relative;
   }
 
-  &__descr {
+  &__note-icon {
     position: absolute;
-    z-index: 500;
-    display: flex;
-    flex-direction: column;
-    opacity: 85%;
-    font-size: 60px;
-    color: $white;
+    color: $red-7;
+  }
+
+  &__note {
+    position: relative;
+    padding-left: 10px;
   }
 }
 </style>

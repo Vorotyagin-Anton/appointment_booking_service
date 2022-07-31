@@ -1,10 +1,24 @@
+<script setup>
+import {onMounted} from "vue";
+import useServices from "src/hooks/services/useServices";
+import ServiceListItem from "components/Catalog/ServiceListItem";
+
+const {loading, services, fetchServices} = useServices();
+
+onMounted(() => {
+  if (!loading && services.value.ids.length === 0) {
+    fetchServices();
+  }
+});
+</script>
+
 <template>
   <div class="app-services">
     <div class="app-services__items" v-if="!loading">
       <service-list-item
-        v-for="service in services"
-        :item="service"
-        :key="service.id"
+        v-for="id in services.ids"
+        :item="services.entities[id]"
+        :key="id"
       />
     </div>
     <div v-else class="app-services__loading">
@@ -18,29 +32,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import {defineComponent} from "vue";
-import useList from "src/hooks/services/useList";
-import ServiceListItem from "components/Catalog/ServiceListItem";
-
-export default defineComponent({
-  name: "ServiceList",
-
-  components: {
-    ServiceListItem,
-  },
-
-  setup() {
-    const {loading, services} = useList();
-
-    return {
-      loading,
-      services,
-    }
-  }
-})
-</script>
 
 <style lang="scss">
 .app-services {

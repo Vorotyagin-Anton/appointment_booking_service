@@ -1,20 +1,18 @@
 <script setup>
-import {onMounted} from "vue";
 import useSelect from "src/hooks/form/useSelect";
-import useServices from "src/hooks/services/useList";
+import useServices from "src/hooks/services/useServices";
 
-const {services, loading, getServicesFromApi} = useServices();
-const {filteredItems, selectedItems, filterFn} = useSelect(services);
+const emit = defineEmits([
+  'select',
+]);
 
-const emit = defineEmits(['select']);
+const {services} = useServices();
 
-const handleSelect = (value) => emit('select', value);
+const {filteredItems, selectedItems, filterFn} = useSelect(Object.values(services.value.entities));
 
-onMounted(async () => {
-  if (services.value.length === 0) {
-    await getServicesFromApi();
-  }
-});
+const handleSelect = (value) => {
+  emit('select', value);
+};
 </script>
 
 <template>
@@ -24,7 +22,6 @@ onMounted(async () => {
     outlined
     use-input
     standout
-    :loading="loading"
     v-model="selectedItems"
     :options="filteredItems"
     @update:model-value="handleSelect"
@@ -34,10 +31,6 @@ onMounted(async () => {
 
 <style lang="scss">
 .services-select {
-  display: flex;
-  justify-content: center;
-  width: 350px;
-
   &__select {
     width: 100%;
   }

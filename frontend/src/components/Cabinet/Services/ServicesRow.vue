@@ -55,7 +55,7 @@
   }
 
   &__col {
-    padding: 5px 10px;
+    padding: 15px 5px;
   }
 
   &__active {
@@ -63,7 +63,7 @@
   }
 
   &__name {
-    flex: 3;
+    flex: 2;
   }
 
   &__image {
@@ -74,10 +74,13 @@
     flex: 4;
   }
 
-  &__duration,
-  &__price,
   &__actions {
-    flex: 2;
+    flex: 1;
+  }
+
+  &__duration,
+  &__price {
+    flex: 1;
   }
 
   &__checkbox {

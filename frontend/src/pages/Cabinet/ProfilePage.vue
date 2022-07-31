@@ -10,7 +10,7 @@ import usePasswordInput from "src/hooks/form/usePasswordInput";
 import useAuth from "src/hooks/user/useAuth";
 import useProfile from "src/hooks/user/useProfile";
 import useMessage from "src/hooks/common/useMessage";
-import logger from "src/helpers/logger";
+import logger from "src/logger";
 import useLoading from "src/hooks/common/useLoading";
 
 const {user} = useAuth();

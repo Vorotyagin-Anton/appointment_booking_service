@@ -40,7 +40,7 @@ export default {
     },
 
     modelValue: {
-      type: [String, null],
+      type: [String, Number, null],
       default: null
     },
 
