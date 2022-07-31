@@ -1,5 +1,5 @@
 <script setup>
-import {ref, toRef, watch} from "vue";
+import {onMounted, ref, toRef, watch} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import ServicesSelect from "components/Cabinet/Services/ServicesSelect";
@@ -28,23 +28,26 @@ const emit = defineEmits([
   'update:modelValue', 'hide',
 ]);
 
-const initialServiceValue = {
-  duration: 1,
-  price: 0,
-  description: null,
-  service: {name: null},
-};
-
 const modal = ref(props.modelValue);
 const modalRef = toRef(props, 'modelValue');
 watch([modalRef], () => modal.value = props.modelValue);
 
 const {workerServices} = useWorkerServices();
 
-const service = ref(props.serviceId
-  ? Object.assign({}, workerServices.value.entities[props.serviceId])
-  : initialServiceValue
-);
+const initialValue = {
+  duration: 1,
+  price: 0,
+  description: null,
+  service: {},
+};
+
+const service = ref(Object.assign({}, initialValue));
+
+onMounted(() => {
+  if (props.serviceId) {
+    service.value = Object.assign({}, workerServices.value.entities[props.serviceId]);
+  }
+});
 
 const handleServiceSelect = (selectedService) => {
   service.value.service = selectedService;
@@ -56,12 +59,11 @@ const updateModel = (value) => {
 
 const hideModal = () => {
   emit('hide');
-  service.value.service = initialServiceValue;
+  service.value = Object.assign({}, initialValue);
 };
 
 const submitChanges = () => {
   props.onSubmit(service.value);
-  hideModal();
 };
 
 const resetChanges = () => {

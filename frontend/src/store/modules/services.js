@@ -38,23 +38,20 @@ const actions = {
   },
 
   setWorkerServices({commit}, payload) {
-    const services = payload.services.map(workerService => workerService.service);
-
     const workerServices = payload.services.map(workerService => ({
       ...workerService,
       service: workerService.service.id,
     }));
 
-    commit('putServicesToState', services);
     commit('putWorkerServicesToState', workerServices);
   },
-  
+
   addWorkerService({commit}, payload) {
     const service = {
       ...payload.service,
       service: payload.service.service.id,
     };
-    
+
     commit('addWorkerServiceToState', service);
   },
 
@@ -87,7 +84,7 @@ const mutations = {
     state.workerServices = entities;
     state.workerServicesIds = Object.keys(entities);
   },
-  
+
   addWorkerServiceToState(state, service) {
     state.workerServices[service.id] = service;
     state.workerServicesIds.push(service.id);

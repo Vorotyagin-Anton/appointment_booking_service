@@ -45,6 +45,7 @@ const createWorkerService = (service) => {
 };
 
 const updateWorkerService = (service) => {
+  console.log("test", service)
   submitWrapper(() => updateService(service), 'Profile successfully updated.');
 };
 
