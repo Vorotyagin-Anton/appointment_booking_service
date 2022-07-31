@@ -1,1 +1,3 @@
 src/Controller/TestServerController.php
+public/uploads/photo/users/
+!public/uploads/photo/users/dummy.jpg

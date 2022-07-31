@@ -48,10 +48,8 @@ final class Version20220528171023 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE "user" DROP telegram');
-        $this->addSql('ALTER TABLE "order" DROP CONSTRAINT FK_F5299398ED5CA9E6');
         $this->addSql('ALTER TABLE "order" DROP CONSTRAINT FK_F529939819EB6921');
         $this->addSql('ALTER TABLE "order" DROP CONSTRAINT FK_F52993986B20BA36');
-        $this->addSql('DROP INDEX IDX_F5299398ED5CA9E6');
         $this->addSql('DROP INDEX IDX_F529939819EB6921');
         $this->addSql('DROP INDEX IDX_F52993986B20BA36');
         $this->addSql('ALTER TABLE "order" ADD client_user_id INT NOT NULL DEFAULT 1');

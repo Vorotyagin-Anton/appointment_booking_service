@@ -99,6 +99,42 @@ class UserController extends AbstractController
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 
+    #[Route(path: '/api/users/{id}/change-photo', name: 'app_users_change-photo', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function updateUserPhoto(
+        int $id,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        Request $request,
+        #[CurrentUser] ?User $currentUser
+    ): Response
+    {
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        if ($user !== $currentUser) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
+
+        $uploadedPhoto = $request->files->get('userPhoto');
+
+        $destination = $this->getParameter('app.uploads_dir').'/photo/users/'.$user->getId();
+        $originalFilename = pathinfo($uploadedPhoto->getClientOriginalName(), PATHINFO_FILENAME);
+        $newFilename = $originalFilename.'-'.uniqid().'.'.$uploadedPhoto->guessExtension();
+
+        $uploadedPhoto->move($this->getParameter('kernel.project_dir')."/public/$destination", $newFilename);
+
+        $user->setPathToPhoto("$destination/$newFilename");
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json($user, Response::HTTP_CREATED, [], ['groups' => [
+            'userShort'
+        ]]);
+    }
+
     #[Route(path: '/api/users/{id}', name: 'app_users_patch', requirements: ['id' => '\d+'], methods: ['PATCH'])]
     public function updateUser(
         int $id,

@@ -33,27 +33,9 @@ class Service
     #[Groups(['serviceShort'])]
     private $pathToPhoto;
 
-    #[ORM\ManyToMany(targetEntity: Worker::class, mappedBy: "services")]
-    #[Groups(['service_workers'])]
-    private $workers;
-
-    #[ORM\Column(type: 'smallint', nullable: true)]
-    #[Groups(['serviceShort'])]
-    private $price;
-
-    #[ORM\Column(type: 'smallint', nullable: true)]
-    #[Groups(['serviceShort'])]
-    private $duration;
-
-    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Order::class)]
-    #[Groups(['service_orders'])]
-    private $orders;
-
     public function __construct()
     {
-        $this->workers = new ArrayCollection();
         $this->category = new ArrayCollection();
-        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,87 +90,6 @@ class Service
     public function setPathToPhoto(?string $pathToPhoto): self
     {
         $this->pathToPhoto = $pathToPhoto;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Worker>
-     */
-    public function getWorkers(): Collection
-    {
-        return $this->workers;
-    }
-
-    public function addWorker(Worker $worker): self
-    {
-        if (!$this->workers->contains($worker)) {
-            $this->workers[] = $worker;
-            $worker->addService($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWorker(Worker $worker): self
-    {
-        if ($this->workers->removeElement($worker)) {
-            $worker->removeService($this);
-        }
-
-        return $this;
-    }
-
-    public function getPrice(): ?int
-    {
-        return $this->price;
-    }
-
-    public function setPrice(?int $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getDuration(): ?int
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(?int $duration): self
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setService($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getService() === $this) {
-                $order->setService(null);
-            }
-        }
 
         return $this;
     }

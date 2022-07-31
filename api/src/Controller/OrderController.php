@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Entity\Service;
 use App\Entity\User\User;
 use App\Entity\WorkerAvailableTime;
+use App\Entity\WorkerService;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
 use App\Service\CustomDataFormatter;
@@ -50,7 +50,7 @@ class OrderController extends AbstractController
 
         if ($form->isValid()) {
             $worker = $em->getRepository(User::class)->findOneBy(['id' => $data['master_id']]);
-            $service = $em->getRepository(Service::class)->findOneBy(['id' => $data['service_id']]);
+            $service = $em->getRepository(WorkerService::class)->findOneBy(['id' => $data['service_id']]);
             $time = $em->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $data['time_id']]);
 
             if (!$worker) {
