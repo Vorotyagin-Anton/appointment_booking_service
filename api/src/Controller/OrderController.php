@@ -53,12 +53,24 @@ class OrderController extends AbstractController
             $service = $em->getRepository(Service::class)->findOneBy(['id' => $data['service_id']]);
             $time = $em->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $data['time_id']]);
 
+            if (!$worker) {
+                return $this->json('master not found', Response::HTTP_BAD_REQUEST);
+            }
+
+            if (!$service) {
+                return $this->json('service not found', Response::HTTP_BAD_REQUEST);
+            }
+
+            if (!$time) {
+                return $this->json('time not found', Response::HTTP_BAD_REQUEST);
+            }
+
             $order = new Order();
             $order->setClientName($data['client_name']);
             $order->setClientEmail($data['email']);
-            $order->setClientPhone($data['phone']);
-            $order->setClientTelegram($data['telegram']);
-            $order->setClientContactType($data['notification_type']);
+            $order->setClientPhone($data['phone'] ?? null);
+            $order->setClientTelegram($data['telegram'] ?? null);
+            $order->setClientContactType($data['notification_type'] ?? 1);
 
             $order->setWorker($worker);
             $order->setService($service);
