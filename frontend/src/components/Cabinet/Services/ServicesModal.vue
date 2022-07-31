@@ -56,6 +56,12 @@ const updateModel = (value) => {
 
 const hideModal = () => {
   emit('hide');
+  service.value.service = initialServiceValue;
+};
+
+const submitChanges = () => {
+  props.onSubmit(service.value);
+  hideModal();
 };
 
 const resetChanges = () => {
@@ -138,7 +144,7 @@ const resetChanges = () => {
           :label="action === 'update' ? 'Update' : 'Create'"
           color="primary"
           v-close-popup
-          @click="() => onSubmit(service)"
+          @click="submitChanges"
         />
       </q-card-actions>
     </q-card>

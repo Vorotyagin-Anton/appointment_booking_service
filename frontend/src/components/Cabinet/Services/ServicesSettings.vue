@@ -60,7 +60,6 @@ const submitWrapper = async (callback, successMsg) => {
     finishLoading();
   }
 }
-
 </script>
 
 <template>
