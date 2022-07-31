@@ -57,13 +57,6 @@
         </q-item>
 
         <q-item>
-          <OrderField
-            label="Telegram"
-            v-model="order.telegram"
-          />
-        </q-item>
-
-        <q-item>
           <q-checkbox v-model="order.notification_type" label="Send notification"/>
         </q-item>
 
@@ -110,7 +103,7 @@ export default {
 
     mountMaster();
 
-    const showModal = ref(true)
+    const showModal = ref(false)
     const responseModalData = ref()
 
     const {date, time, service} = orderInfo.value
@@ -129,7 +122,6 @@ export default {
       client_name: '',
       phone: '',
       email: '',
-      telegram: '',
       notification_type: false,
 
       client_id: null,
@@ -141,8 +133,8 @@ export default {
       time_id: time.time_id,
     })
 
-    const readySend = computed(()=>{
-      if (order.value.client_name && order.value.phone && order.value.email && order.value.telegram) {
+    const readySend = computed(function () {
+      if (order.value.client_name && order.value.phone && order.value.email) {
         return true
       } else {
         return false
@@ -158,6 +150,7 @@ export default {
 
           if (responseData.title === 'Validation Failed'){
             console.log('ошибка валидации, передать ошибку в форму');
+            showModal.value = true;
           }
           if (responseData.id) {
             // closeOrderModal();

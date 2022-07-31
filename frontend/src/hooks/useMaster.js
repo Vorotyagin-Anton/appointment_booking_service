@@ -38,8 +38,6 @@ export default function useMaster() {
   const {openOrderModal} = useOrderModal();
 
   const reserveMaster = async (id) => {
-    console.log('reserved', id);
-
     await store.dispatch('master/setId', id)
     openOrderModal();
   }
