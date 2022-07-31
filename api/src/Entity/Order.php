@@ -32,7 +32,7 @@ class Order
     #[Groups(['orderShort'])]
     private $details;
 
-    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'orders')]
+    #[ORM\ManyToOne(targetEntity: WorkerService::class)]
     #[Groups(['order_service'])]
     private $service;
 
@@ -135,12 +135,12 @@ class Order
         return $this;
     }
 
-    public function getService(): ?Service
+    public function getService(): ?WorkerService
     {
         return $this->service;
     }
 
-    public function setService(?Service $service): self
+    public function setService(?WorkerService $service): self
     {
         $this->service = $service;
 

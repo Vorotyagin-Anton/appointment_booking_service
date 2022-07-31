@@ -6,8 +6,8 @@ use App\Entity\Career;
 use App\Entity\Order;
 use App\Entity\Rating;
 use App\Entity\Review;
-use App\Entity\Service;
 use App\Entity\WorkerAvailableTime;
+use App\Entity\WorkerService;
 use App\Repository\WorkerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,13 +17,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: WorkerRepository::class)]
 class Worker extends User
 {
-    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: "workers")]
-    #[ORM\JoinTable(name: "workers_services")]
-    #[ORM\JoinColumn(name: "worker_id", referencedColumnName: "id")]
-    #[ORM\InverseJoinColumn(name: "service_id", referencedColumnName: "id")]
-    #[Groups(['worker_services'])]
-    private $services;
-
     #[ORM\OneToMany(mappedBy: 'worker', targetEntity: WorkerAvailableTime::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['worker_workerAvailableTimes'])]
     private $availableTimes;
@@ -48,6 +41,10 @@ class Worker extends User
     #[Groups(['worker_orders'])]
     private $orders;
 
+    #[ORM\OneToMany(mappedBy: 'worker', targetEntity: WorkerService::class, cascade: ['persist'], orphanRemoval: true)]
+    #[Groups(['worker_services'])]
+    private $services;
+
     public function __construct()
     {
         parent::__construct();
@@ -55,38 +52,11 @@ class Worker extends User
         $this->setIsClient(false);
         $this->setIsWorker(true);
 
-        $this->services = new ArrayCollection();
         $this->availableTimes = new ArrayCollection();
         $this->career = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->orders = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection<int, Service>
-     */
-    public function getServices(): Collection
-    {
-        return $this->services;
-    }
-
-    public function addService(Service $service): self
-    {
-        if (!$this->services->contains($service)) {
-            $this->services[] = $service;
-            $service->addWorker($this);
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): self
-    {
-        if ($this->services->removeElement($service)) {
-            $service->removeWorker($this);
-        }
-
-        return $this;
+        $this->services = new ArrayCollection();
     }
 
     /**
@@ -230,6 +200,30 @@ class Worker extends User
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkerService>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(WorkerService $workerService): self
+    {
+        if (!$this->services->contains($workerService)) {
+            $this->services[] = $workerService;
+            $workerService->setWorker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(WorkerService $workerService): self
+    {
+        $this->services->removeElement($workerService);
         return $this;
     }
 }

@@ -12,9 +12,27 @@ class OrderFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('master_id')
-            ->add('time_id')
-            ->add('service_id')
+            ->add('master_id', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please check the master choice',
+                    ])
+                ],
+            ])
+            ->add('time_id', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please check the time choice',
+                    ])
+                ],
+            ])
+            ->add('service_id', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please check the service choice',
+                    ])
+                ],
+            ])
             ->add('price')
             ->add('duration')
             ->add('client_id')
