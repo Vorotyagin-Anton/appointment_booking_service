@@ -19,11 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class WorkerController extends AbstractController
 {
@@ -101,7 +98,8 @@ class WorkerController extends AbstractController
         int $id,
         UserRepository $userRepository,
         WorkerAvailableTimeRepository $workerAvailableTimeRepository,
-        LoggerInterface $telegramDebugLogger
+        LoggerInterface $telegramDebugLogger,
+        NormalizerInterface $normalizer
     ): Response
     {
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
@@ -110,16 +108,13 @@ class WorkerController extends AbstractController
         }
 
         $workerTimeCollection = $workerAvailableTimeRepository->findBy(['worker' => $user, 'isTimeFree' => true]);
-        $serializerManual = new Serializer([
-            new DateTimeNormalizer(),
-            new ObjectNormalizer(new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader())))
-        ]);
+
         try {
-            $workerTimeArray = $serializerManual->normalize($workerTimeCollection, null, [
+            $workerTimeArray = $normalizer->normalize($workerTimeCollection, null, [
                 'groups' => ['workerAvailableTimeShort'],
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
             ]);
-        } catch (\Exception|ExceptionInterface $exception) {
+        } catch (ExceptionInterface $exception) {
             $workerTimeArray = [];
             $telegramDebugLogger->error($exception->getMessage(), $exception->getTrace());
         }
