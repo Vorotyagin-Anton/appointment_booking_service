@@ -1,4 +1,7 @@
 {
+    "behat/transliterator": {
+        "version": "v1.5.0"
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -98,6 +101,9 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
+    "gedmo/doctrine-extensions": {
+        "version": "v3.8.0"
+    },
     "jacklul/monolog-telegram": {
         "version": "2.1.0"
     },
@@ -127,6 +133,18 @@
     },
     "psr/log": {
         "version": "3.0.0"
+    },
+    "stof/doctrine-extensions-bundle": {
+        "version": "1.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.2",
+            "ref": "e805aba9eff5372e2d149a9ff56566769e22819d"
+        },
+        "files": [
+            "config/packages/stof_doctrine_extensions.yaml"
+        ]
     },
     "symfony/cache": {
         "version": "v6.0.6"

@@ -12,6 +12,7 @@
         "doctrine/orm": "^2.11",
         "jacklul/monolog-telegram": "^2.1",
         "knplabs/knp-paginator-bundle": "^5.8",
+        "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
         "symfony/finder": "6.0.*",
