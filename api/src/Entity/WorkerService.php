@@ -47,6 +47,11 @@ class WorkerService
     #[Gedmo\Timestampable(on: 'update')]
     private $updatedAt;
 
+    public function __toString(): string
+    {
+        return $this->service->getName() . " ($this->price)";
+    }
+
     public function getId(): ?int
     {
         return $this->id;

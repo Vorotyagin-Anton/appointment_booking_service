@@ -46,6 +46,13 @@ class WorkerAvailableTime
     #[Gedmo\Timestampable(on: 'update')]
     private $updatedAt;
 
+    public function __toString(): string
+    {
+        $hours = intval($this->exactTimeInMinutes/60);
+        $minutes = str_pad(($this->exactTimeInMinutes/60 - $hours) * 6, 2, 0);
+        return $this->exactDate->format('Y-m-d') . " $hours:$minutes";
+    }
+
     public function getId(): ?int
     {
         return $this->id;
