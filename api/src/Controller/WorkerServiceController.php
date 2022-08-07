@@ -16,6 +16,27 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class WorkerServiceController extends AbstractController
 {
+    #[Route(
+        path: '/api/worker-services/{id}',
+        name: 'app_worker-service_get',
+        requirements: ['id' => '\d+'],
+        methods: ['GET']
+    )]
+    public function getOneWorkerService(
+        int $id,
+        WorkerServiceRepository $workerServiceRepository
+    ): Response
+    {
+        $service = $workerServiceRepository->find($id);
+        if (!isset($service)) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($service, Response::HTTP_OK, [], ['groups' => [
+            'workerServiceShort'
+        ]]);
+    }
+
     #[Route(path: '/api/worker-services', name: 'app_worker_service_post', methods: ['POST'])]
     public function addWorkerService(
         EntityManagerInterface $entityManager,

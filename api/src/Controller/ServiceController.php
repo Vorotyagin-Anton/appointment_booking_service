@@ -26,7 +26,7 @@ class ServiceController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneServiceCategories(
+    public function getOneService(
         int $id,
         ServiceRepository $serviceRepository
     ): Response
