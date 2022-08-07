@@ -9,6 +9,7 @@ use App\Entity\WorkerService;
 use App\Form\OrderFormType;
 use App\Repository\OrderRepository;
 use App\Service\CustomDataFormatter;
+use App\Service\OrderMailer;
 use App\Service\Notifier\TelegramSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,7 +42,8 @@ class OrderController extends AbstractController
         Request $request,
         TelegramSender $telegramSender,
         CustomDataFormatter $customDataFormatter,
-        ChatterInterface $chatter
+        ChatterInterface $chatter,
+        OrderMailer $orderMailer
     ): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -63,6 +65,10 @@ class OrderController extends AbstractController
 
             if (!$time) {
                 return $this->json('time not found', Response::HTTP_BAD_REQUEST);
+            }
+
+            if (!$time->getIsTimeFree()) {
+                return $this->json('time is busy', Response::HTTP_BAD_REQUEST);
             }
 
             $order = new Order();
@@ -87,19 +93,25 @@ class OrderController extends AbstractController
                 $time->getExactTimeInMinutes() + $service->getDuration() * 30
             );
             $serviceDate = date_format($time->getExactDate(), 'Y-m-d');
-            if ($worker->getTelegram()) {
-                $message = <<<STR
-                К Вам записался {$data['client_name']} (tg: {$data['telegram']}) на $serviceDate $serviceStartTime-$serviceEndTime.
+
+            $workerMessage = <<<STR
+                К Вам записался {$data['client_name']} (email: {$data['email']}) на $serviceDate $serviceStartTime-$serviceEndTime.
                 Услуга - {$service->getService()->getName()}.
-                STR;
-                $telegramSender->sendMessage($message, $worker->getTelegram(), $chatter);
+            STR;
+
+            if ($worker->getTelegram()) {
+                $telegramSender->sendMessage($workerMessage, $worker->getTelegram(), $chatter);
             }
-            if (isset($data['telegram'])) {
-                $message = <<<STR
+
+            $clientMessage = <<<STR
                 Вы записались к {$worker->getName()} (м.т.: {$worker->getMobilePhoneNumber()}) на $serviceDate $serviceStartTime-$serviceEndTime.
                 Услуга - {$service->getService()->getName()}, стоимость - {$service->getPrice()} рублей.
-                STR;
-                $telegramSender->sendMessage($message, $data['telegram'], $chatter);
+            STR;
+
+            $orderMailer->sendEmail($data['email'], $clientMessage);
+
+            if (isset($data['telegram'])) {
+                $telegramSender->sendMessage($clientMessage, $data['telegram'], $chatter);
             }
 
             return $this->json($order, Response::HTTP_CREATED, [], ['groups' => [
