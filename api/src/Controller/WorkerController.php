@@ -9,7 +9,6 @@ use App\Repository\WorkerAvailableTimeRepository;
 use App\Repository\WorkerRepository;
 use App\Service\CustomDataValidator;
 use App\Service\Paginator;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

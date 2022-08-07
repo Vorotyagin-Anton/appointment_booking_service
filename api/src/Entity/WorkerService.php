@@ -27,15 +27,15 @@ class WorkerService
     #[Groups(['workerService_service'])]
     private $service;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['workerServiceShort'])]
     private $price;
 
-    #[ORM\Column(type: 'smallint')]
+    #[ORM\Column(type: 'smallint', nullable: true)]
     #[Groups(['workerServiceShort'])]
     private $duration;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['workerServiceShort'])]
     private $description;
 
@@ -86,7 +86,7 @@ class WorkerService
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(?int $price): self
     {
         $this->price = $price;
 
@@ -98,7 +98,7 @@ class WorkerService
         return $this->duration;
     }
 
-    public function setDuration(int $duration): self
+    public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
 
@@ -110,7 +110,7 @@ class WorkerService
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
