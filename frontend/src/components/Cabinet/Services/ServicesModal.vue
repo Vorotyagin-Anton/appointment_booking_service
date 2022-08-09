@@ -3,7 +3,6 @@ import {onMounted, ref, toRef, watch} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import ServicesSelect from "components/Cabinet/Services/ServicesSelect";
-import useWorkerServices from "src/hooks/services/useWorkerServices";
 
 const props = defineProps({
   modelValue: {
@@ -11,7 +10,7 @@ const props = defineProps({
     required: true,
   },
 
-  serviceId: Number,
+  selectedService: Object,
 
   action: {
     validator: (value) => ['create', 'update'].includes(value),
@@ -32,8 +31,6 @@ const modal = ref(props.modelValue);
 const modalRef = toRef(props, 'modelValue');
 watch([modalRef], () => modal.value = props.modelValue);
 
-const {workerServices} = useWorkerServices();
-
 const initialValue = {
   duration: 1,
   price: 0,
@@ -44,8 +41,8 @@ const initialValue = {
 const service = ref(Object.assign({}, initialValue));
 
 onMounted(() => {
-  if (props.serviceId) {
-    service.value = Object.assign({}, workerServices.value.entities[props.serviceId]);
+  if (props.selectedService) {
+    service.value = Object.assign({}, props.selectedService);
   }
 });
 
@@ -67,7 +64,7 @@ const submitChanges = () => {
 };
 
 const resetChanges = () => {
-  service.value = Object.assign({}, workerServices.value.entities[props.serviceId]);
+  service.value = Object.assign({}, selectedService);
 };
 </script>
 

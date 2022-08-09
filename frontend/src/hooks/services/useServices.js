@@ -9,13 +9,13 @@ export default function useServices() {
 
   const {loading, startLoading, finishLoading} = useLoading();
 
-  const services = computed(() => store.getters["services/getAll"]);
+  const services = computed(() => store.getters["services/get"]);
 
   const fetchServices = async () => {
     try {
       startLoading();
       const services = await api.services.get();
-      await store.dispatch('services/setList', {services});
+      await store.dispatch('services/set', {services});
     } catch (error) {
       logger(error);
     } finally {

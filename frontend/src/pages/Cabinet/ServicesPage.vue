@@ -19,11 +19,11 @@ onMounted(async () => {
     isOverlay: false,
   });
 
-  if (services.value.ids.length === 0) {
+  if (services.value.length === 0) {
     fetchServices();
   }
 
-  if (workerServices.value.ids.length === 0) {
+  if (workerServices.value.length === 0) {
     fetchWorkerServices(user.value.id);
   }
 });

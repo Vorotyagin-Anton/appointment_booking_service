@@ -20,7 +20,7 @@ const status = ref(props.service.status);
 const duration = computed(() => formatDuration(props.service.duration ?? 1));
 const price = computed(() => formatPrice(props.service.price ?? "0.00"));
 
-const selectService = () => emit('select', props.service.id);
+const selectService = () => emit('select', props.service);
 const toggleService = () => emit('toggle', props.service.id);
 const removeService = () => emit('remove', props.service.id);
 
