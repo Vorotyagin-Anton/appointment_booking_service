@@ -8,7 +8,7 @@ const emit = defineEmits([
 
 const {services} = useServices();
 
-const {filteredItems, selectedItems, filterFn} = useSelect(services.value);
+const {filteredItems, selectedItems, filterFn} = useSelect(services);
 
 const handleSelect = (value) => {
   emit('select', value);

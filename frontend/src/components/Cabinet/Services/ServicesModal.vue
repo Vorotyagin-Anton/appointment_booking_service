@@ -47,7 +47,9 @@ onMounted(() => {
 });
 
 const handleServiceSelect = (selectedService) => {
-  service.value.service = selectedService;
+  if (selectedService) {
+    service.value.service = selectedService;
+  }
 };
 
 const updateModel = (value) => {
@@ -64,7 +66,7 @@ const submitChanges = () => {
 };
 
 const resetChanges = () => {
-  service.value = Object.assign({}, selectedService);
+  service.value = Object.assign({}, props.selectedService);
 };
 </script>
 

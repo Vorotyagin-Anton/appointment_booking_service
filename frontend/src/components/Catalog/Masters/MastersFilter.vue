@@ -27,7 +27,7 @@ const {
   selectedItems: selectedServices,
   filteredItems: filteredServices,
   filterFn: servicesFilter,
-} = useSelect(Object.values(services.value.entities));
+} = useSelect(services);
 
 const applyFilters = () => emit('filter', {
   categories: selectedCategories.value,
@@ -46,7 +46,7 @@ onMounted(() => {
     getFromApi();
   }
 
-  if (!servicesLoading.value && services.value.ids.length === 0) {
+  if (services.value.length === 0) {
     fetchServices();
   }
 });
