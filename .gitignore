@@ -9,6 +9,7 @@
 
 # APP
 /postgresqldb
+.env.local
 
 # OS
 .DS_Store
