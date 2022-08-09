@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\User\Worker;
 use App\Repository\WorkerServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkerServiceRepository::class)]
@@ -26,17 +27,30 @@ class WorkerService
     #[Groups(['workerService_service'])]
     private $service;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['workerServiceShort'])]
     private $price;
 
-    #[ORM\Column(type: 'smallint')]
+    #[ORM\Column(type: 'smallint', nullable: true)]
     #[Groups(['workerServiceShort'])]
     private $duration;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['workerServiceShort'])]
     private $description;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on: 'create')]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Gedmo\Timestampable(on: 'update')]
+    private $updatedAt;
+
+    public function __toString(): string
+    {
+        return $this->service->getName() . " ($this->price)";
+    }
 
     public function getId(): ?int
     {
@@ -72,7 +86,7 @@ class WorkerService
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(?int $price): self
     {
         $this->price = $price;
 
@@ -84,7 +98,7 @@ class WorkerService
         return $this->duration;
     }
 
-    public function setDuration(int $duration): self
+    public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
 
@@ -96,9 +110,33 @@ class WorkerService
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

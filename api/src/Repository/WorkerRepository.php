@@ -64,8 +64,9 @@ class WorkerRepository extends ServiceEntityRepository
 
         if (isset($filters['categories'])) {
             $builder
-                ->join('u.services', 'servcat')
-                ->join('servcat.category', 'cat');
+                ->join('u.services', 'worker_service')
+                ->join('worker_service.service', 'service_template')
+                ->join('service_template.category', 'cat');
             $builder->andWhere($builder->expr()->in('cat.id', $filters['categories']));
         }
 
