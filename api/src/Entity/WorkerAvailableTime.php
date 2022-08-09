@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\User\Worker;
 use App\Repository\WorkerAvailableTimeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: WorkerAvailableTimeRepository::class)]
@@ -36,6 +37,21 @@ class WorkerAvailableTime
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'time')]
     #[Groups(['workerAvailableTime_relatedOrder'])]
     private $relatedOrder;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on: 'create')]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Gedmo\Timestampable(on: 'update')]
+    private $updatedAt;
+
+    public function __toString(): string
+    {
+        $hours = intval($this->exactTimeInMinutes/60);
+        $minutes = str_pad(($this->exactTimeInMinutes/60 - $hours) * 6, 2, 0);
+        return $this->exactDate->format('Y-m-d') . " $hours:$minutes";
+    }
 
     public function getId(): ?int
     {
@@ -98,6 +114,30 @@ class WorkerAvailableTime
     public function setRelatedOrder(?Order $relatedOrder): self
     {
         $this->relatedOrder = $relatedOrder;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

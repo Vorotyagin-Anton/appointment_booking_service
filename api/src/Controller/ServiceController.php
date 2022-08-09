@@ -19,4 +19,25 @@ class ServiceController extends AbstractController
             'serviceShort'
         ]]);
     }
+
+    #[Route(
+        path: '/api/services/{id}',
+        name: 'app_service_get',
+        requirements: ['id' => '\d+'],
+        methods: ['GET']
+    )]
+    public function getOneService(
+        int $id,
+        ServiceRepository $serviceRepository
+    ): Response
+    {
+        $service = $serviceRepository->find($id);
+        if (!isset($service)) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($service, Response::HTTP_OK, [], ['groups' => [
+            'serviceShort'
+        ]]);
+    }
 }
