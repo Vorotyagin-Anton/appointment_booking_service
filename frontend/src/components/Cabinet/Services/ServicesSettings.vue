@@ -41,11 +41,13 @@ const {loading, startLoading, finishLoading} = useLoading();
 const {visible, type, message, showError, showSuccess, hide} = useMessage();
 
 const createWorkerService = (service) => {
-  submitWrapper(() => createService(service), 'Profile successfully created.');
+  submitWrapper(
+    () => createService(user.value.id, service),
+    'Profile successfully created.'
+  );
 };
 
 const updateWorkerService = (service) => {
-  console.log("test", service)
   submitWrapper(() => updateService(service), 'Profile successfully updated.');
 };
 

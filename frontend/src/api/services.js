@@ -12,21 +12,25 @@ export default function (axios) {
       return response.data.worker.services ?? [];
     },
 
-    async create(service) {
-      console.log('create', service);
-      return {
+    async create(userId, service) {
+      const response = await axios.post(`/api/worker-services`, {
         ...service,
-        id: (new Date).getTime(),
-      };
+        worker: userId,
+        service: service.service.id,
+      });
+
+      return response.data;
     },
 
     async update(service) {
-      console.log('update', service);
-      return true;
+      const response = await axios.patch(`api/worker-services/${service.id}`, service);
+
+      return response.data;
     },
 
     async remove(serviceId) {
-      console.log('delete', serviceId)
+      await axios.delete(`/api/worker-services/${serviceId}`);
+
       return true;
     },
   };

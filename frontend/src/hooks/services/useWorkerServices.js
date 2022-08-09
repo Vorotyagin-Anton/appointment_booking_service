@@ -22,15 +22,15 @@ export default function useWorkerServices() {
       finishLoading();
     }
   };
-  
-  const createService = async (service) => {
-    const newService = await api.services.create(service);
+
+  const createService = async (userId, service) => {
+    const newService = await api.services.create(userId, service);
     await store.dispatch('services/addWorkerService', {service: newService});
   };
 
   const updateService = async (service) => {
-    await api.services.update(service);
-    await store.dispatch('services/updateWorkerService', {service});
+    const updatedService = await api.services.update(service);
+    await store.dispatch('services/setWorkerServices', {services: [updatedService]});
   };
 
   const removeService = async (serviceId) => {

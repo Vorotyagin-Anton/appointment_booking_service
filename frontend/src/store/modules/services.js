@@ -79,7 +79,7 @@ const mutations = {
     const entities = services.reduce((acc, workerService) => {
       acc[workerService.id] = workerService;
       return acc;
-    }, {});
+    }, state.workerServices);
 
     state.workerServices = entities;
     state.workerServicesIds = Object.keys(entities);
