@@ -13,16 +13,16 @@
           <q-item-section> Your master: {{ master.name + ' ' + master.surname }}</q-item-section>
           <q-item-section avatar>
             <q-avatar>
-              <img :src="hostUrl + master.pathToPhoto">
+              <img :src="master.pathToPhoto">
             </q-avatar>
           </q-item-section>
         </q-item>
 
         <q-item>
-          <q-item-section> Service: {{service.name }}</q-item-section>
+          <q-item-section> Service: {{service.service.name }}</q-item-section>
           <q-item-section avatar>
             <q-avatar>
-              <img :src="hostUrl + service.pathToPhoto">
+              <img :src="service.service.pathToPhoto">
             </q-avatar>
           </q-item-section>
         </q-item>
