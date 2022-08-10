@@ -30,11 +30,8 @@ const closeUpdateModal = () => {
   selectedService.value = null;
 };
 
-const toggleService = (serviceId) => {
-  updateService({
-    ...workerServices.value.entities[serviceId],
-    status: !workerServices.value.entities[serviceId].status,
-  })
+const toggleService = (service) => {
+  updateService({...service, active: !service.active});
 };
 
 const {loading, startLoading, finishLoading} = useLoading();

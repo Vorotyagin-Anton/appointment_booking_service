@@ -64,13 +64,13 @@
 </template>
 
 <script>
-import useList from "src/hooks/categories/useList";
+import useCategories from "src/hooks/categories/useCategories";
 
 export default {
   name: "MainNavCatalog",
 
   setup() {
-    const {categories} = useList();
+    const {categories} = useCategories();
 
     return {
       categories,

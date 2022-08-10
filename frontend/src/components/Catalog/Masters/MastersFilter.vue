@@ -1,6 +1,6 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
-import useCategories from "src/hooks/categories/useList";
+import useCategories from "src/hooks/categories/useCategories";
 import useServices from "src/hooks/services/useServices";
 import useSelect from "src/hooks/form/useSelect";
 

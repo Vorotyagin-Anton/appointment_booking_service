@@ -14,8 +14,8 @@ const emit = defineEmits([
 ]);
 
 const selectService = (service) => emit('select', service);
+const toggleService = (service) => emit('toggle', service);
 const removeService = (id) => emit('remove', id);
-const toggleService = (id) => emit('toggle', id);
 </script>
 
 <template>

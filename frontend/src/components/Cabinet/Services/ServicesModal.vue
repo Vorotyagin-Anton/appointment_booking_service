@@ -3,6 +3,7 @@ import {onMounted, ref, toRef, watch} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import ServicesSelect from "components/Cabinet/Services/ServicesSelect";
+import CategoriesSelect from "components/Cabinet/Services/CategoriesSelect";
 
 const props = defineProps({
   modelValue: {
@@ -40,6 +41,8 @@ const initialValue = {
 
 const service = ref(Object.assign({}, initialValue));
 
+const category = ref(null);
+
 onMounted(() => {
   if (props.selectedService) {
     service.value = Object.assign({}, props.selectedService);
@@ -52,21 +55,23 @@ const handleServiceSelect = (selectedService) => {
   }
 };
 
+const submitChanges = () => {
+  props.onSubmit(service.value);
+};
+
+const resetChanges = () => {
+  category.value = null;
+  service.value = Object.assign({}, props.selectedService);
+};
+
 const updateModel = (value) => {
   emit('update:modelValue', value);
 };
 
 const hideModal = () => {
   emit('hide');
+  category.value = null;
   service.value = Object.assign({}, initialValue);
-};
-
-const submitChanges = () => {
-  props.onSubmit(service.value);
-};
-
-const resetChanges = () => {
-  service.value = Object.assign({}, props.selectedService);
 };
 </script>
 
@@ -84,8 +89,21 @@ const resetChanges = () => {
         <q-btn icon="close" flat round dense v-close-popup/>
       </q-card-section>
 
-      <q-card-section v-if="action === 'create'" class="services-modal__section">
-        <services-select @select="handleServiceSelect"/>
+      <q-card-section
+        v-if="action === 'create'"
+        class="services-modal__section"
+      >
+        <categories-select
+          class="services-modal__select"
+          v-model="category"
+        />
+
+        <services-select
+          class="services-modal__select"
+          v-if="category && category.services.length > 0"
+          :services="category.services"
+          @update:model-value="handleServiceSelect"
+        />
       </q-card-section>
 
       <q-card-section class="services-modal__section">
@@ -162,6 +180,10 @@ const resetChanges = () => {
 
   &__section {
     width: 100%;
+  }
+
+  &__select {
+    margin-top: 15px;
   }
 
   &__field {
