@@ -20,8 +20,38 @@ const instance = axios.create({
   }
 });
 
-export default boot(() => {
-  instance.interceptors.response.use(responseInterceptor, errorInterceptor);
+function responseInterceptor(response) {
+  if (process.env.DEV) {
+    console.log("API_RESPONSE:", response.config.url, response);
+  }
+
+  return response;
+}
+
+function errorInterceptor(error, router, store) {
+  if (process.env.DEV) {
+    console.log("API_ERROR:", error.config.url, error.response);
+  }
+
+  if (error.response.status === 401 || error.response.status === 403) {
+    store.dispatch('auth/logout');
+    window.localStorage.removeItem('user');
+
+    const isGuardedRoute = router.currentRoute.value.matched.some(record => record.meta.guards?.includes('auth'));
+
+    if (isGuardedRoute) {
+      router.push({name: 'main'});
+    }
+  }
+
+  return Promise.reject(error);
+}
+
+export default boot(({router, store}) => {
+  instance.interceptors.response.use(
+    response => responseInterceptor(response),
+    error => errorInterceptor(error, router, store),
+  );
 });
 
 const api = {
@@ -34,19 +64,3 @@ const api = {
 };
 
 export {api};
-
-function responseInterceptor(response) {
-  if (process.env.DEV) {
-    console.log("RESPONSE:", response.config.url, response);
-  }
-
-  return response;
-}
-
-function errorInterceptor(error) {
-  if (process.env.DEV) {
-    console.log("API ERROR:", error.config.url, error.response);
-  }
-
-  return Promise.reject(error);
-}
