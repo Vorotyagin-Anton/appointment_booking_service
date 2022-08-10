@@ -85,6 +85,12 @@ export default [
         path: '/masters',
         component: () => import('pages/MastersPage.vue'),
       },
+
+      {
+        name: 'services',
+        path: '/services',
+        component: () => import('pages/Catalog/ServicesPage.vue'),
+      }
     ],
   },
 

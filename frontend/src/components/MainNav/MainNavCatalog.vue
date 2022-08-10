@@ -42,7 +42,7 @@
         <q-item-section>
           <router-link
             class="main-nav-catalog__link"
-            :to="{name: 'main'}"
+            :to="{name: 'services'}"
           >
             Services
           </router-link>
