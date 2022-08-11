@@ -17,27 +17,19 @@ export default function useAuth() {
     try {
       await store.dispatch('auth/startRequest');
 
-      let user = window.localStorage.getItem('user');
-
-      if (user) {
-        user = JSON.parse(user);
-      } else {
-        user = await api.user.authorize();
-        window.localStorage.setItem('user', JSON.stringify(user));
-      }
+      const user = await api.user.authorize();
 
       await store.dispatch('auth/login', user);
 
-      if (route.matched.some(record => record.meta.guards?.includes('guest'))) {
+      const isGuardedRoute = route.matched.some(record =>  {
+        return record.meta.guards?.includes('guest')
+      });
+
+      if (isGuardedRoute) {
         await router.push({name: 'cabinet'});
       }
     } catch (error) {
-      if (error.response?.status === 401) {
-        window.localStorage.removeItem('user');
-        await store.dispatch('auth/logout');
-        return;
-      }
-
+      await store.dispatch('auth/logout');
       logger(error);
     } finally {
       await store.dispatch('auth/finishRequest');

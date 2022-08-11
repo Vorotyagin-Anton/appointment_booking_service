@@ -29,7 +29,7 @@ const progress = ref();
 <template>
   <div class="business-page">
     <div class="business-page__wrapper">
-      <div v-if="loading" class="business-page__content">
+      <div v-if="!loading" class="business-page__content">
         <services-settings/>
       </div>
 

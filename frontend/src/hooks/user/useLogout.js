@@ -1,6 +1,7 @@
 import {api} from "boot/api";
 import {useStore} from "vuex";
 import {useRoute, useRouter} from "vue-router";
+import logger from "src/logger";
 
 export default function useLogout() {
   const store = useStore();
@@ -8,18 +9,23 @@ export default function useLogout() {
   const route = useRoute();
 
   return async () => {
-    await store.dispatch('auth/logout');
+    try {
+      await store.dispatch('auth/startRequest');
+      await api.user.logout();
+    } catch (error) {
+      logger(error);
+    } finally {
+      await store.dispatch('auth/logout');
 
-    window.localStorage.removeItem('user');
+      const isGuardedRoute = route.matched.some(record => {
+        return record.meta.guards?.includes('auth');
+      });
 
-    const isGuardedRoute = route.matched.some(record => {
-      return record.meta.guards?.includes('auth');
-    });
+      if (isGuardedRoute) {
+        await router.push({name: 'main'});
+      }
 
-    if (isGuardedRoute) {
-      await router.push({name: 'main'});
+      await store.dispatch('auth/finishRequest');
     }
-
-    await api.user.logout();
   };
 };

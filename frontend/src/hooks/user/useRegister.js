@@ -12,8 +12,6 @@ export default function useRegister() {
 
     await store.dispatch('auth/login', user);
 
-    window.localStorage.setItem('user', JSON.stringify(user));
-
     await router.push({name: 'cabinet'});
   };
 }

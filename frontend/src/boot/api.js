@@ -28,20 +28,9 @@ function responseInterceptor(response) {
   return response;
 }
 
-function errorInterceptor(error, router, store) {
+function errorInterceptor(error) {
   if (process.env.DEV) {
     console.log("API_ERROR:", error.config.url, error.response);
-  }
-
-  if (error.response.status === 401 || error.response.status === 403) {
-    store.dispatch('auth/logout');
-    window.localStorage.removeItem('user');
-
-    const isGuardedRoute = router.currentRoute.value.matched.some(record => record.meta.guards?.includes('auth'));
-
-    if (isGuardedRoute) {
-      router.push({name: 'main'});
-    }
   }
 
   return Promise.reject(error);

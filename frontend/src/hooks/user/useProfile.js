@@ -5,9 +5,10 @@ import useAuth from "src/hooks/user/useAuth";
 
 export default function useProfile() {
   const store = useStore();
-  const {user} = useAuth();
-  console.log(user)
+  const {user, authorize} = useAuth();
+
   const profile = ref({
+    avatar: null,
     email: user.value.email,
     name: user.value.name ?? null,
     surname: user.value.surname ?? null,
@@ -26,13 +27,20 @@ export default function useProfile() {
   });
 
   const updateProfile = async () => {
+    await authorize();
+
+    if (profile.value.avatar) {
+      await api.user.changeAvatar(user.value.id, profile.value.avatar);
+      profile.value.avatar = null;
+    }
+
     const payload = parseProfileData(profile.value);
     const data = await api.user.updateProfile(user.value.id, payload);
     await store.dispatch('auth/login', data);
-    window.localStorage.setItem('user', JSON.stringify(data));
   };
 
   const changePassword = async (oldPassword, newPassword) => {
+    await authorize();
     await api.user.changePassword(user.value.id, oldPassword, newPassword);
   };
 
