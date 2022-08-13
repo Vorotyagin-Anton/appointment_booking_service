@@ -5,7 +5,7 @@
       <q-list>
         <q-item>
 
-            Date of visit: {{ formattedDate }}
+          Date of visit: {{ formattedDate }}
 
         </q-item>
 
@@ -19,7 +19,7 @@
         </q-item>
 
         <q-item>
-          <q-item-section> Service: {{service.service.name }}</q-item-section>
+          <q-item-section> Service: {{ service.service.name }}</q-item-section>
           <q-item-section avatar>
             <q-avatar>
               <img :src="service.service.pathToPhoto">
@@ -75,13 +75,25 @@
     </div>
   </div>
 
-  <OrderResponseModal v-model="showModal">
-    <p>88888</p>
+  <OrderResponseModal v-model="showResponseModal"
+                      :title="responseModalData?.title"
+                      @closeModal="closeResponseModal"
+  >
+    <p class="text-center">{{ responseModalData?.message }}</p>
+
+    <p class="text-center">
+      Master: {{ master.name + ' ' + master.surname }}<br>
+      Service: {{service.service.name}}<br>
+      Date: {{formattedDate}}<br>
+      Time: {{time.formattedTime}}<br>
+      Price: {{service.price}}
+    </p>
+
   </OrderResponseModal>
 
 </template>
 
-<script>
+<script setup>
 import {computed, ref, watch, toRef} from "vue"
 import axios from "axios";
 import useMaster from "src/hooks/useMaster";
@@ -89,93 +101,88 @@ import OrderField from "components/Order/OrderField";
 import OrderResponseModal from "components/Common/Modal/OrderResponseModal";
 import useOrderModal from "src/hooks/order/useOrderModal";
 
-export default {
-  name: "OrderStepperConfirm",
 
-  components: {
-    OrderField,
-    OrderResponseModal
-  },
+const {master, mountMaster, orderInfo, clearOrder} = useMaster();
+const {closeOrderModal} = useOrderModal();
 
-  setup() {
-    const {master, mountMaster, orderInfo} = useMaster();
-    const {closeOrderModal} = useOrderModal();
+mountMaster();
 
-    mountMaster();
+const showResponseModal = ref(false)
+const responseModalData = ref({
+  title: null,
+  message: null
+})
 
-    const showModal = ref(false)
-    const responseModalData = ref()
+const {date, time, service} = orderInfo.value
 
-    const {date, time, service} = orderInfo.value
+const hostUrl = process.env.HOST;
 
-    const hostUrl = process.env.HOST;
+//форматировние даты для вывода в карточку
+const dateToString = (string) => {
+  const date = new Date(string)
+  return date.getDate() + ' ' + date.toLocaleString('en-EN', {month: 'long'}) + ' ' + date.getFullYear()
+}
 
-    //форматировние даты для вывода в карточку
-    const dateToString = (string) => {
-      const date = new Date(string)
-      return date.getDate() + ' ' + date.toLocaleString('en-EN', { month: 'long' }) + ' ' + date.getFullYear()
-    }
+const formattedDate = dateToString(date)
 
-    const formattedDate = dateToString(date)
+const order = ref({
+  client_name: 'name test',
+  phone: '888',
+  email: 'andykey@bk.ru',
+  notification_type: true,
 
-    const order = ref({
-      client_name: '',
-      phone: '',
-      email: '',
-      notification_type: false,
+  client_id: null,
+  price: service.price,
+  duration: 1,
 
-      client_id: null,
-      price: 1000,
-      duration: 1,
+  master_id: master.value.id,
+  service_id: service.id,
+  time_id: time.time_id,
+})
 
-      master_id: master.value.id,
-      service_id: service.id,
-      time_id: time.time_id,
-    })
+const readySend = computed(function () {
+  if (order.value.client_name && order.value.phone && order.value.email) {
+    return true
+  } else {
+    return false
+  }
+})
 
-    const readySend = computed(function () {
-      if (order.value.client_name && order.value.phone && order.value.email) {
-        return true
-      } else {
-        return false
+const sendOrder = () => {
+  axios.post('api/orders', order.value)
+    .then(response => {
+      const responseData = response.data
+
+      if (responseData.title === 'Validation Failed') {
+        responseModalData.value.title = 'Error';
+        responseModalData.value.message = 'Validation Failed';
+        console.log('ошибка валидации, передать ошибку в форму');
+        showResponseModal.value = true;
+
+      }
+      if (responseData.id) {
+        responseModalData.value.title = 'Success';
+        responseModalData.value.message = 'You have successfully enrolled.';
+        console.log('показать окно с сообщением об удачной записи');
+        showResponseModal.value = true;
       }
     })
-
-    const sendOrder = () => {
-      //console.log('order.value', order.value)
-      axios.post('api/orders', order.value)
-        .then(response => {
-          console.log('response', response.data);
-          const responseData = response.data
-
-          if (responseData.title === 'Validation Failed'){
-            console.log('ошибка валидации, передать ошибку в форму');
-            showModal.value = true;
-          }
-          if (responseData.id) {
-            // closeOrderModal();
-            showModal.value = true;
-            console.log('показать окно с сообщением об удачной записи');
-          }
-        })
-        .catch(error => {
-          console.log('error', error);
-        });
-    }
-
-    return {
-      order,
-      sendOrder,
-      master,
-      hostUrl,
-      readySend,
-      formattedDate, time, service,
-
-      showModal,
-      responseModalData,
-    }
-  }
+    .catch(error => {
+      console.error('error', error);
+    });
 }
+
+const closeResponseModal = () => {
+  if (responseModalData.value.title === 'Success') {
+    showResponseModal.value = false;
+    clearOrder();
+    closeOrderModal();
+  } else {
+    showResponseModal.value = false;
+  }
+
+}
+
 </script>
 
 <style lang="scss">

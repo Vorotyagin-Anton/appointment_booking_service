@@ -19,30 +19,22 @@
 
 </template>
 
-<script>
-import {ref, toRef, watch} from 'vue'
-export default {
-  name: "ModalDefault",
+<script setup>
+import {ref, watch} from 'vue'
 
-  props: {
-    showModal: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  setup(props){
-    const showModalLocal = ref(props.showModal)
-
-    watch([props.showModal], ()=>{
-      console.log('showModalLocal', showModalLocal.value);
-    })
-
-    return {
-      showModalLocal,
-    }
+const props = defineProps({
+  showModal: {
+    type: Boolean,
+    default: false
   }
-}
+})
+
+const showModalLocal = ref(props.showModal)
+
+watch([props.showModal], () => {
+  console.log('showModalLocal', showModalLocal.value);
+})
+
 </script>
 
 <style scoped>

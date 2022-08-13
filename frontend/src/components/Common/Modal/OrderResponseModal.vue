@@ -1,33 +1,52 @@
 <template>
 
-  <DefaultModal :showModal="showModal">
+  <q-dialog v-model="dialogLocal"
+            persistent
+            transition-show="scale"
+            transition-hide="scale">
+    <q-card class="bg-teal text-white" style="width: 300px">
 
-    <template v-slot:body>
-      <slot/>
-    </template>
+      <div class="text-h5 text-center">
+        {{ title }}
+      </div>
 
-    <template v-slot:footer>
-      <q-btn flat label="OK" v-close-popup />
-    </template>
+      <q-card-section class="q-pt-none">
+        <slot/>
+      </q-card-section>
 
-  </DefaultModal>
+      <q-card-actions align="center" class="bg-white text-teal">
+        <q-btn flat
+               label="OK"
+               v-close-popup
+               @click="$emit('closeModal')"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 
 </template>
 
-<script>
-import DefaultModal from "components/Common/Modal/DefaultModal";
-export default {
-  name: "OrderResponseModal",
-  components: {
-    DefaultModal
+<script setup>
+
+import {ref} from "vue";
+
+const props = defineProps({
+  dialog: {
+    type: Boolean,
+    default: false
   },
-  props: {
-    showModal: {
-      type: Boolean,
-      default: false
-    }
+  title: {
+    type: String,
+    default: 'Default title'
   }
-}
+})
+
+const emits = defineEmits([
+
+])
+
+const dialogLocal = ref(props.dialog)
+
 </script>
 
 <style scoped>
