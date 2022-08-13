@@ -5,7 +5,7 @@
       <q-list>
         <q-item>
 
-            Date of visit: {{ formattedDate }}
+          Date of visit: {{ formattedDate }}
 
         </q-item>
 
@@ -13,16 +13,16 @@
           <q-item-section> Your master: {{ master.name + ' ' + master.surname }}</q-item-section>
           <q-item-section avatar>
             <q-avatar>
-              <img :src="hostUrl + master.pathToPhoto">
+              <img :src="master.pathToPhoto">
             </q-avatar>
           </q-item-section>
         </q-item>
 
         <q-item>
-          <q-item-section> Service: {{service.name }}</q-item-section>
+          <q-item-section> Service: {{ service.service.name }}</q-item-section>
           <q-item-section avatar>
             <q-avatar>
-              <img :src="hostUrl + service.pathToPhoto">
+              <img :src="service.service.pathToPhoto">
             </q-avatar>
           </q-item-section>
         </q-item>
@@ -57,13 +57,6 @@
         </q-item>
 
         <q-item>
-          <OrderField
-            label="Telegram"
-            v-model="order.telegram"
-          />
-        </q-item>
-
-        <q-item>
           <q-checkbox v-model="order.notification_type" label="Send notification"/>
         </q-item>
 
@@ -82,82 +75,114 @@
     </div>
   </div>
 
+  <OrderResponseModal v-model="showResponseModal"
+                      :title="responseModalData?.title"
+                      @closeModal="closeResponseModal"
+  >
+    <p class="text-center">{{ responseModalData?.message }}</p>
+
+    <p class="text-center">
+      Master: {{ master.name + ' ' + master.surname }}<br>
+      Service: {{service.service.name}}<br>
+      Date: {{formattedDate}}<br>
+      Time: {{time.formattedTime}}<br>
+      Price: {{service.price}}
+    </p>
+
+  </OrderResponseModal>
+
 </template>
 
-<script>
-import {computed, ref, watch} from "vue"
+<script setup>
+import {computed, ref, watch, toRef} from "vue"
+import axios from "axios";
 import useMaster from "src/hooks/useMaster";
 import OrderField from "components/Order/OrderField";
-import axios from "axios";
+import OrderResponseModal from "components/Common/Modal/OrderResponseModal";
+import useOrderModal from "src/hooks/order/useOrderModal";
 
-export default {
-  name: "OrderStepperConfirm",
 
-  components: {
-    OrderField
-  },
+const {master, mountMaster, orderInfo, clearOrder} = useMaster();
+const {closeOrderModal} = useOrderModal();
 
-  setup() {
-    const {master, mountMaster, orderInfo} = useMaster();
-    mountMaster();
+mountMaster();
 
-    const {date, time, service} = orderInfo.value
+const showResponseModal = ref(false)
+const responseModalData = ref({
+  title: null,
+  message: null
+})
 
-    const hostUrl = process.env.HOST;
+const {date, time, service} = orderInfo.value
 
-    //форматировние даты для вывода в карточку
-    const dateToString = (string) => {
-      const date = new Date(string)
-      return date.getDate() + ' ' + date.toLocaleString('en-EN', { month: 'long' }) + ' ' + date.getFullYear()
-    }
+const hostUrl = process.env.HOST;
 
-    const formattedDate = dateToString(date)
+//форматировние даты для вывода в карточку
+const dateToString = (string) => {
+  const date = new Date(string)
+  return date.getDate() + ' ' + date.toLocaleString('en-EN', {month: 'long'}) + ' ' + date.getFullYear()
+}
 
-    const order = ref({
-      client_name: '',
-      phone: '',
-      email: '',
-      telegram: '',
-      notification_type: false,
+const formattedDate = dateToString(date)
 
-      client_id: null,
-      price: 1000,
-      duration: 1,
+const order = ref({
+  client_name: '',
+  phone: '',
+  email: '',
+  notification_type: true,
 
-      master_id: master.value.id,
-      service_id: service.id,
-      time_id: time.time_id,
-    })
+  client_id: null,
+  price: service.price,
+  duration: 1,
 
-    const readySend = computed(()=>{
-      if (order.value.client_name && order.value.phone && order.value.email && order.value.telegram) {
-        return true
-      } else {
-        return false
+  master_id: master.value.id,
+  service_id: service.id,
+  time_id: time.time_id,
+})
+
+const readySend = computed(function () {
+  if (order.value.client_name && order.value.phone && order.value.email) {
+    return true
+  } else {
+    return false
+  }
+})
+
+const sendOrder = () => {
+  axios.post('api/orders', order.value)
+    .then(response => {
+      const responseData = response.data
+
+      if (responseData.title === 'Validation Failed') {
+        responseModalData.value.title = 'Error';
+        responseModalData.value.message = 'Validation Failed';
+        console.log('ошибка валидации, передать ошибку в форму');
+        showResponseModal.value = true;
+
+      }
+      if (responseData.id) {
+        responseModalData.value.title = 'Success';
+        responseModalData.value.message = 'You have successfully enrolled.';
+        console.log('показать окно с сообщением об удачной записи');
+        showResponseModal.value = true;
       }
     })
-
-    const sendOrder = () => {
-      console.log('order.value', order.value)
-      axios.post('api/orders', order.value)
-        .then(response => {
-          console.log('response', JSON.parse(response.data));
-        })
-        .catch(error => {
-          console.log('error', error);
-        });
-    }
-
-    return {
-      order,
-      sendOrder,
-      master,
-      hostUrl,
-      readySend,
-      formattedDate, time, service
-    }
-  }
+    .catch(error => {
+      console.error('error', error);
+    });
 }
+
+const closeResponseModal = () => {
+  if (responseModalData.value.title === 'Success') {
+    showResponseModal.value = false;
+    clearOrder();
+    closeOrderModal();
+  } else {
+    showResponseModal.value = false;
+  }
+
+}
+
 </script>
 
 <style lang="scss">
