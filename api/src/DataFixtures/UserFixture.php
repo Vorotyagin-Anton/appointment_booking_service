@@ -39,7 +39,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            ServiceFixtures::class,
+            ServiceCategoryFixtures::class,
         ];
     }
 
@@ -83,7 +83,7 @@ class UserFixture extends Fixture implements DependentFixtureInterface
 
         $user->setPathToPhoto(\array_pop($this->fakeImagePaths));
         $user->setStory($this->faker->text());
-        $user->setTelegram('310345945');
+        $user->setTelegram('-625207605');
 
         $address = new Address();
         $address->setState('Russia');
