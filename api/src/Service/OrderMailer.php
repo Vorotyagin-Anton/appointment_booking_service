@@ -16,12 +16,16 @@ class OrderMailer
     {
     }
 
-    public function sendEmail(string $receiver, string $message): void
+    public function sendEmail(
+        string $receiver,
+        string $message,
+        string $pathToImage = 'uploads/photo/dummy.jpg'
+    ): void
     {
         $email = (new Email())
             ->to($receiver)
             ->subject('Service booking information')
-            ->embedFromPath('uploads/photo/dummy.jpg', 'footer-signature')
+            ->embedFromPath($pathToImage ?? 'uploads/photo/dummy.jpg', 'footer-signature')
             ->html("<p>$message</p>" . '<img alt="dummy" src="cid:footer-signature" width="250" height="250">');
 
         try {
