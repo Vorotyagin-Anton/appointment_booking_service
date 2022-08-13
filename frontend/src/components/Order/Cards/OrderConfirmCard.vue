@@ -126,9 +126,9 @@ const dateToString = (string) => {
 const formattedDate = dateToString(date)
 
 const order = ref({
-  client_name: 'name test',
-  phone: '888',
-  email: 'andykey@bk.ru',
+  client_name: '',
+  phone: '',
+  email: '',
   notification_type: true,
 
   client_id: null,
