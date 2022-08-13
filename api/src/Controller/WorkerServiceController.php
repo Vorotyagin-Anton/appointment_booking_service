@@ -46,6 +46,10 @@ class WorkerServiceController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $data = $request->toArray();
 
         $worker = $workerRepository->find($data['worker'] ?? null);
@@ -90,6 +94,10 @@ class WorkerServiceController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $workerService = $workerServiceRepository->find($id);
         if (!isset($workerService)) {
             return new Response('', Response::HTTP_NOT_FOUND);
@@ -119,6 +127,10 @@ class WorkerServiceController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $workerService = $workerServiceRepository->find($id);
         if (!isset($workerService)) {
             return new Response('', Response::HTTP_NOT_FOUND);
