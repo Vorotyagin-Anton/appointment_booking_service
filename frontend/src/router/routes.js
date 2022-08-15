@@ -83,7 +83,7 @@ export default [
       {
         name: 'masters',
         path: '/masters',
-        component: () => import('pages/MastersPage.vue'),
+        component: () => import('pages/Catalog/MastersPage.vue'),
       },
 
       {

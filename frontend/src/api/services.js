@@ -1,7 +1,7 @@
 export default function (axios) {
   return  {
-    async get() {
-      const response = await axios.get('/api/services');
+    async get(params) {
+      const response = await axios.get('/api/services', {params});
 
       return response.data;
     },

@@ -4,41 +4,34 @@ import useCategories from "src/hooks/categories/useCategories";
 import useServices from "src/hooks/services/useServices";
 import useSelect from "src/hooks/form/useSelect";
 
-const emit = defineEmits([
-  'filter',
-])
+const emit = defineEmits(['filter']);
+
+const {categories, getFromApi} = useCategories();
+const {itemsList: categoriesList, selectedItems: selectedCategories} = useSelect(categories);
+
+const {services, fetchServices} = useServices();
+const {itemsList: servicesList, selectedItems: selectedServices,} = useSelect(services);
 
 const days = ref([]);
-const calendarTitle = computed(() => days.value.length === 0 ? 'BOOKING DATES' : null);
-const calendarSubtitle = computed(() => days.value.length === 0 ? ' ' : null);
 
-// CATEGORIES
-const {categories, getFromApi} = useCategories();
+const calendarTitle = computed(() => {
+  return (!days.value || days.value.length === 0) ? 'BOOKING DATES' : null;
+});
 
-const {
-  itemsList: categoriesList,
-  selectedItems: selectedCategories
-} = useSelect(categories);
-
-// SERVICES
-const {loading: servicesLoading, services, fetchServices} = useServices();
-
-const {
-  selectedItems: selectedServices,
-  filteredItems: filteredServices,
-  filterFn: servicesFilter,
-} = useSelect(services);
+const calendarSubtitle = computed(() => {
+  return (!days.value || days.value.length === 0) ? ' ' : null;
+});
 
 const applyFilters = () => emit('filter', {
   categories: selectedCategories.value,
-  services: selectedServices.value.map(service => service.value),
+  services: selectedServices.value,
   days,
 });
 
 const resetFilters = () => {
+  days.value = [];
   selectedCategories.value = [];
   selectedServices.value = [];
-  days.value = [];
 }
 
 onMounted(() => {
@@ -60,28 +53,23 @@ onMounted(() => {
       </div>
 
       <q-option-group
-        class="masters-filter__categories"
-        :options="categoriesList"
+        class="options-group masters-filter__categories"
         type="checkbox"
+        :options="categoriesList"
         v-model="selectedCategories"
       />
     </div>
 
-    <div class="masters-filter__item masters-filter__services">
-      <q-select
-        class="masters-filter__select"
+    <div class="masters-filter__item">
+      <div class="masters-filter__title">
+        SERVICES
+      </div>
+
+      <q-option-group
+        class="options-group masters-filter__services"
+        type="checkbox"
+        :options="servicesList"
         v-model="selectedServices"
-        use-input
-        use-chips
-        multiple
-        square
-        dense
-        label="SERVICES"
-        bg-color="white"
-        virtual-scroll-slice-size="10"
-        :options-dense="true"
-        :options="filteredServices"
-        @filter="servicesFilter"
       />
     </div>
 
@@ -127,6 +115,7 @@ onMounted(() => {
 
   &__item {
     margin-bottom: 35px;
+    padding: 0 35px;
   }
 
   &__title {
@@ -141,11 +130,6 @@ onMounted(() => {
     font-size: 18px;
     font-weight: 500;
     color: $primary;
-  }
-
-  &__categories {
-    padding-left: 5px;
-    color: $grey-9;
   }
 
   &__select {
@@ -199,5 +183,12 @@ onMounted(() => {
 
 .q-menu {
   max-height: 350px !important;
+}
+
+.options-group {
+  padding-left: 5px;
+  color: $grey-9;
+  max-height: 250px;
+  overflow: auto;
 }
 </style>

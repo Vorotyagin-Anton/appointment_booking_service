@@ -1,13 +1,50 @@
-<template>
-  <div class="masters-sorting">
+<script setup>
+import {ref} from "vue";
 
-    <div class="masters-sorting__sorting">
+const props = defineProps({
+  sortMap: {
+    type: Array,
+    required: true,
+  },
+
+  orderMap: {
+    type: Array,
+    required: true,
+  },
+
+  perPageMap: {
+    type: Array,
+    required: true,
+  },
+
+  perPage: {
+    type: Number,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['sort']);
+
+const sort = ref(null);
+const order = ref(null);
+const offset = ref(props.perPage);
+
+const applySorting = () => emit('sort', {
+  sort: sort.value,
+  order: order.value,
+  offset: offset.value,
+});
+</script>
+
+<template>
+  <div class="sorting-panel">
+    <div class="sorting-panel__sorting">
       <q-select
-        class="masters-sorting__select"
+        class="sorting-panel__select"
         v-model="sort"
         :options="sortMap"
-        :dense="'dense'"
         :options-dense="true"
+        dense="dense"
         label="Sort by"
         bg-color="white"
         borderless
@@ -25,11 +62,11 @@
       </q-select>
 
       <q-select
-        class="masters-sorting__select masters-sorting__order"
+        class="sorting-panel__select sorting-panel__order"
         v-model="order"
         :options="orderMap"
-        :dense="'dense'"
         :options-dense="true"
+        dense="dense"
         label="Order"
         bg-color="white"
         borderless
@@ -39,59 +76,25 @@
     </div>
 
     <q-select
-      class="masters-sorting__select masters-sorting__show"
+      class="sorting-panel__select sorting-panel__show"
       v-model="offset"
       :options="perPageMap"
-      :dense="'dense'"
       :options-dense="true"
+      dense="dense"
       bg-color="white"
       borderless
       square
       @update:model-value="applySorting"
     />
-
   </div>
 </template>
 
-<script>
-import {onMounted, ref} from "vue";
-
-export default {
-  name: "MastersSorting",
-
-  emits: ['sort'],
-
-  setup(props, {emit}) {
-    const sort = ref(null);
-    const order = ref(null);
-    const offset = ref(12);
-
-    const applySorting = () => emit('sort', {
-      sort: sort.value,
-      order: order.value,
-      offset: offset.value,
-    });
-
-    return {
-      sort,
-      order,
-      offset,
-      sortMap: ['Name', 'Rating', 'Popularity'],
-      orderMap: [null, 'Asc', 'Desc'],
-      perPageMap: [12, 30, 60, 90],
-
-      applySorting,
-    }
-  }
-}
-</script>
-
 <style lang="scss">
-.masters-sorting {
-  width: 885px;
+.sorting-panel {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 10px 10px;
+  padding: 10px;
   background-color: $grey-2;
 
   &__sorting {

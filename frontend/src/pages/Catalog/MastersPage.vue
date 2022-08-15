@@ -1,28 +1,27 @@
 <script setup>
+import Masters from "components/Catalog/Masters/Masters";
 import useBreadcrumbs from "src/hooks/common/useBreadcrumbs";
 import BreadcrumbsSection from "components/Sections/BreadcrumbsSection";
 import FaqSection from "components/Sections/FaqSection";
-import Services from "components/Catalog/Services/Services";
 
-const breadcrumbs = useBreadcrumbs('services');
-
+const breadcrumbs = useBreadcrumbs('masters');
 </script>
 
 <template>
-  <div class="services-page">
+  <div class="masters-page">
     <breadcrumbs-section
-      class="services-page__breadcrumbs"
+      class="masters-page__breadcrumbs"
       :breadcrumbs="breadcrumbs"
     />
 
-    <services class="services-page__list"/>
+    <masters class="masters-page__list"/>
   </div>
 
   <faq-section/>
 </template>
 
 <style lang="scss">
-.services-page {
+.masters-page {
   &__list  {
     margin: 50px 0;
   }

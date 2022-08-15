@@ -1,39 +1,45 @@
 <script setup>
-import ServicesListItem from "components/Catalog/Services/ServicesListItem";
-import useServicesPagination from "src/hooks/services/useServicesPagination";
 import {toRef, watch} from "vue";
+import useServicesPagination from "src/hooks/services/useServicesPagination";
+import ServiceCard from "components/Service/ServiceCard";
+import {useRouter} from "vue-router";
 
-const props = defineProps({
-  params: Object,
-});
+const props = defineProps({params: Object});
 
 const params = toRef(props, "params");
 
 const {page, pages, perPage, pagination} = useServicesPagination();
 
-watch([params], () => {
+watch(params, () => {
   perPage.value = params.value.offset;
-})
+});
 
-watch([pages], () => {
-  console.log(pages.value)
-})
+const router = useRouter();
 
+const redirectToMaster = (serviceId) => {
+  router.push({name: "masters", query: {services: [serviceId]}});
+}
+
+const handleSelect = (service) => {
+  console.log(service);
+  redirectToMaster(service.id);
+};
 </script>
 
 <template>
-  <div class="app-services">
-    <div class="app-services__items">
-      <services-list-item
-        class="app-services__item"
+  <div class="service-list">
+    <div class="service-list__items">
+      <service-card
+        class="service-list__item"
         v-for="service in pagination"
         :key="service.id"
-        :item="service"
+        :service="service"
+        @click="handleSelect"
       />
 
       <div
         v-if="pages > 1"
-        class="app-services__pagination"
+        class="service-list__pagination"
       >
         <q-pagination
           boundary-numbers
@@ -47,7 +53,7 @@ watch([pages], () => {
 </template>
 
 <style lang="scss">
-.app-services {
+.service-list {
   &__items {
     display: flex;
     justify-content: flex-start;
@@ -56,6 +62,7 @@ watch([pages], () => {
 
   &__item {
     margin: 10px 5px;
+    cursor: pointer;
   }
 
   &__pagination {
