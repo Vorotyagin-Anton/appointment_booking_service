@@ -1,15 +1,15 @@
 import {api} from "boot/api";
 import {useStore} from "vuex";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import logger from "src/logger";
 import useLoading from "src/hooks/common/useLoading";
-import {ref} from "vue/dist/vue";
 
 export default function useServices() {
   const store = useStore();
 
   const page = ref(1);
 
+  const services = computed(() => store.getters['services/getArray']);
   const items = computed(() => store.getters['services/getItems']);
   const pagesCnt = computed(() => store.getters['services/getPagesCnt']);
   const pagesIds = computed(() => store.getters['services/getPagesIds']);
@@ -25,10 +25,10 @@ export default function useServices() {
     try {
       startLoading();
 
-      const {items, totalPages} = await api.masters.get({...params, page: page.value});
+      const {items, totalPages} = await api.services.get({...params, page: page.value});
 
       await store.dispatch('services/putItems', {items});
-      await store.dispatch('services/putPages', {items, page})
+      await store.dispatch('services/putPages', {items, page: page.value})
       await store.dispatch('services/setPagesCnt', {totalPages});
     } catch (error) {
       logger(error);
@@ -43,6 +43,6 @@ export default function useServices() {
   };
 
   return {
-    loading, page, pagesCnt, items, itemsIds, pagesIds, fetchServices, flushServices,
+    loading, page, pagesCnt, services, items, itemsIds, pagesIds, fetchServices, flushServices,
   };
 }

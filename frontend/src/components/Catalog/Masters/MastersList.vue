@@ -70,6 +70,7 @@ const changePage = () => emit('changePage', currentPage.value)
 
   &__item {
     margin: 10px 5px;
+    cursor: pointer;
   }
 
   &__pagination {

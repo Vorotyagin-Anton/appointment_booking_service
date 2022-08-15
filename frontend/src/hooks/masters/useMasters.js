@@ -27,7 +27,7 @@ export default function useMasters() {
       const {items, totalPages} = await api.masters.get({...params, page: page.value});
 
       await store.dispatch('masters/putItems', {items});
-      await store.dispatch('masters/putPages', {items, page})
+      await store.dispatch('masters/putPages', {items, page: page.value})
       await store.dispatch('masters/setPagesCnt', {totalPages});
     } catch (error) {
       logger(error);

@@ -1,20 +1,30 @@
 <script setup>
-import {toRef, watch} from "vue";
-import useServicesPagination from "src/hooks/services/useServicesPagination";
 import ServiceCard from "components/Service/ServiceCard";
+import {ref} from "vue";
 import {useRouter} from "vue-router";
 
-const props = defineProps({params: Object});
+const props = defineProps({
+  items: {
+    type: Object,
+    required: true,
+  },
 
-const params = toRef(props, "params");
+  itemsIds: {
+    type: Array,
+    required: true,
+  },
 
-const {page, pages, perPage, pagination} = useServicesPagination();
-
-watch(params, () => {
-  perPage.value = params.value.offset;
+  page: Number,
+  pages: Number,
 });
 
+const emit = defineEmits(['changePage']);
+
 const router = useRouter();
+
+const currentPage = ref(props.page);
+
+const changePage = () => emit('changePage', currentPage.value);
 
 const redirectToMaster = (serviceId) => {
   router.push({name: "masters", query: {services: [serviceId]}});
@@ -31,33 +41,38 @@ const handleSelect = (service) => {
     <div class="service-list__items">
       <service-card
         class="service-list__item"
-        v-for="service in pagination"
-        :key="service.id"
-        :service="service"
+        v-for="itemId in itemsIds"
+        :key="itemId"
+        :service="items[itemId]"
         @click="handleSelect"
       />
+    </div>
 
-      <div
-        v-if="pages > 1"
-        class="service-list__pagination"
-      >
-        <q-pagination
-          boundary-numbers
-          v-model="page"
-          :max="pages"
-          :max-pages="8"
-        />
-      </div>
+    <div
+      v-if="pages > 1"
+      class="service-list__pagination"
+    >
+      <q-pagination
+        boundary-numbers
+        :max="pages"
+        :max-pages="8"
+        v-model="currentPage"
+        @update:model-value="changePage"
+      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .service-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+
   &__items {
     display: flex;
-    justify-content: flex-start;
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   &__item {
@@ -70,13 +85,6 @@ const handleSelect = (service) => {
     margin-top: 50px;
     display: flex;
     justify-content: center;
-  }
-
-  &__loading {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 </style>

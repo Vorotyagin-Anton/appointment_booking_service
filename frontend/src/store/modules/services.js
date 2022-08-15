@@ -7,6 +7,10 @@ const state = {
 };
 
 const getters = {
+  getArray: (state) => {
+    return Object.values(state.items);
+  },
+
   getItems: (state) => {
     return state.items;
   },

@@ -73,6 +73,7 @@ onMounted(() => {
 
   &__item {
     margin-bottom: 35px;
+    padding: 0 35px;
   }
 
   &__title {

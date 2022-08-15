@@ -10,7 +10,7 @@ const {categories, getFromApi} = useCategories();
 const {itemsList: categoriesList, selectedItems: selectedCategories} = useSelect(categories);
 
 const {services, fetchServices} = useServices();
-const {itemsList: servicesList, selectedItems: selectedServices,} = useSelect(services);
+const {itemsList: servicesList, selectedItems: selectedServices} = useSelect(services);
 
 const days = ref([]);
 
@@ -40,7 +40,7 @@ onMounted(() => {
   }
 
   if (services.value.length === 0) {
-    fetchServices();
+    fetchServices({offset: 12});
   }
 });
 </script>

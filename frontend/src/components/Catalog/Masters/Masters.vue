@@ -88,7 +88,7 @@ watch(page, async () => {
 .masters {
   display: flex;
   height: 100%;
-  width:  100%;
+  width: 100%;
 
   &__sidebar {
     display: flex;

@@ -29,6 +29,7 @@
 
 <style lang="scss">
 .service-card {
+  height: 243px;
   width: 100%;
   max-width: 280px;
   border: 1px solid $grey-4;
