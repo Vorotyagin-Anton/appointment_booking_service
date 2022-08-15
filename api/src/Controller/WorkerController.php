@@ -179,6 +179,10 @@ class WorkerController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $user = $userRepository->findOneBy(['id' => $id, 'isWorker' => true]);
 
         if (!$user) {

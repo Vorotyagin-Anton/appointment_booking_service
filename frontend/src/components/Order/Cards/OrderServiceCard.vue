@@ -29,7 +29,8 @@ export default {
 
     const makeItems = (services) => {
       services.forEach(service => {
-        items.push({label: service.name, value: service.id, id: service.id})
+        console.log('service.name', service.name)
+        items.push({label: service.service.name, value: service.id, id: service.id})
         })
       }
 

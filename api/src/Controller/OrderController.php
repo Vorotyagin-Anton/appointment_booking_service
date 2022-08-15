@@ -108,7 +108,7 @@ class OrderController extends AbstractController
                 Услуга - {$service->getService()->getName()}, стоимость - {$service->getPrice()} рублей.
             STR;
 
-            $orderMailer->sendEmail($data['email'], $clientMessage);
+            $orderMailer->sendEmail($data['email'], $clientMessage, substr($service->getService()->getPathToPhoto(), 1));
 
             if (isset($data['telegram'])) {
                 $telegramSender->sendMessage($clientMessage, $data['telegram'], $chatter);

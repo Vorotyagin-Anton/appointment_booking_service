@@ -108,6 +108,10 @@ class UserController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $user = $userRepository->find($id);
 
         if (!$user) {
@@ -144,6 +148,10 @@ class UserController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $user = $userRepository->find($id);
 
         if (!$user) {
@@ -195,6 +203,10 @@ class UserController extends AbstractController
         #[CurrentUser] ?User $currentUser
     ): Response
     {
+        if (!isset($currentUser)) {
+            return new Response('', Response::HTTP_UNAUTHORIZED);
+        }
+
         $data = json_decode($request->getContent());
         $userId = $data->userId;
         $userNewPassword = $data->newPassword;

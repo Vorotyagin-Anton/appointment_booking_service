@@ -45,7 +45,7 @@
         </div>
 
         <div class="master-profile__section">
-          <master-reviews :reviews="master.gettedReviews"/>
+          <master-reviews :reviews="master.reviews"/>
         </div>
       </div>
     </div>
@@ -80,8 +80,11 @@ export default {
     },
   },
 
-  setup(){
+  setup(props){
     const hostUrl = process.env.HOST
+
+    console.log('MasterProfile', props.master)
+
     return{
       hostUrl,
     }
