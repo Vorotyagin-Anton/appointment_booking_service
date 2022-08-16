@@ -1,17 +1,19 @@
 <script setup>
-import {onMounted} from "vue";
-import useSelect from "src/hooks/form/useSelect";
+import {computed, onMounted, ref} from "vue";
 import useCategories from "src/hooks/categories/useCategories";
+import CheckboxGroup from "components/Catalog/CheckboxGroup";
 
 const emit = defineEmits(['filter']);
 
-// CATEGORIES
 const {categories, getFromApi} = useCategories();
 
-const {
-  itemsList: categoriesList,
-  selectedItems: selectedCategories
-} = useSelect(categories);
+const selectedCategories = ref([]);
+
+const categoriesMap = computed(() => categories.value.map(item => ({
+  value: item.id,
+  label: item.name,
+  ...item
+})));
 
 const applyFilters = () => emit('filter', {
   categories: selectedCategories.value,
@@ -31,18 +33,12 @@ onMounted(() => {
 
 <template>
   <div class="services-filters">
-    <div class="services-filters__item">
-      <div class="services-filters__title">
-        CATEGORIES
-      </div>
-
-      <q-option-group
-        class="services-filters__categories"
-        :options="categoriesList"
-        type="checkbox"
-        v-model="selectedCategories"
-      />
-    </div>
+    <checkbox-group
+      label="CATEGORIES"
+      class="services-filters__item"
+      :options="categoriesMap"
+      v-model:select="selectedCategories"
+    />
 
     <div class="services-filters__item services-filters__btns">
       <q-btn

@@ -2,15 +2,10 @@
 import {computed, onMounted, ref} from "vue";
 import useCategories from "src/hooks/categories/useCategories";
 import useServices from "src/hooks/services/useServices";
-import useSelect from "src/hooks/form/useSelect";
+import CheckboxGroup from "components/Catalog/CheckboxGroup";
+import useFilter from "src/hooks/form/useFIlter";
 
 const emit = defineEmits(['filter']);
-
-const {categories, getFromApi} = useCategories();
-const {itemsList: categoriesList, selectedItems: selectedCategories} = useSelect(categories);
-
-const {services, fetchServices} = useServices();
-const {itemsList: servicesList, selectedItems: selectedServices} = useSelect(services);
 
 const days = ref([]);
 
@@ -22,17 +17,20 @@ const calendarSubtitle = computed(() => {
   return (!days.value || days.value.length === 0) ? ' ' : null;
 });
 
-const applyFilters = () => emit('filter', {
-  categories: selectedCategories.value,
-  services: selectedServices.value,
-  days,
-});
+// Categories
+const selectedCategories = ref([]);
+const {categories, getFromApi} = useCategories();
+const {items: categoriesMap} = useFilter(categories);
 
-const resetFilters = () => {
-  days.value = [];
-  selectedCategories.value = [];
-  selectedServices.value = [];
-}
+// Services
+const servicesInput = ref('');
+const selectedServices = ref([]);
+const {page, services, fetchServices} = useServices();
+const {items: servicesMap, filterFn} = useFilter(services);
+
+const fetchFn = () => {
+  return fetchServices({offset: 12, page: ++page.value});
+};
 
 onMounted(() => {
   if (categories.value.length === 0) {
@@ -43,39 +41,42 @@ onMounted(() => {
     fetchServices({offset: 12});
   }
 });
+
+const applyFilters = () => emit('filter', {
+  categories: selectedCategories.value,
+  services: selectedServices.value,
+  days,
+});
+
+const resetFilters = () => {
+  days.value = [];
+  selectedServices.value = [];
+  selectedCategories.value = [];
+  servicesInput.value = '';
+}
 </script>
 
 <template>
-  <div class="masters-filter">
-    <div class="masters-filter__item">
-      <div class="masters-filter__title">
-        CATEGORIES
-      </div>
+  <div class="masters-filters">
+    <checkbox-group
+      class="masters-filters__item"
+      label="CATEGORIES"
+      :options="categoriesMap"
+      v-model:select="selectedCategories"
+    />
 
-      <q-option-group
-        class="options-group masters-filter__categories"
-        type="checkbox"
-        :options="categoriesList"
-        v-model="selectedCategories"
-      />
-    </div>
+    <checkbox-group
+      class="masters-filters__item"
+      label="SERVICES"
+      :options="servicesMap"
+      v-model:select="selectedServices"
+      :filter-fn="filterFn"
+      :fetch-fn="fetchFn"
+    />
 
-    <div class="masters-filter__item">
-      <div class="masters-filter__title">
-        SERVICES
-      </div>
-
-      <q-option-group
-        class="options-group masters-filter__services"
-        type="checkbox"
-        :options="servicesList"
-        v-model="selectedServices"
-      />
-    </div>
-
-    <div class="masters-filter__item">
+    <div class="masters-filters__item">
       <q-date
-        class="masters-filter__date"
+        class="masters-filters__date"
         v-model="days"
         :title="calendarTitle"
         :subtitle="calendarSubtitle"
@@ -86,9 +87,9 @@ onMounted(() => {
       />
     </div>
 
-    <div class="masters-filter__item masters-filter__btns">
+    <div class="masters-filters__item masters-filters__btns">
       <q-btn
-        class="masters-filter__btn"
+        class="masters-filters__btn"
         color="green"
         label="Use filters"
         unelevated
@@ -96,7 +97,7 @@ onMounted(() => {
       />
 
       <q-btn
-        class="masters-filter__btn"
+        class="masters-filters__btn"
         color="white"
         text-color="black"
         label="Reset"
@@ -109,43 +110,13 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-.masters-filter {
+.masters-filters {
   display: flex;
   flex-direction: column;
 
   &__item {
     margin-bottom: 35px;
     padding: 0 35px;
-  }
-
-  &__title {
-    width: 100%;
-    height: 40px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    border-left: 5px solid $primary;
-    border-bottom: 1.5px solid $grey-5;
-    font-size: 18px;
-    font-weight: 500;
-    color: $primary;
-  }
-
-  &__select {
-    width: 290px;
-    border-left: 5px solid $primary;
-
-    .q-field__label {
-      left: 10px;
-      font-size: 18px;
-      font-weight: 500;
-      color: $primary;
-    }
-
-    .q-field__input {
-      padding-left: 10px;
-    }
   }
 
   &__date {
