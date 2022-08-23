@@ -160,7 +160,12 @@ class WorkerController extends AbstractController
                     'reviewShort',
                     'review_reviewer',
                     'user_addresses',
-                    'addressShort'
+                    'addressShort',
+                    'worker_orders',
+                    'orderShort',
+                    'order_client',
+                    'order_time',
+                    'workerAvailableTimeShort'
                 ],
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
             ]
