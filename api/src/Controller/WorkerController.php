@@ -158,7 +158,9 @@ class WorkerController extends AbstractController
                     'careerShort',
                     'worker_reviews',
                     'reviewShort',
-                    'review_reviewer'
+                    'review_reviewer',
+                    'user_addresses',
+                    'addressShort'
                 ],
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
             ]
