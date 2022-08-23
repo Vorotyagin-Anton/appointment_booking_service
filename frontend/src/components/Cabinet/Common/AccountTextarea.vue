@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {ref, watch} from "vue";
+import {ref, toRef, watch} from "vue";
 
 export default {
   name: "ProfileAccountTextarea",
@@ -47,10 +47,9 @@ export default {
 
   setup(props, {emit}) {
     const model = ref(props.modelValue);
-
-    watch(model, () => {
-      emit('update:modelValue', model.value);
-    });
+    const modelRef = toRef(props, 'modelValue');
+    watch(model, () => emit('update:modelValue', model.value));
+    watch(modelRef, () => model.value = props.modelValue);
 
     return {
       model,

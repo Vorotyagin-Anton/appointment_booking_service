@@ -1,3 +1,23 @@
+<script setup>
+import {ref} from "vue";
+
+const props = defineProps({
+  photo: String,
+  modelValue: {
+    type: [File, null],
+    required: true,
+  },
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+const model = ref(props.modelValue);
+const avatar = process.env.HOST + "/" + props.photo;
+
+const updateModel = (value) => emit('update:modelValue', value);
+const removeModel = () => model.value = null;
+</script>
+
 <template>
   <div class="acccount-avatar">
     <div class="acccount-avatar__content">
@@ -5,18 +25,12 @@
         class="acccount-avatar__photo"
         size="250px"
       >
-        <img
-          v-if="photo"
-          :src="avatar"
-          alt="img"
-        >
+        <img v-if="photo" :src="avatar" alt="">
       </q-avatar>
 
       <div class="acccount-avatar__background"></div>
 
-      <div
-        class="acccount-avatar__btn"
-      >
+      <div class="acccount-avatar__btn">
         <span class="material-icons acccount-avatar__icon-photo">add_a_photo</span>
         <span class="acccount-avatar__span">Upload photo</span>
       </div>
@@ -28,10 +42,7 @@
       />
     </div>
 
-    <div
-      class="acccount-avatar__file"
-      v-if="model"
-    >
+    <div class="acccount-avatar__file" v-if="model">
       {{ model.name }}
       <span
         class="material-icons acccount-avatar__close-icon"
@@ -42,50 +53,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import {ref} from "vue";
-
-export default {
-  name: "ProfileAccountAvatar",
-
-  props: {
-    photo: {
-      type: String,
-    },
-
-    modelValue: {
-      type: [File, null],
-      required: true,
-    },
-  },
-
-  emits: [
-    'update:modelValue',
-  ],
-
-  setup(props, {emit}) {
-    const model = ref(props.modelValue);
-
-    const avatar = process.env.HOST + props.photo;
-
-    const updateModel = (value) => {
-      emit('update:modelValue', value);
-    };
-
-    const removeModel = () => {
-      model.value = null;
-    };
-
-    return {
-      model,
-      avatar,
-      updateModel,
-      removeModel,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .acccount-avatar {

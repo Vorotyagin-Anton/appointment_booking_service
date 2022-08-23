@@ -4,7 +4,6 @@
     <offers-section/>
     <categories-section/>
     <invitation-section/>
-    <featured-masters/>
     <pricing-section/>
     <connect-section/>
     <faq-section/>
@@ -13,7 +12,6 @@
 
 <script>
 import PromoSection from "components/Sections/PromoSection";
-import FeaturedMasters from "components/Sections/FeaturedMasters";
 import InvitationSection from "components/Sections/InvitationSection";
 import ConnectSection from "components/Sections/ConnectSection";
 import FaqSection from "components/Sections/FaqSection";
@@ -29,7 +27,6 @@ export default {
     OffersSection,
     CategoriesSection,
     PromoSection,
-    FeaturedMasters,
     InvitationSection,
     ConnectSection,
     FaqSection,

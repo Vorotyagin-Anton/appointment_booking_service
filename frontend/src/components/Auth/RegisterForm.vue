@@ -1,3 +1,43 @@
+<script setup>
+import {ref} from "vue";
+import useEmailInput from "src/hooks/form/useEmailInput";
+import usePasswordInput from "src/hooks/form/usePasswordInput";
+import useRegister from "src/hooks/user/useRegister";
+import useForm from "src/hooks/common/useForm";
+import useMessage from "src/hooks/common/useMessage";
+import ProfileDialog from "components/Auth/Profile/ProfileDialog";
+import AppAlert from "components/Common/AppAlert";
+
+const register = useRegister();
+const {isRequested, error, submit, reset} = useForm();
+const {visible, type, message, showError, hide} = useMessage();
+
+const agree = ref(false);
+const profileType = ref(null);
+const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
+const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
+
+const onSubmit = async () => {
+  await submit(register, email.value, pass.value, profileType.value);
+
+  if (error.value.message) {
+    await showError(error.value.message, 5000);
+  }
+};
+
+const onReset = () => {
+  hide();
+  reset();
+
+  agree.value = false;
+  email.value = null;
+  pass.value = null;
+  profileType.value = null;
+  emailConfirmation.value = null;
+  passConfirmation.value = null;
+};
+</script>
+
 <template>
   <q-form
     class="register-form"
@@ -10,6 +50,8 @@
       :type="type"
       @hide="hide"
     />
+
+    <profile-dialog v-model="profileType"/>
 
     <div class="register-form__inputs">
       <div class="register-form__email">
@@ -115,92 +157,9 @@
           no-caps
         />
       </div>
-
-      <div class="register-form__signin">
-        <span class="register-form__p">Already have a Square account?</span>&nbsp;
-
-        <router-link
-          class="register-form__link"
-          :to="{name: 'auth.signin'}"
-        >
-          Sign In
-        </router-link>
-      </div>
     </div>
-
   </q-form>
 </template>
-
-<script>
-import {ref} from "vue";
-import useEmailInput from "src/hooks/form/useEmailInput";
-import usePasswordInput from "src/hooks/form/usePasswordInput";
-import useRegister from "src/hooks/user/useRegister";
-import useForm from "src/hooks/common/useForm";
-import useMessage from "src/hooks/common/useMessage";
-import AppAlert from "components/Common/AppAlert";
-
-export default {
-  name: "RegisterForm",
-
-  components: {
-    AppAlert,
-  },
-
-  setup() {
-    const {email, emailRules, emailConfirmation, emailConfirmationRules} = useEmailInput();
-    const {pass, passRules, passConfirmation, passConfirmationRules} = usePasswordInput();
-
-    const agree = ref(false);
-
-    const register = useRegister();
-
-    const {isRequested, error, submit, reset} = useForm();
-
-    const {visible, type, message, showError, hide} = useMessage();
-
-    const onSubmit = async () => {
-      await submit(register, email.value, pass.value);
-
-      if (error.value.message) {
-        await showError(error.value.message, 5000);
-      }
-    };
-
-    const onReset = () => {
-      hide();
-      reset();
-
-      agree.value = false;
-      email.value = null;
-      pass.value = null;
-      emailConfirmation.value = null;
-      passConfirmation.value = null;
-    };
-
-    return {
-      visible,
-      type,
-      message,
-      hide,
-
-      email,
-      emailRules,
-      emailConfirmation,
-      emailConfirmationRules,
-      pass,
-      passRules,
-      passConfirmation,
-      passConfirmationRules,
-      agree,
-      isRequested,
-      error,
-      onSubmit,
-      onReset,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .register-form {

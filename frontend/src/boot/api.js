@@ -20,8 +20,27 @@ const instance = axios.create({
   }
 });
 
-export default boot(() => {
-  instance.interceptors.response.use(responseInterceptor, errorInterceptor);
+function responseInterceptor(response) {
+  if (process.env.DEV) {
+    console.log("API_RESPONSE:", response.config.url, response);
+  }
+
+  return response;
+}
+
+function errorInterceptor(error) {
+  if (process.env.DEV) {
+    console.log("API_ERROR:", error.config.url, error.response);
+  }
+
+  return Promise.reject(error);
+}
+
+export default boot(({router, store}) => {
+  instance.interceptors.response.use(
+    response => responseInterceptor(response),
+    error => errorInterceptor(error, router, store),
+  );
 });
 
 const api = {
@@ -34,19 +53,3 @@ const api = {
 };
 
 export {api};
-
-function responseInterceptor(response) {
-  if (process.env.DEV) {
-    console.log("RESPONSE:", response.config.url, response);
-  }
-
-  return response;
-}
-
-function errorInterceptor(error) {
-  if (process.env.DEV) {
-    console.log("API ERROR:", error.config.url, error.response);
-  }
-
-  return Promise.reject(error);
-}

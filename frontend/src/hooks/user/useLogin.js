@@ -12,7 +12,6 @@ export default function useLogin() {
     const user = await api.user.login(email, password);
 
     await store.dispatch('auth/login', user);
-    window.localStorage.setItem('user', JSON.stringify(user));
 
     await router.push({name: 'cabinet'});
   };

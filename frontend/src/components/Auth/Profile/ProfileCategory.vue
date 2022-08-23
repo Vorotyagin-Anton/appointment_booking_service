@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import useList from "src/hooks/categories/useList";
+import useCategories from "src/hooks/categories/useCategories";
 import useSelect from "src/hooks/form/useSelect";
 import useMessage from "src/hooks/common/useMessage";
 import {onMounted} from "vue";
@@ -80,7 +80,7 @@ export default {
   ],
 
   setup(props, {emit}) {
-    const {categories, getFromApi} = useList();
+    const {categories, getFromApi} = useCategories();
 
     const {filteredItems, selectedItems, filterFn} = useSelect(categories);
 
