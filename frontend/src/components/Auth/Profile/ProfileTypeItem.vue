@@ -53,7 +53,7 @@ export default {
   border: 1px solid $grey-5;
   border-radius: 3px;
   cursor: pointer;
-  transition: all .5s;
+  transition: all .3s;
 
   &:hover {
     box-shadow: rgba(0, 0, 0, .1) 0 4px 12px;

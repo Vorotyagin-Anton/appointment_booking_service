@@ -1,3 +1,7 @@
+<script setup>
+import RegisterForm from "components/Auth/RegisterForm";
+</script>
+
 <template>
   <div class="register">
     <div class="register__content">
@@ -31,21 +35,20 @@
       </div>
 
       <register-form/>
+
+      <div class="register__signin-link">
+        <span class="register-promo__p">Already have a Square account?</span>&nbsp;
+
+        <router-link
+          class="register__link"
+          :to="{name: 'auth.signin'}"
+        >
+          Sign In
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
-
-<script>
-import RegisterForm from "components/Auth/RegisterForm";
-
-export default {
-  name: "RegisterPage",
-
-  components: {
-    RegisterForm,
-  },
-}
-</script>
 
 <style lang="scss">
 .register {
@@ -78,6 +81,15 @@ export default {
     font-size: 14px;
     color: $grey-7;
     font-weight: 300;
+  }
+
+  &__link {
+    font-weight: 500;
+    color: $blue-8;
+
+    &:hover {
+      color: $blue-6;
+    }
   }
 }
 
