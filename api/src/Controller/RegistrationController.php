@@ -35,8 +35,8 @@ class RegistrationController extends AbstractController
         $postData = $request->request->all();
 
         if (
-            ($postData['isWorker'] && $postData['isClient']) ||
-            (!$postData['isWorker'] && !$postData['isClient'])
+            ($postData['isWorker'] === 'true' && $postData['isClient'] === 'true') ||
+            ($postData['isWorker'] === 'false' && $postData['isClient'] === 'false')
         ) {
             return $this->json('Please make a choice between client and worker type', Response::HTTP_BAD_REQUEST);
         }
