@@ -1,7 +1,7 @@
 import {api} from "boot/api";
 import useList from "src/hooks/masters/useList";
 import useLoading from "src/hooks/masters/useLoading";
-import logger from "src/helpers/logger";
+import logger from "src/logger";
 
 export default function useSearch() {
   const {startLoading, stopLoading} = useLoading();

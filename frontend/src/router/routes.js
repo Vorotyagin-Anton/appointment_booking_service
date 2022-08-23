@@ -53,10 +53,15 @@ export default [
         component: () => import('pages/Cabinet/ProfilePage.vue'),
       },
       {
+        name: 'cabinet.services',
+        path: 'services',
+        component: () => import('pages/Cabinet/ServicesPage.vue'),
+      },
+      {
         name: 'cabinet.schedule',
         path: 'schedule',
         component: () => import('pages/Cabinet/SchedulePage.vue'),
-      }
+      },
     ],
     beforeEnter: [authGuard, profileNotCreatedGuard],
     meta: {

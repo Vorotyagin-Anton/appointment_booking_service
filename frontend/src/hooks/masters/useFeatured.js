@@ -2,7 +2,7 @@ import {api} from "boot/api";
 import useLoading from "src/hooks/masters/useLoading";
 import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
-import logger from "src/helpers/logger";
+import logger from "src/logger";
 
 export default function useFeatured() {
   const {startLoading, stopLoading} = useLoading();

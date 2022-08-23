@@ -8,7 +8,7 @@ import useStepper from "src/hooks/common/useStepper";
 import useProfile from "src/hooks/user/useProfile";
 import {useRouter} from "vue-router";
 import useMessage from "src/hooks/common/useMessage";
-import logger from "src/helpers/logger";
+import logger from "src/logger";
 import useLoading from "src/hooks/common/useLoading";
 
 const steps = [

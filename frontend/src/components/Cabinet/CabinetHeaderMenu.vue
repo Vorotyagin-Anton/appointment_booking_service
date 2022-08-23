@@ -1,3 +1,20 @@
+<script setup>
+import {computed} from "vue";
+import useAuth from "src/hooks/user/useAuth";
+import useLogout from "src/hooks/user/useLogout";
+
+const {user} = useAuth();
+const logout = useLogout();
+
+const userName = computed(() => {
+  if (!user.value.name || !user.value.surname) {
+    return user.value.email;
+  }
+
+  return user.value.name + ' ' + user.value.surname;
+});
+</script>
+
 <template>
   <q-menu
     class="cabinet-header-menu"
@@ -20,7 +37,18 @@
             class="cabinet-header-menu__link"
             :to="{name: 'cabinet.profile'}"
           >
-            Profile settings
+            Profile
+          </router-link>
+        </q-item-section>
+      </q-item>
+
+      <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
+        <q-item-section>
+          <router-link
+            class="cabinet-header-menu__link"
+            :to="{name: 'cabinet.services'}"
+          >
+            Services settings
           </router-link>
         </q-item-section>
       </q-item>
@@ -60,38 +88,6 @@
     </q-list>
   </q-menu>
 </template>
-
-<script>
-import {computed} from "vue";
-import useAuth from "src/hooks/user/useAuth";
-import useLogout from "src/hooks/user/useLogout";
-
-export default {
-  name: "CabinetHeaderMenu",
-
-  setup() {
-    const {user} = useAuth();
-    const logout = useLogout();
-
-    const userName = computed(() => {
-      if (!user.value) {
-        return null;
-      }
-
-      if (!user.value.name || !user.value.surname) {
-        return user.value.email;
-      }
-
-      return user.value.name + ' ' + user.value.surname;
-    });
-
-    return {
-      userName,
-      logout,
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 .cabinet-header-menu {

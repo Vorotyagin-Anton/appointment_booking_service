@@ -31,7 +31,7 @@
       </q-drawer>
     </div>
 
-    <q-page-container>
+    <q-page-container class="cabinet-layout__center">
       <router-view
         @toggle-left-drawer="toggleLeftDrawer"
       />
@@ -85,5 +85,9 @@ export default {
 </script>
 
 <style lang="scss">
-.cabinet-layout {}
+.cabinet-layout {
+  &__center {
+    height: 100%;
+  }
+}
 </style>

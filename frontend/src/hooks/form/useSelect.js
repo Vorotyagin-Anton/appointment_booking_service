@@ -4,14 +4,12 @@ export default function useSelect(items) {
   const selectedItems = ref([]);
   const filteredItems = ref([]);
 
-  const itemsList = computed(() => normalizeItems(items));
-
-  const normalizeItems = (items) => items.value.map(item => {
-    return {
-      value: item.id,
-      label: item.name,
-      ...item
-    };
+  const itemsList = computed(() => {
+    return items.map(item => ({
+        value: item.id,
+        label: item.name,
+        ...item
+    }));
   });
 
   const filterFn = (val, update) => {
