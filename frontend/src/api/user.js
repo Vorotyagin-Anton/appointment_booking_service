@@ -1,9 +1,18 @@
 export default function (axios) {
   return {
-    async register(email, password) {
+    async register(email, password, type) {
       const formData = new FormData();
+
       formData.append('email', email);
       formData.append('plainPassword', password);
+
+      if (type === 'worker') {
+        formData.append('isWorker', '1');
+      }
+
+      if (type === 'client') {
+        formData.append('isClient', '1');
+      }
 
       const response = await axios.post('/api/register', formData, {
         headers: {'Content-Type': 'multipart/form-data'},
