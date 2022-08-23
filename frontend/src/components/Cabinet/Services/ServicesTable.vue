@@ -13,9 +13,9 @@ const emit = defineEmits([
   'select', 'toggle', 'remove',
 ]);
 
-const selectService = (id) => emit('select', id);
+const selectService = (service) => emit('select', service);
+const toggleService = (service) => emit('toggle', service);
 const removeService = (id) => emit('remove', id);
-const toggleService = (id) => emit('toggle', id);
 </script>
 
 <template>
@@ -45,9 +45,9 @@ const toggleService = (id) => emit('toggle', id);
     </services-row>
 
     <services-row-content
-      v-for="id in services.ids"
-      :key="id"
-      :service="services.entities[id]"
+      v-for="service in services"
+      :key="service.id"
+      :service="service"
       @select="selectService"
       @toggle="toggleService"
       @remove="removeService"

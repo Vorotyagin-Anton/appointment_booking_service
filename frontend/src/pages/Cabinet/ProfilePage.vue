@@ -1,34 +1,35 @@
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import AccountAvatar from "components/Cabinet/Common/AccountAvatar";
 import ProfileFooter from "components/Cabinet/Profile/ProfileFooter";
 import AppLoading from "components/Common/AppLoading";
 import AppAlert from "components/Common/AppAlert";
-import usePasswordInput from "src/hooks/form/usePasswordInput";
 import useAuth from "src/hooks/user/useAuth";
 import useProfile from "src/hooks/user/useProfile";
 import useMessage from "src/hooks/common/useMessage";
 import logger from "src/logger";
 import useLoading from "src/hooks/common/useLoading";
+import ProfilePasswordForm from "components/Cabinet/Profile/ProfilePasswordForm";
 
 const {user} = useAuth();
 
-const avatar = ref(null);
-
 const {loading, startLoading, finishLoading} = useLoading();
-const {visible, type, message, showError, showSuccess, hide} = useMessage();
 const {profile, updateProfile, changePassword} = useProfile(user.value);
+const {visible, type, message, showError, showSuccess, hide} = useMessage();
+
+const onSuccess = (message) => showSuccess(message, 5000);
+const onError = (message) => showError(message, 5000);
 
 const submitProfileChanges = async () => {
   try {
     startLoading();
     await updateProfile();
-    showSuccess('Profile successfully updated.', 5000);
+    onSuccess('Profile successfully updated.');
   } catch (error) {
     logger(error);
-    showError('Something was wrong.', 5000);
+    onError('Something was wrong.');
   } finally {
     finishLoading();
   }
@@ -36,39 +37,6 @@ const submitProfileChanges = async () => {
 
 const passwordModal = ref(false);
 const openPasswordModal = () => passwordModal.value = true;
-
-const {pass: oldPass, passRules: oldPassRules} = usePasswordInput();
-const {pass: newPass, passRules: newPassRules, passConfirmation, passConfirmationRules} = usePasswordInput();
-
-const submitPasswordChanges = async () => {
-  try {
-    startLoading();
-    await changePassword(oldPass.value, newPass.value);
-    showSuccess('Password successfully changed.', 5000)
-  } catch (error) {
-    logger(error);
-    showError('Something was wrong.', 5000);
-  } finally {
-    finishLoading();
-    resetPasswordChanges();
-  }
-};
-
-const resetPasswordChanges = () => {
-  oldPass.value = '';
-  newPass.value = '';
-  passConfirmation.value = '';
-  passwordModal.value = false;
-};
-
-const emit = defineEmits(['toggle-left-drawer'])
-
-onMounted(() => {
-  emit('toggle-left-drawer', {
-    isOpen: false,
-    isOverlay: true,
-  });
-});
 </script>
 
 <template>
@@ -89,7 +57,7 @@ onMounted(() => {
         <account-avatar
           class="profile-page__avatar"
           :photo="user.pathToPhoto"
-          v-model="avatar"
+          v-model="profile.avatar"
         />
 
         <h3 class="profile-page__h3">Basic Information</h3>
@@ -130,70 +98,12 @@ onMounted(() => {
             @click="openPasswordModal"
           />
 
-          <q-dialog class="password-modal" v-model="passwordModal">
-            <q-card class="password-modal__card">
-              <q-card-section>
-                <div class="text-h6 password-modal__header">Change Password</div>
-
-                <label>
-                  <span class="password-modal__label">Enter old password</span>
-                  <q-input
-                    class="password-modal__input"
-                    placeholder="Old password"
-                    type="password"
-                    v-model="oldPass"
-                    :rules="oldPassRules"
-                    :dense="true"
-                    outlined
-                  />
-                </label>
-
-                <label>
-                  <span class="password-modal__label">Create a new password</span>
-                  <q-input
-                    class="password-modal__input"
-                    placeholder="New password"
-                    type="password"
-                    v-model="newPass"
-                    :rules="newPassRules"
-                    :dense="true"
-                    outlined
-                  />
-                </label>
-
-                <label>
-                  <span class="password-modal__label">Confirm new password</span>
-                  <q-input
-                    class="password-modal__input"
-                    placeholder="Password confirmation"
-                    type="password"
-                    v-model="passConfirmation"
-                    :rules="passConfirmationRules"
-                    :dense="true"
-                    outlined
-                  />
-                </label>
-              </q-card-section>
-
-              <q-card-actions align="right">
-                <q-btn
-                  flat
-                  outline
-                  label="Cancel"
-                  v-close-popup
-                  @click="resetPasswordChanges"
-                />
-
-                <q-btn
-                  flat
-                  label="Submit"
-                  color="primary"
-                  v-close-popup
-                  @click="submitPasswordChanges"
-                />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
+          <profile-password-form
+            v-model="passwordModal"
+            :user="user"
+            @success="onSuccess"
+            @error="onError"
+          />
         </div>
 
         <h3 class="profile-page__h3">2-step verification</h3>
@@ -413,21 +323,6 @@ onMounted(() => {
     &:hover {
       color: $primary;
     }
-  }
-}
-
-.password-modal {
-  &__card {
-    width: 450px;
-    padding: 0 15px;
-  }
-
-  &__header {
-    margin: 10px 0 15px;
-  }
-
-  &__input {
-    margin-top: 5px;
   }
 }
 </style>

@@ -1,74 +1,78 @@
 const state = {
-  pages: 0,
-  items: [],
-  featured: [],
-  loading: false,
+  items: {},
+  itemsIds: [],
+  pages: {},
+  pagesIds: [],
+  pagesCnt: 0,
 };
 
 const getters = {
-  pages(state) {
-    return state.pages;
-  },
-
-  items(state) {
+  getItems: (state) => {
     return state.items;
   },
 
-  featured(state) {
-    return state.featured;
+  getItemsIds: (state) => {
+    return state.itemsIds;
   },
 
-  loading(state) {
-    return state.loading;
+  getItemsIdsByPage: (state) => (page) => {
+    return state.pages[page];
+  },
+
+  getPagesIds: (state) => {
+    return state.pagesIds;
+  },
+
+  getPagesCnt: (state) => {
+    return state.pagesCnt;
   },
 };
 
 const actions = {
-  putItems({commit}, payload) {
-    commit('putMastersToState', payload);
+  putItems: ({commit}, payload) => {
+    commit('putMastersToState', payload.items);
   },
 
-  putFeatured({commit}, payload) {
-    commit('putMastersToFeatured', payload);
+  putPages: ({commit}, payload) => {
+    commit('putMastersPageToState', payload);
   },
 
-  setPages({commit}, payload) {
-    commit('setPagesCount', payload);
+  setPagesCnt: ({commit}, payload) => {
+    commit('setPagesCount', payload.totalPages);
   },
 
-  startLoading({commit}) {
-    commit('setLoadingValue', true);
-  },
-
-  stopLoading({commit}) {
-    commit('setLoadingValue', false);
-  },
-
-  flush({commit}) {
+  flush: ({commit}) => {
     commit('flushState');
   },
 };
 
 const mutations = {
-  putMastersToState(state, payload) {
-    state.items.push(payload);
+  putMastersToState: (state, masters) => {
+    state.items = masters.reduce((acc, master) => {
+      acc[master.id] = master;
+      return acc;
+    }, state.items);
+
+    state.itemsIds = Object.keys(state.items);
   },
 
-  putMastersToFeatured(state, payload) {
-    state.featured = payload;
+  putMastersPageToState: (state, payload) => {
+    const {items, page} = payload;
+
+    state.pages[page] = items.map(item => item.id);
+    state.pagesIds = Object.keys(state.pages);
   },
 
-  setPagesCount(state, payload) {
-    state.pages = payload;
+  setPagesCount: (state, pagesCnt) => {
+    state.pagesCnt = pagesCnt;
   },
 
-  setLoadingValue(state, payload) {
-    state.loading = payload
-  },
-
-  flushState(state) {
-    state.items = [];
-    state.pages = 0;
+  flushState: (state) => {
+    state.items = {};
+    state.itemsIds = [];
+    state.pages = {};
+    state.pagesIds = [];
+    state.pagesCnt = 0;
   },
 };
 

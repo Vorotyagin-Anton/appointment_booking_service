@@ -1,9 +1,9 @@
 import {api} from "boot/api";
 import {useStore} from "vuex";
-import {computed, onMounted} from "vue";
+import {computed} from "vue";
 import useLoading from "src/hooks/common/useLoading";
 
-export default function useList() {
+export default function useCategories() {
   const store = useStore();
 
   const {loading, startLoading, finishLoading} = useLoading();

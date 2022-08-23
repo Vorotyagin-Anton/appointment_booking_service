@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User\Client;
 use App\Entity\User\User;
+use App\Entity\User\Worker;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,10 +32,25 @@ class RegistrationController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
-        $user = new User();
+        $postData = $request->request->all();
+
+        if (
+            ($postData['isWorker'] && $postData['isClient']) ||
+            (!$postData['isWorker'] && !$postData['isClient'])
+        ) {
+            return $this->json('Please make a choice between client and worker type', Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($postData['isWorker']) {
+            $user = new Worker();
+        } elseif ($postData['isClient']) {
+            $user = new Client();
+        } else {
+            $user = new User();
+        }
 
         $form = $this->createForm(RegistrationFormType::class, $user, ['csrf_protection' => false]);
-        $form->submit($request->request->all());
+        $form->submit($postData);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(

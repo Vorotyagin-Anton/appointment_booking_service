@@ -11,41 +11,40 @@ import useMessage from "src/hooks/common/useMessage";
 import logger from "src/logger";
 
 const {user} = useAuth();
-const {workerServices, createService, updateService, removeService} = useWorkerServices(user.value.id);
+const {workerServices, createService, updateService, removeService} = useWorkerServices();
 
 const createModal = ref(false);
 const updateModal = ref(false);
-const selectedServiceId = ref(null);
+const selectedService = ref(null);
 
 const openCreateModal = () => {
   createModal.value = true;
 };
 
-const openUpdateModal = (serviceId) => {
-  selectedServiceId.value = serviceId;
+const openUpdateModal = (service) => {
+  selectedService.value = service;
   updateModal.value = true;
 };
 
 const closeUpdateModal = () => {
-  selectedServiceId.value = null;
+  selectedService.value = null;
 };
 
-const toggleService = (serviceId) => {
-  updateService({
-    ...workerServices.value.entities[serviceId],
-    status: !workerServices.value.entities[serviceId].status,
-  })
+const toggleService = (service) => {
+  updateService({...service, active: !service.active});
 };
 
 const {loading, startLoading, finishLoading} = useLoading();
 const {visible, type, message, showError, showSuccess, hide} = useMessage();
 
 const createWorkerService = (service) => {
-  submitWrapper(() => createService(service), 'Profile successfully created.');
+  submitWrapper(
+    () => createService(user.value.id, service),
+    'Profile successfully created.'
+  );
 };
 
 const updateWorkerService = (service) => {
-  console.log("test", service)
   submitWrapper(() => updateService(service), 'Profile successfully updated.');
 };
 
@@ -95,9 +94,9 @@ const submitWrapper = async (callback, successMsg) => {
 
     <services-modal
       action="update"
-      v-if="selectedServiceId"
+      v-if="selectedService"
       v-model="updateModal"
-      :service-id="selectedServiceId"
+      :selected-service="selectedService"
       :on-submit="updateWorkerService"
       @hide="closeUpdateModal"
     />

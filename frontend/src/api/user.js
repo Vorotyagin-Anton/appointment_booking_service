@@ -1,15 +1,15 @@
 export default function (axios) {
   return {
-    async register(email, password) {
+    async register(email, password, type) {
       const formData = new FormData();
 
       formData.append('email', email);
       formData.append('plainPassword', password);
+      formData.append('isWorker', type === 'worker');
+      formData.append('isClient', type === 'client');
 
       const response = await axios.post('/api/register', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: {'Content-Type': 'multipart/form-data'},
       });
 
       return response.data;
@@ -38,6 +38,15 @@ export default function (axios) {
       const response = await axios.patch(`/api/users/${userId}`, payload);
 
       return response.data;
+    },
+
+    async changeAvatar(userId, userPhoto) {
+      const formData = new FormData();
+      formData.append('userPhoto', userPhoto);
+
+      await axios.post(`/api/users/${userId}/change-photo`, formData, {
+        headers: {'Content-Type': 'multipart/form-data'},
+      });
     },
 
     async changePassword(userId, oldPassword, newPassword) {

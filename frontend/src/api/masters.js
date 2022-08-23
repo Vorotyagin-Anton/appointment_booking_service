@@ -14,15 +14,5 @@ export default function (axios) {
         workerFreeTime: response.data.workerFreeTime,
       };
     },
-
-    getByName(name) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve({
-          items: [],
-          totalPages: 1,
-          currentPage: 1,
-        }), 500);
-      });
-    },
   };
 }

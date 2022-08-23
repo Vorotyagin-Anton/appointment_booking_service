@@ -5,7 +5,7 @@ export default function useSelect(items) {
   const filteredItems = ref([]);
 
   const itemsList = computed(() => {
-    return items.map(item => ({
+    return items.value.map(item => ({
         value: item.id,
         label: item.name,
         ...item

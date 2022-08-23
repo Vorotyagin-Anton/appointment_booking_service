@@ -2,9 +2,12 @@ import {api} from "boot/api";
 import {computed} from "vue";
 import {useStore} from "vuex";
 import moment from "moment";
+import useAuth from "src/hooks/user/useAuth";
 
 export default function useSchedule() {
   const store = useStore();
+
+  const {authorize} = useAuth();
 
   const STATUS = store.getters['schedule/status'];
   const slots = computed(() => store.getters['schedule/slots']);
@@ -15,12 +18,16 @@ export default function useSchedule() {
   const selectedSlots = computed(() => store.getters['schedule/selectedSlots']);
 
   const getScheduleFromApi = async (userId) => {
+    await authorize();
+
     const data = await api.schedule.getByUserId(userId);
     const parsedData = parseScheduleFromServer(data);
     await store.dispatch('schedule/putSchedule', parsedData);
   };
 
   const updateScheduleInApi = async (userId) => {
+    await authorize();
+
     const data = await api.schedule.updateSchedule(userId, selectedSlots.value);
     const parsedData = parseScheduleFromServer(data);
     await store.dispatch('schedule/putSchedule', parsedData);

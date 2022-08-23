@@ -3,7 +3,7 @@ import {onMounted, ref, toRef, watch} from "vue";
 import AccountField from "components/Cabinet/Common/AccountField";
 import AccountTextarea from "components/Cabinet/Common/AccountTextarea";
 import ServicesSelect from "components/Cabinet/Services/ServicesSelect";
-import useWorkerServices from "src/hooks/services/useWorkerServices";
+import CategoriesSelect from "components/Cabinet/Services/CategoriesSelect";
 
 const props = defineProps({
   modelValue: {
@@ -11,7 +11,7 @@ const props = defineProps({
     required: true,
   },
 
-  serviceId: Number,
+  selectedService: Object,
 
   action: {
     validator: (value) => ['create', 'update'].includes(value),
@@ -32,8 +32,6 @@ const modal = ref(props.modelValue);
 const modalRef = toRef(props, 'modelValue');
 watch([modalRef], () => modal.value = props.modelValue);
 
-const {workerServices} = useWorkerServices();
-
 const initialValue = {
   duration: 1,
   price: 0,
@@ -43,14 +41,27 @@ const initialValue = {
 
 const service = ref(Object.assign({}, initialValue));
 
+const category = ref(null);
+
 onMounted(() => {
-  if (props.serviceId) {
-    service.value = Object.assign({}, workerServices.value.entities[props.serviceId]);
+  if (props.selectedService) {
+    service.value = Object.assign({}, props.selectedService);
   }
 });
 
 const handleServiceSelect = (selectedService) => {
-  service.value.service = selectedService;
+  if (selectedService) {
+    service.value.service = selectedService;
+  }
+};
+
+const submitChanges = () => {
+  props.onSubmit(service.value);
+};
+
+const resetChanges = () => {
+  category.value = null;
+  service.value = Object.assign({}, props.selectedService);
 };
 
 const updateModel = (value) => {
@@ -59,15 +70,8 @@ const updateModel = (value) => {
 
 const hideModal = () => {
   emit('hide');
+  category.value = null;
   service.value = Object.assign({}, initialValue);
-};
-
-const submitChanges = () => {
-  props.onSubmit(service.value);
-};
-
-const resetChanges = () => {
-  service.value = Object.assign({}, workerServices.value.entities[props.serviceId]);
 };
 </script>
 
@@ -85,8 +89,21 @@ const resetChanges = () => {
         <q-btn icon="close" flat round dense v-close-popup/>
       </q-card-section>
 
-      <q-card-section v-if="action === 'create'" class="services-modal__section">
-        <services-select @select="handleServiceSelect"/>
+      <q-card-section
+        v-if="action === 'create'"
+        class="services-modal__section"
+      >
+        <categories-select
+          class="services-modal__select"
+          v-model="category"
+        />
+
+        <services-select
+          class="services-modal__select"
+          v-if="category && category.services.length > 0"
+          :services="category.services"
+          @update:model-value="handleServiceSelect"
+        />
       </q-card-section>
 
       <q-card-section class="services-modal__section">
@@ -163,6 +180,10 @@ const resetChanges = () => {
 
   &__section {
     width: 100%;
+  }
+
+  &__select {
+    margin-top: 15px;
   }
 
   &__field {

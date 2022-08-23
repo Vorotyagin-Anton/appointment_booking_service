@@ -89,7 +89,7 @@ export default {
     display: flex;
     align-items: center;
     background-color: $grey-3;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
 
     &_focused {

@@ -78,7 +78,7 @@
 
 <script>
 import {computed, onMounted, ref, watch} from "vue";
-import useList from "src/hooks/categories/useList";
+import useCategories from "src/hooks/categories/useCategories";
 import AppSection from "components/Common/AppSection";
 import AppSectionHeader from "components/Common/AppSectionHeader";
 import {Carousel, Slide} from 'vue3-carousel';
@@ -95,7 +95,7 @@ export default {
   },
 
   setup() {
-    const {categories, getFromApi} = useList();
+    const {categories, getFromApi} = useCategories();
 
     const categoryList = computed(() => {
       return categories.value.map((category, key) => ({

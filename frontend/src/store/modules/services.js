@@ -1,106 +1,82 @@
 const state = {
-  services: {},
-  servicesIds: [],
-  workerServices: {},
-  workerServicesIds: [],
+  items: {},
+  itemsIds: [],
+  pages: {},
+  pagesIds: [],
+  pagesCnt: 0,
 };
 
 const getters = {
-  getAll(state) {
-    return {
-      ids: state.servicesIds,
-      entities: state.services,
-    };
+  getArray: (state) => {
+    return Object.values(state.items);
   },
 
-  getByWorker(state) {
-    const entities = state.workerServicesIds.reduce((acc, id) => {
-      const workerService = state.workerServices[id];
+  getItems: (state) => {
+    return state.items;
+  },
 
-      acc[id] = {
-        ...workerService,
-        service: state.services[workerService.service],
-      };
+  getItemsIds: (state) => {
+    return state.itemsIds;
+  },
 
-      return acc;
-    }, {});
+  getItemsIdsByPage: (state) => (page) => {
+    return state.pages[page];
+  },
 
-    return {
-      ids: Object.keys(entities),
-      entities,
-    };
+  getPagesIds: (state) => {
+    return state.pagesIds;
+  },
+
+  getPagesCnt: (state) => {
+    return state.pagesCnt;
   },
 };
 
 const actions = {
-  setList({commit}, payload) {
-    commit('putServicesToState', payload.services);
+  putItems: ({commit}, payload) => {
+    commit('putServicesToState', payload.items);
   },
 
-  setWorkerServices({commit}, payload) {
-    const workerServices = payload.services.map(workerService => ({
-      ...workerService,
-      service: workerService.service.id,
-    }));
-
-    commit('putWorkerServicesToState', workerServices);
+  putPages: ({commit}, payload) => {
+    commit('putServicesPageToState', payload);
   },
 
-  addWorkerService({commit}, payload) {
-    const service = {
-      ...payload.service,
-      service: payload.service.service.id,
-    };
-
-    commit('addWorkerServiceToState', service);
+  setPagesCnt: ({commit}, payload) => {
+    commit('setPagesCount', payload.totalPages);
   },
 
-  updateWorkerService({commit}, payload) {
-    commit('updateWorkerServices', payload.service);
-  },
-
-  removeWorkerService({commit}, payload) {
-    commit('removeWorkerServiceFromState', payload.serviceId);
+  flush: ({commit}) => {
+    commit('flushState');
   },
 };
 
 const mutations = {
-  putServicesToState(state, services) {
-    const entities = services.reduce((acc, service) => {
-      acc[service.id] = service;
+  putServicesToState: (state, masters) => {
+    state.items = masters.reduce((acc, master) => {
+      acc[master.id] = master;
       return acc;
-    }, {});
+    }, state.items);
 
-    state.services = entities;
-    state.servicesIds = Object.keys(entities);
+    state.itemsIds = Object.keys(state.items);
   },
 
-  putWorkerServicesToState(state, services) {
-    const entities = services.reduce((acc, workerService) => {
-      acc[workerService.id] = workerService;
-      return acc;
-    }, {});
+  putServicesPageToState: (state, payload) => {
+    const {items, page} = payload;
 
-    state.workerServices = entities;
-    state.workerServicesIds = Object.keys(entities);
+    state.pages[page] = items.map(item => item.id);
+    state.pagesIds = Object.keys(state.pages);
   },
 
-  addWorkerServiceToState(state, service) {
-    state.workerServices[service.id] = service;
-    state.workerServicesIds.push(service.id);
+  setPagesCount: (state, pagesCnt) => {
+    state.pagesCnt = pagesCnt;
   },
 
-  updateWorkerServices(state, service) {
-    state.workerServices[service.id] = {
-      ...service,
-      service: service.service.id
-    };
-  },
-
-  removeWorkerServiceFromState(state, serviceId) {
-    const index = state.workerServicesIds.findIndex(id => parseInt(id) === parseInt(serviceId));
-    state.workerServicesIds.splice(index, 1);
-    delete state.workerServices[serviceId];
+  flushState: (state) => {
+    state.items = {};
+    state.itemsIds = [];
+    state.pages = {};
+    state.pagesIds = [];
+    state.pagesCnt = 0;
   },
 };
 

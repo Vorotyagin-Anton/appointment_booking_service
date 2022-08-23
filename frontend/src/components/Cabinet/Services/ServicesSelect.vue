@@ -1,48 +1,30 @@
 <script setup>
+import {ref, toRef} from "vue";
+import AccountSelect from "components/Cabinet/Common/AccountSelect";
 import useSelect from "src/hooks/form/useSelect";
-import useServices from "src/hooks/services/useServices";
 
-const emit = defineEmits([
-  'select',
-]);
+const props = defineProps({
+  services: {
+    type: Array,
+    required: true,
+  },
+});
 
-const {services} = useServices();
+const emit = defineEmits(['update:modelValue']);
 
-const {filteredItems, selectedItems, filterFn} = useSelect(Object.values(services.value.entities));
+const servicesList = toRef(props, 'services');
+const service = ref(null);
 
-const handleSelect = (value) => {
-  emit('select', value);
-};
+const handleSelect = () => emit('update:modelValue', service.value);
+
+const {itemsList} = useSelect(servicesList);
 </script>
 
 <template>
-  <q-select
-    class="services-select"
-    dense
-    outlined
-    use-input
-    standout
-    v-model="selectedItems"
-    :options="filteredItems"
-    @update:model-value="handleSelect"
-    @filter="filterFn"
+  <account-select
+    label="Services"
+    :options="itemsList"
+    v-model="service"
+    @update:modelValue="handleSelect"
   />
 </template>
-
-<style lang="scss">
-.services-select {
-  &__select {
-    width: 100%;
-  }
-
-  &__option {
-    text-transform: capitalize;
-    color: $primary;
-  }
-
-  &__btn {
-    width: 360px;
-    height: 40px;
-  }
-}
-</style>

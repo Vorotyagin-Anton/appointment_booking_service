@@ -1,7 +1,7 @@
 <script setup>
-import MasterCard from "components/Master/MasterCard";
-import useMaster from "src/hooks/useMaster";
+import ServiceCard from "components/Service/ServiceCard";
 import {ref} from "vue";
+import {useRouter} from "vue-router";
 
 const props = defineProps({
   items: {
@@ -20,29 +20,37 @@ const props = defineProps({
 
 const emit = defineEmits(['changePage']);
 
-const {selectMaster, reserveMaster} = useMaster();
+const router = useRouter();
 
 const currentPage = ref(props.page);
 
-const changePage = () => emit('changePage', currentPage.value)
+const changePage = () => emit('changePage', currentPage.value);
+
+const redirectToMaster = (serviceId) => {
+  router.push({name: "masters", query: {services: [serviceId]}});
+}
+
+const handleSelect = (service) => {
+  console.log(service);
+  redirectToMaster(service.id);
+};
 </script>
 
 <template>
-  <div class="masters-list">
-    <div class="masters-list__items">
-      <master-card
-        class="masters-list__item"
+  <div class="service-list">
+    <div class="service-list__items">
+      <service-card
+        class="service-list__item"
         v-for="itemId in itemsIds"
         :key="itemId"
-        :master="items[itemId]"
-        @selected="selectMaster"
-        @reserved="reserveMaster"
+        :service="items[itemId]"
+        @click="handleSelect"
       />
     </div>
 
     <div
       v-if="pages > 1"
-      class="masters-list__pagination"
+      class="service-list__pagination"
     >
       <q-pagination
         boundary-numbers
@@ -56,10 +64,9 @@ const changePage = () => emit('changePage', currentPage.value)
 </template>
 
 <style lang="scss">
-.masters-list {
+.service-list {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 0 10px;
 
   &__items {

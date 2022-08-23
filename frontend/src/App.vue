@@ -1,20 +1,15 @@
-<template>
-  <router-view/>
-</template>
-
-<script>
+<script setup>
 import {onMounted} from "vue";
 import useAuth from "src/hooks/user/useAuth";
 
-export default {
-  name: 'App',
+const {authorize} = useAuth();
 
-  setup() {
-    const {authorize} = useAuth();
-    onMounted(() => authorize())
-  },
-}
+onMounted(() => authorize())
 </script>
+
+<template>
+  <router-view/>
+</template>
 
 <style lang="scss">
 * {

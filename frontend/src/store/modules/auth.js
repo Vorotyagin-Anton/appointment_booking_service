@@ -1,7 +1,9 @@
+import {hasItem, getItem, setItem, removeItem} from "src/utils/localStorage";
+
 const state = {
-  isAuthorized: false,
+  user: getItem('user'),
+  isAuthorized: hasItem('user'),
   isRequested: false,
-  user: null,
 };
 
 const getters = {
@@ -20,11 +22,15 @@ const getters = {
 
 const actions = {
   login({commit}, payload) {
+    setItem('user', payload);
+
     commit('putUserToState', payload);
     commit('setAuthorizedStatus', true);
   },
 
   logout({commit}) {
+    removeItem('user');
+
     commit('putUserToState', null);
     commit('setAuthorizedStatus', false);
   },

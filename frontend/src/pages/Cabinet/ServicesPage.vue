@@ -10,8 +10,7 @@ const emit = defineEmits([
 ]);
 
 const {user} = useAuth();
-const {loading: servicesLoading, services, fetchServices} = useServices();
-const {loading: workerServicesLoading, workerServices, fetchServices: fetchWorkerServices} = useWorkerServices();
+const {loading, workerServices, fetchServices} = useWorkerServices();
 
 onMounted(async () => {
   emit('toggle-left-drawer', {
@@ -19,12 +18,8 @@ onMounted(async () => {
     isOverlay: false,
   });
 
-  if (services.value.ids.length === 0) {
-    fetchServices();
-  }
-
-  if (workerServices.value.ids.length === 0) {
-    fetchWorkerServices(user.value.id);
+  if (workerServices.value.length === 0) {
+    await fetchServices(user.value.id);
   }
 });
 
@@ -34,17 +29,17 @@ const progress = ref();
 <template>
   <div class="business-page">
     <div class="business-page__wrapper">
-      <div class="business-page__content">
-        <services-settings v-if="!servicesLoading && !workerServicesLoading"/>
+      <div v-if="!loading" class="business-page__content">
+        <services-settings/>
+      </div>
 
-        <div v-else class="business-page__progress">
-          <q-circular-progress
-            indeterminate
-            size="lg"
-            color="primary"
-            class="q-ma-md"
-          />
-        </div>
+      <div v-else class="business-page__progress">
+        <q-circular-progress
+          indeterminate
+          size="lg"
+          color="primary"
+          class="q-ma-md"
+        />
       </div>
     </div>
   </div>
@@ -67,8 +62,8 @@ const progress = ref();
   }
 
   &__progress {
-    height: 100%;
-    padding: 150px;
+    width: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;

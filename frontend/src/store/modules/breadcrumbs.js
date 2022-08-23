@@ -7,6 +7,14 @@ const state = {
         {title: 'masters', path: {name: 'masters'}},
       ],
     },
+
+    {
+      name: 'services',
+      items: [
+        {title: 'main', path: {name: 'main'}},
+        {title: 'services', path: {name: 'services'}},
+      ],
+    },
   ],
 };
 
