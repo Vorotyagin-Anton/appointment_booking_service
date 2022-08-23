@@ -1,7 +1,5 @@
 import authGuard from "src/router/guards/authGuard";
 import guestGuard from "src/router/guards/guestGuard";
-import profileCreatedGuard from "src/router/guards/profileCreatedGuard";
-import profileNotCreatedGuard from "src/router/guards/profileNotCreatedGuard";
 
 export default [
   {
@@ -30,7 +28,7 @@ export default [
       {
         name: 'auth.profile',
         path: 'profile',
-        beforeEnter: [authGuard, profileCreatedGuard],
+        beforeEnter: [authGuard],
         component: () => import('pages/Auth/ProfilePage.vue'),
       },
     ],
@@ -63,7 +61,7 @@ export default [
         component: () => import('pages/Cabinet/SchedulePage.vue'),
       },
     ],
-    beforeEnter: [authGuard, profileNotCreatedGuard],
+    beforeEnter: [authGuard],
     meta: {
       guards: ['auth'],
     },
