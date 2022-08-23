@@ -40,6 +40,20 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('isClient', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please make a choice between client and worker type',
+                    ])
+                ],
+            ])
+            ->add('isWorker', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please make a choice between client and worker type',
+                    ])
+                ],
+            ])
         ;
     }
 
