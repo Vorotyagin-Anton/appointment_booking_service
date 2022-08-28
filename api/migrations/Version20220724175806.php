@@ -28,8 +28,7 @@ final class Version20220724175806 extends AbstractMigration
         $this->addSql('DROP TABLE workers_services');
         $this->addSql('ALTER TABLE service DROP price');
         $this->addSql('ALTER TABLE service DROP duration');
-        $this->addSql('ALTER TABLE "order" DROP CONSTRAINT FK_F5299398ED5CA9E6');
-        $this->addSql('ALTER TABLE "order" ADD CONSTRAINT FK_F5299398ED5CA9E6 FOREIGN KEY (service_id) REFERENCES worker_service (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE "order" DROP CONSTRAINT fk_f5299398ed5ca9e6');
     }
 
     public function down(Schema $schema): void
