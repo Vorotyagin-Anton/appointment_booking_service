@@ -58,15 +58,17 @@ class WorkerRepository extends ServiceEntityRepository
         $builder->orderBy('u.id', 'ASC');
 
         if (isset($filters['services'])) {
-            $builder->join('u.services', 'serv');
-            $builder->andWhere($builder->expr()->in('serv.id', $filters['services']));
+            $builder
+                ->join('u.services', 'worker_service')
+                ->join('worker_service.service', 'service_template');
+            $builder->andWhere($builder->expr()->in('service_template.id', $filters['services']));
         }
 
         if (isset($filters['categories'])) {
             $builder
-                ->join('u.services', 'worker_service')
-                ->join('worker_service.service', 'service_template')
-                ->join('service_template.category', 'cat');
+                ->join('u.services', 'w_s')
+                ->join('w_s.service', 's_t')
+                ->join('s_t.category', 'cat');
             $builder->andWhere($builder->expr()->in('cat.id', $filters['categories']));
         }
 
@@ -93,10 +95,10 @@ class WorkerRepository extends ServiceEntityRepository
         if (isset($filters['searchByName'])) {
             $builder
                 ->andWhere($builder->expr()->orX(
-                    $builder->expr()->like('u.name', ':name'),
-                    $builder->expr()->like('u.surname', ':name')
+                    $builder->expr()->like('lower(u.name)', ':name'),
+                    $builder->expr()->like('lower(u.surname)', ':name')
                 ))
-                ->setParameter('name', '%' . $filters['searchByName'] . '%');
+                ->setParameter('name', '%' . mb_strtolower($filters['searchByName']) . '%');
         }
 
         if (isset($filters['requiredDates'])) {

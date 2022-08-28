@@ -60,9 +60,9 @@ class ServiceRepository extends ServiceEntityRepository
         if (isset($filters['searchByName'])) {
             $builder
                 ->andWhere($builder->expr()->orX(
-                    $builder->expr()->like('s.name', ':name')
+                    $builder->expr()->like('lower(s.name)', ':name')
                 ))
-                ->setParameter('name', '%' . $filters['searchByName'] . '%');
+                ->setParameter('name', '%' . mb_strtolower($filters['searchByName']) . '%');
         }
 
         return $builder->getQuery();
