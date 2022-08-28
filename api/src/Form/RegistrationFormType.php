@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class RegistrationFormType extends AbstractType
 {
@@ -42,14 +43,16 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('isClient', null, [
                 'constraints' => [
-                    new NotBlank([
+                    new Type([
+                        'type' => 'bool',
                         'message' => 'Please make a choice between client and worker type',
                     ])
                 ],
             ])
             ->add('isWorker', null, [
                 'constraints' => [
-                    new NotBlank([
+                    new Type([
+                        'type' => 'bool',
                         'message' => 'Please make a choice between client and worker type',
                     ])
                 ],

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Rating;
 use App\Entity\User\Client;
 use App\Entity\User\User;
 use App\Entity\User\Worker;
@@ -33,10 +34,13 @@ class RegistrationController extends AbstractController
     ): Response
     {
         $postData = $request->request->all();
+        // TODO refactor this and constraints in RegistrationFormType
+        $postData['isWorker'] = $postData['isWorker'] === 'true';
+        $postData['isClient'] = $postData['isClient'] === 'true';
 
         if (
-            ($postData['isWorker'] === 'true' && $postData['isClient'] === 'true') ||
-            ($postData['isWorker'] === 'false' && $postData['isClient'] === 'false')
+            ($postData['isWorker'] && $postData['isClient']) ||
+            (!$postData['isWorker'] && !$postData['isClient'])
         ) {
             return $this->json('Please make a choice between client and worker type', Response::HTTP_BAD_REQUEST);
         }
@@ -60,6 +64,14 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            if ($user instanceof Worker) {
+                // TODO change rating logic
+                $rating = new Rating();
+                $rating->setScore(0);
+                $rating->setVoices(0);
+                $user->setRating($rating);
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -74,7 +86,7 @@ class RegistrationController extends AbstractController
             );*/
             // do anything else you need here, like send an email
 
-            return $this->json($user, Response::HTTP_CREATED, ['groups' => [
+            return $this->json($user, Response::HTTP_CREATED, [], ['groups' => [
                 'userShort'
             ]]);
         }
