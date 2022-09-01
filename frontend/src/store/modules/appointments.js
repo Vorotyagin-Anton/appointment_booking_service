@@ -1,3 +1,5 @@
+import {formatSlotTime} from "src/utils/format";
+
 const state = {
   ids: [],
   items: {},
@@ -34,11 +36,19 @@ const getters = {
   getById: (state) => (id) => {
     return state.items[id] ?? null;
   },
+
+  getStatusMap: (state) => {
+    return Object.entries(state.statusMap).map(entry => ({value: entry[0], label: entry[1]}));
+  }
 };
 
 const actions = {
   put: ({commit}, payload) => {
     commit('putItemsToState', payload.items);
+  },
+
+  changeStatus: ({commit}, payload) => {
+    commit('changeAppointmentStatus', payload);
   },
 };
 
@@ -49,12 +59,18 @@ const mutations = {
         ...item,
         clientContactType: state.contactTypeMap[item.clientContactType],
         status: {value: item.status, label: state.statusMap[item.status]},
+        time: formatSlotTime(item.time[0].exactDate, item.time[0].exactTimeInMinutes),
       };
 
       return acc;
     }, state.items);
 
     state.ids = Object.keys(state.items);
+  },
+
+  changeAppointmentStatus: (state, payload) => {
+    const {status, appointmentId} = payload;
+    state.items[appointmentId].status = status;
   },
 };
 
