@@ -60,6 +60,11 @@ export default [
         path: 'schedule',
         component: () => import('pages/Cabinet/SchedulePage.vue'),
       },
+      {
+        name: 'cabinet.appointments',
+        path: 'appointments',
+        component: () => import('pages/Cabinet/AppointmentsPage'),
+      }
     ],
     beforeEnter: [authGuard],
     meta: {
