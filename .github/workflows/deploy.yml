@@ -17,3 +17,4 @@ jobs:
       - run: chmod 600 "$HOME/.ssh/key"
       # Deploy
       - run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . root@82.146.32.24:/root/www/abs
+      - run: ssh root@82.146.32.24 "cp /root/www/.env.local /root/www/abs/api/.env.local"
