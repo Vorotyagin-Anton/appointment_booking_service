@@ -26,7 +26,7 @@ api-migrate-up: ## apply last database migrations
 	docker-compose exec -T api-cli symfony console doctrine:migrations:migrate -n
 
 api-set-rights:
-    docker-compose exec -T api-cli chmod -R 777 /var/www/symfony_docker
+	docker-compose exec -T api-cli chmod -R 777 /var/www/symfony_docker
 
 api-migrate-down:
 	docker-compose exec -T api-cli symfony console doctrine:migrations:migrate 0 -n
