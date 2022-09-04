@@ -17,10 +17,10 @@ down:
 	docker-compose down --remove-orphans
 
 api-cli: ## backend cli access
-	docker-compose exec -T api-cli /bin/sh
+	docker-compose exec api-cli /bin/sh
 
 api-install: ## install backend dependencies
-	docker-compose exec api-cli composer install
+	docker-compose exec -T api-cli composer install
 
 api-migrate-up: ## apply last database migrations
 	docker-compose exec api-cli symfony console doctrine:migrations:migrate -n
