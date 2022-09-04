@@ -3,7 +3,7 @@
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-rebuild: down build up api-install api-migrate-up frontend-install frontend-serve ## rebuild docker containers with dependencies and run frontend
+rebuild: down build up api-install api-migrate-up api-set-rights frontend-install frontend-serve ## rebuild docker containers with dependencies and run frontend
 
 start: up frontend-serve ## start docker containers and run frontend
 
@@ -24,6 +24,9 @@ api-install: ## install backend dependencies
 
 api-migrate-up: ## apply last database migrations
 	docker-compose exec -T api-cli symfony console doctrine:migrations:migrate -n
+
+api-set-rights:
+    docker-compose exec -T api-cli chmod -R 777 /var/www/symfony_docker
 
 api-migrate-down:
 	docker-compose exec -T api-cli symfony console doctrine:migrations:migrate 0 -n
