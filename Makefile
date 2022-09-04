@@ -17,7 +17,7 @@ down:
 	docker-compose down --remove-orphans
 
 api-cli: ## backend cli access
-	docker-compose exec api-cli /bin/sh
+	docker-compose exec -T api-cli /bin/sh
 
 api-install: ## install backend dependencies
 	docker-compose exec api-cli composer install
