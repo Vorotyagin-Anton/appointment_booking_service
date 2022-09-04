@@ -18,5 +18,4 @@ jobs:
       # Deploy
       - run: rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . root@82.146.32.24:/root/www/abs
       - run: ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no root@82.146.32.24 "cp /root/www/.env.local /root/www/abs/api/.env.local"
-      - run: ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no root@82.146.32.24 "cp /root/www/Makefile /root/www/abs/Makefile"
       - run: ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no root@82.146.32.24 "cd /root/www/abs && make rebuild"
