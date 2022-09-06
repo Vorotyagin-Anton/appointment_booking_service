@@ -21,19 +21,21 @@
         </q-item>
       </router-link>
 
-      <q-item class="cabinet-left-drawer__item" clickable v-ripple>
-        <q-item-section class="cabinet-left-drawer__section" avatar>
-          <svg aria-labelledby="ember65__title" role="img" height="28" width="28" viewBox="0 0 28 28" id="ember65"
-               class="cabinet-left-drawer__icon cabinet-left-drawer__appointments">
-            <title id="ember65__title"></title>
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M10 6C10.5523 6 11 6.44772 11 7V8H17V7C17 6.44772 17.4477 6 18 6C18.5523 6 19 6.44772 19 7V8H20.2222C20.6257 8 21.0585 8.10791 21.4125 8.39237C21.7854 8.69204 22 9.13527 22 9.625V13V18.375C22 18.8647 21.7854 19.308 21.4125 19.6076C21.0585 19.8921 20.6257 20 20.2222 20H7.77778C7.37433 20 6.94149 19.8921 6.5875 19.6076C6.21456 19.308 6 18.8647 6 18.375V13V9.625C6 9.13527 6.21456 8.69204 6.5875 8.39237C6.94149 8.10791 7.37433 8 7.77778 8H9V7C9 6.44772 9.44772 6 10 6ZM18 10H10H8V12H20V10H18ZM8 14H20V18H8V14ZM7.74771 10.002C7.74769 10.002 7.74854 10.0018 7.75035 10.0015L7.74771 10.002ZM7.74771 17.998L7.75035 17.9985C7.74854 17.9982 7.74769 17.998 7.74771 17.998ZM20.2523 17.998C20.2523 17.998 20.2515 17.9982 20.2496 17.9985L20.2523 17.998ZM20.2523 10.002L20.2496 10.0015C20.2515 10.0018 20.2523 10.002 20.2523 10.002Z"
-                  fill="white"></path>
-          </svg>
-        </q-item-section>
+      <router-link :to="{name: 'cabinet.appointments'}">
+        <q-item class="cabinet-left-drawer__item" clickable v-ripple>
+          <q-item-section class="cabinet-left-drawer__section" avatar>
+            <svg aria-labelledby="ember65__title" role="img" height="28" width="28" viewBox="0 0 28 28" id="ember65"
+                 class="cabinet-left-drawer__icon cabinet-left-drawer__appointments">
+              <title id="ember65__title"></title>
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M10 6C10.5523 6 11 6.44772 11 7V8H17V7C17 6.44772 17.4477 6 18 6C18.5523 6 19 6.44772 19 7V8H20.2222C20.6257 8 21.0585 8.10791 21.4125 8.39237C21.7854 8.69204 22 9.13527 22 9.625V13V18.375C22 18.8647 21.7854 19.308 21.4125 19.6076C21.0585 19.8921 20.6257 20 20.2222 20H7.77778C7.37433 20 6.94149 19.8921 6.5875 19.6076C6.21456 19.308 6 18.8647 6 18.375V13V9.625C6 9.13527 6.21456 8.69204 6.5875 8.39237C6.94149 8.10791 7.37433 8 7.77778 8H9V7C9 6.44772 9.44772 6 10 6ZM18 10H10H8V12H20V10H18ZM8 14H20V18H8V14ZM7.74771 10.002C7.74769 10.002 7.74854 10.0018 7.75035 10.0015L7.74771 10.002ZM7.74771 17.998L7.75035 17.9985C7.74854 17.9982 7.74769 17.998 7.74771 17.998ZM20.2523 17.998C20.2523 17.998 20.2515 17.9982 20.2496 17.9985L20.2523 17.998ZM20.2523 10.002L20.2496 10.0015C20.2515 10.0018 20.2523 10.002 20.2523 10.002Z"
+                    fill="white"></path>
+            </svg>
+          </q-item-section>
 
-        <q-item-section class="cabinet-left-drawer__text">Appointments</q-item-section>
-      </q-item>
+          <q-item-section class="cabinet-left-drawer__text">Appointments</q-item-section>
+        </q-item>
+      </router-link>
 
       <q-item class="cabinet-left-drawer__item" clickable v-ripple>
         <q-item-section class="cabinet-left-drawer__section" avatar>

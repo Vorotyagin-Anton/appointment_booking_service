@@ -20,20 +20,6 @@
       <q-btn
         class="cabinet-header__icon"
         flat
-        icon="notifications_none"
-        @click="toggleRightDrawer"
-      />
-
-      <q-btn
-        class="cabinet-header__icon"
-        flat
-        icon="help_outline"
-        @click="toggleRightDrawer"
-      />
-
-      <q-btn
-        class="cabinet-header__icon"
-        flat
         icon="pending_actions"
         @click="toggleRightDrawer"
       />

@@ -64,17 +64,6 @@ const userName = computed(() => {
         </q-item-section>
       </q-item>
 
-      <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>
-        <q-item-section>
-          <router-link
-            class="cabinet-header-menu__link"
-            :to="{name: 'cabinet'}"
-          >
-            To tour dashboard
-          </router-link>
-        </q-item-section>
-      </q-item>
-
       <q-separator class="cabinet-header-menu__separator"/>
 
       <q-item class="cabinet-header-menu__item" clickable v-close-popup dense>

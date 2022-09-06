@@ -12,7 +12,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const model = ref(props.modelValue);
-const avatar = process.env.HOST + "/" + props.photo;
+const avatar = ref(props.photo);
 
 const updateModel = (value) => emit('update:modelValue', value);
 const removeModel = () => model.value = null;

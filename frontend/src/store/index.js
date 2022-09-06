@@ -11,6 +11,7 @@ import breadcrumbs from "src/store/modules/breadcrumbs";
 import categories from "src/store/modules/categories";
 import schedule from "src/store/modules/schedule";
 import workerServices from "src/store/modules/workerServices";
+import appointments from "src/store/modules/appointments";
 
 /*
  * If not building with SSR mode, you can
@@ -34,6 +35,7 @@ export default store(function (/* { ssrContext } */) {
       categories,
       schedule,
       workerServices,
+      appointments,
     },
 
     // enable strict mode (adds overhead!)

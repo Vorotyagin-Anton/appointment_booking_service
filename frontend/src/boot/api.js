@@ -5,6 +5,7 @@ import servicesModule from "src/api/services";
 import mastersModule from "src/api/masters";
 import categoriesModule from "src/api/categories";
 import scheduleModule from "src/api/schedule";
+import appointmentsModule from "src/api/appointments";
 import logModule from "src/api/log";
 
 // Be careful when using SSR for cross-request state pollution
@@ -49,6 +50,7 @@ const api = {
   masters: mastersModule(instance),
   categories: categoriesModule(instance),
   schedule: scheduleModule(instance),
+  appointments: appointmentsModule(instance),
   log: logModule(instance),
 };
 
