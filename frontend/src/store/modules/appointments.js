@@ -1,4 +1,5 @@
 import {formatSlotTime} from "src/utils/format";
+import moment from "moment";
 
 const state = {
   ids: [],
@@ -38,8 +39,36 @@ const getters = {
   },
 
   getStatusMap: (state) => {
-    return Object.entries(state.statusMap).map(entry => ({value: entry[0], label: entry[1]}));
-  }
+    return Object
+      .entries(state.statusMap)
+      .map(entry => ({value: entry[0], label: entry[1]}));
+  },
+
+  getTodayItems: (state) => {
+    return state.ids.reduce((acc, id) => {
+      const isToday = moment().diff(state.items[id].time, 'days') <= 1;
+
+      if (isToday) {
+        acc.push(state.items[id])
+      }
+
+      return acc;
+    }, []);
+  },
+
+  getCustomers: (state) => {
+    const clients = state.ids.reduce((acc, id) => {
+      const client = state.items[id].client;
+      acc[client.id] = {
+        ...client,
+        amount: acc[client.id] ? acc[client.id].amount + 1 : 1,
+      };
+
+      return acc;
+    }, {});
+
+    return Object.values(clients).sort((a, b) => a.amount - b.amount);
+  },
 };
 
 const actions = {

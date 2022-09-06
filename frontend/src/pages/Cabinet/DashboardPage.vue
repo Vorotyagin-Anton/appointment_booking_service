@@ -1,42 +1,73 @@
 <script setup>
 import {onMounted} from "vue";
-import CabinetStats from "components/Cabinet/CabinetStats";
-import SetupBanner from "components/Cabinet/Banners/SetupBanner";
+import SalesCalendarBanner from "components/Cabinet/Banners/Calendar/SalesCalendarBanner";
+import TodayBanner from "components/Cabinet/Banners/Today/TodayBanner";
+import useAppointments from "src/hooks/appointments/useAppointments";
+import SetupBanner from "components/Cabinet/Banners/Setup/SetupBanner";
 
-const emits = defineEmits([
-  'toggleLeftDrawer',
-]);
+const emit = defineEmits(['toggleLeftDrawer']);
 
-onMounted(() => {
+const {ids, loading, fetchAppointments} = useAppointments();
+
+onMounted(async () => {
   emit('toggleLeftDrawer', {
     isOpen: true,
     isOverlay: false,
   });
+
+  if (ids.value.length === 0) {
+    await fetchAppointments()
+  }
 });
 </script>
 
 <template>
-  <div class="container cabinet-page">
+  <div class="cabinet-page">
+    <div class="cabinet-page__wrapper">
+      <div v-if="!loading" class="cabinet-page__content">
+        <div class="cabinet-page__header">
+          <h1 class="cabinet-page__heading">Welcome to Booking Service. Here’s your business at a glance.</h1>
+        </div>
 
-    <div class="cabinet-page__center">
-      <div class="cabinet-page__heading">Welcome to Booking Service. Here’s your business at a glance.</div>
+        <setup-banner class="cabinet-page__banner"/>
+        <sales-calendar-banner class="cabinet-page__banner"/>
+        <today-banner class="cabinet-page__banner"/>
+      </div>
 
-      <setup-banner class="cabinet-page__banner"/>
-    </div>
-
-    <div class="cabinet-page__side">
-      <cabinet-stats/>
+      <div v-else class="cabinet-page__progress">
+        <q-circular-progress
+          indeterminate
+          size="lg"
+          color="primary"
+          class="q-ma-md"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .cabinet-page {
-  display: flex;
+  height: 100%;
 
-  &__center {
-    width: 740px;
-    padding: 25px 50px;
+  &__wrapper {
+    height: 100%;
+    padding: 15px 35px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__content {
+    max-width: 700px;
+    width: 100%;
+  }
+
+  &__progress {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__side {
@@ -44,9 +75,12 @@ onMounted(() => {
   }
 
   &__heading {
-    padding: 25px 0 50px;
     font-size: 22px;
     font-weight: 500;
+  }
+
+  &__banner {
+    margin-bottom: 25px;
   }
 }
 </style>
