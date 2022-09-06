@@ -52,8 +52,8 @@ watch(page, async () => {
     <div class="masters__list">
       <sorting-panel
         class="masters__sorting"
-        :order-map="['Name', 'Rating', 'Popularity']"
-        :sort-map="[null, 'Asc', 'Desc']"
+        :order-map="[null, 'Asc', 'Desc']"
+        :sort-map="['Name', 'Rating', 'Popularity']"
         :per-page-map="[12, 30, 60, 90]"
         :per-page="filters.offset"
         @sort="applyFilters"
