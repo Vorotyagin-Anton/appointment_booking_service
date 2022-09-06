@@ -6,8 +6,8 @@ const state = {
   items: {},
 
   contactTypeMap: {
-    1: "phone",
-    2: "email",
+    1: "email",
+    2: "phone",
     3: "telegram",
   },
 
