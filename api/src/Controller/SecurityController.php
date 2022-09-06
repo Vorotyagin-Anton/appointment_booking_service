@@ -25,7 +25,9 @@ class SecurityController extends AbstractController
         }
 
         return $this->json($user, Response::HTTP_OK, [], ['groups' => [
-            'userShort'
+            'userShort',
+            'user_addresses',
+            'addressShort'
         ]]);
     }
 }
