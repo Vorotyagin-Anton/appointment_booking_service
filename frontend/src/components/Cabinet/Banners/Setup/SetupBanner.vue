@@ -1,14 +1,20 @@
 <script setup>
 import {ref} from "vue";
 
-const isExpansionOpen = ref(true);
+const show = ref(true);
+const isExpansionOpen = ref(false);
 const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
 </script>
 
 <template>
-  <q-banner class="cabinet-banner">
+  <q-banner class="cabinet-banner" v-if="show">
     <div class="cabinet-banner__top">
-      <q-btn class="cabinet-banner__close" flat icon="close"/>
+      <q-btn
+        class="cabinet-banner__close"
+        icon="close"
+        flat
+        @click="show = false;"
+      />
     </div>
 
     <div class="cabinet-banner__header">
@@ -34,7 +40,7 @@ const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
                 class="banner-expansion__label"
                 @click="toggleExpansion"
               >
-                Activate your account to take payments
+                Setup your account
               </h3>
             </q-item-section>
           </template>
@@ -49,7 +55,7 @@ const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
                   class="banner-expansion__link"
                   :to="{name: 'cabinet.profile'}"
                 >
-                  <p class="banner-expansion__title">Tell About Your Identity</p>
+                  <p class="banner-expansion__title">Profile</p>
 
                   <p class="banner-expansion__desc">
                     Before you can accept bookings, we need to verify your identity.
@@ -64,7 +70,7 @@ const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
                   class="banner-expansion__link"
                   :to="{name: 'cabinet.schedule'}"
                 >
-                  <p class="banner-expansion__title">Setup Schedule</p>
+                  <p class="banner-expansion__title">Schedule</p>
 
                   <p class="banner-expansion__desc">
                     Set up a your work schedule so for your customers.
@@ -77,12 +83,12 @@ const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
               <div class="banner-expansion__item">
                 <router-link
                   class="banner-expansion__link"
-                  :to="{name: 'cabinet'}"
+                  :to="{name: 'cabinet.services'}"
                 >
-                  <p class="banner-expansion__title">Link Your Bank Account</p>
+                  <p class="banner-expansion__title">Services</p>
 
                   <p class="banner-expansion__desc">
-                    Connect your bank account so you can transfer your funds.
+                    Specify services for ordering.
                   </p>
                 </router-link>
               </div>
