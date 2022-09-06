@@ -1,3 +1,20 @@
+<script setup>
+import {onMounted} from "vue";
+import CabinetStats from "components/Cabinet/CabinetStats";
+import SetupBanner from "components/Cabinet/Banners/SetupBanner";
+
+const emits = defineEmits([
+  'toggleLeftDrawer',
+]);
+
+onMounted(() => {
+  emit('toggleLeftDrawer', {
+    isOpen: true,
+    isOverlay: false,
+  });
+});
+</script>
+
 <template>
   <div class="container cabinet-page">
 
@@ -8,41 +25,10 @@
     </div>
 
     <div class="cabinet-page__side">
-      <cabinet-actions/>
       <cabinet-stats/>
     </div>
   </div>
 </template>
-
-<script>
-import SetupBanner from "components/Cabinet/Banners/SetupBanner";
-import CabinetActions from "components/Cabinet/CabinetActions";
-import CabinetStats from "components/Cabinet/CabinetStats";
-import {onMounted} from "vue";
-
-export default {
-  name: "DashboardPage",
-
-  components: {
-    SetupBanner,
-    CabinetActions,
-    CabinetStats,
-  },
-
-  emits: [
-    'toggleLeftDrawer',
-  ],
-
-  setup(props, {emit}) {
-    onMounted(() => {
-      emit('toggleLeftDrawer', {
-        isOpen: true,
-        isOverlay: false,
-      });
-    });
-  },
-}
-</script>
 
 <style lang="scss">
 .cabinet-page {

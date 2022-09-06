@@ -1,3 +1,10 @@
+<script setup>
+import {ref} from "vue";
+
+const isExpansionOpen = ref(true);
+const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
+</script>
+
 <template>
   <q-banner class="cabinet-banner">
     <div class="cabinet-banner__top">
@@ -86,25 +93,6 @@
     </div>
   </q-banner>
 </template>
-
-<script>
-import {ref} from "vue";
-
-export default {
-  name: "SetupBanner",
-
-  setup() {
-    const isExpansionOpen = ref(true);
-
-    const toggleExpansion = () => isExpansionOpen.value = !isExpansionOpen.value;
-
-    return {
-      isExpansionOpen,
-      toggleExpansion,
-    }
-  },
-}
-</script>
 
 <style lang="scss">
 .cabinet-banner {

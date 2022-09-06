@@ -1,3 +1,36 @@
+<script setup>
+const stats = [
+  {
+    name: 'Total customers',
+    value: 0,
+  },
+  {
+    name: 'New customers',
+    value: 0,
+  },
+  {
+    name: 'Returning customers',
+    value: 0,
+  },
+  {
+    name: 'Average spending per list customers',
+    value: '$0.00',
+  },
+  {
+    name: 'Average visits per customers',
+    value: 0,
+  },
+  {
+    name: 'Positive feedback',
+    value: 0,
+  },
+  {
+    name: 'Negative feedback',
+    value: 0,
+  },
+];
+</script>
+
 <template>
   <div class="cabinet-stats">
     <q-list class="cabinet-stats__list">
@@ -35,51 +68,9 @@
   </div>
 </template>
 
-<script>
-const stats = [
-  {
-    name: 'Total customers',
-    value: 0,
-  },
-  {
-    name: 'New customers',
-    value: 0,
-  },
-  {
-    name: 'Returning customers',
-    value: 0,
-  },
-  {
-    name: 'Average spending per list customers',
-    value: '$0.00',
-  },
-  {
-    name: 'Average visits per customers',
-    value: 0,
-  },
-  {
-    name: 'Positive feedback',
-    value: 0,
-  },
-  {
-    name: 'Negative feedback',
-    value: 0,
-  },
-];
-
-export default {
-  name: "CabinetStats",
-
-  setup() {
-    return {
-      stats,
-    }
-  }
-}
-</script>
-
 <style lang="scss">
 .cabinet-stats {
+  padding-top: 25px;
 
   &__heading {
     font-size: 16px;
