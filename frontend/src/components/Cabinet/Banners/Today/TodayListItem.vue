@@ -15,13 +15,18 @@ const formattedSum = computed(() => formatPrice(props.item.sum ?? '0.00'));
 <template>
   <q-item class="services-item" clickable v-ripple>
     <q-item-section avatar>
-      <q-avatar>
-        <img :src="item.client.pathToPhoto" alt="img">
+      <q-avatar color="primary" text-color="white">
+        <img
+          v-if="item.client?.pathToPhoto"
+          :src="item.client.pathToPhoto"
+          alt="img"
+        >
+        <span v-else>{{ item.clientName[0] }}</span>
       </q-avatar>
     </q-item-section>
 
     <q-item-section class="services-item__name">
-      <q-item-label>{{ item.client.name }} {{ item.client.surname }}</q-item-label>
+      <q-item-label>{{ item.clientName ?? item.client.name + ' ' + item.client.surname }}</q-item-label>
       <q-item-label caption lines="1">Demo service</q-item-label>
     </q-item-section>
 

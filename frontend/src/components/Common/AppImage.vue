@@ -1,5 +1,5 @@
 <template>
-  <img :src="source" alt="alt">
+  <img :src="src" alt="alt">
 </template>
 
 <script>
@@ -16,12 +16,6 @@ export default {
       type: String,
       default: 'img',
     },
-  },
-
-  setup(props) {
-    return {
-      source: process.env.HOST + '/uploads/photo/' + props.src,
-    }
   },
 }
 </script>

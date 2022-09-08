@@ -20,7 +20,7 @@
       <master-info
         class="masters-card__info"
         :name="master.name"
-        :image="hostUrl + master.pathToPhoto"
+        :image="master.pathToPhoto"
         :speciality="master.speciality"
         :info="master.story"
         :avatar-size="100"
@@ -76,10 +76,6 @@ export default {
   ],
 
   setup(props, {emit}) {
-     //console.log(props.master);
-
-    const hostUrl = process.env.HOST;
-
     // const rating = ref({
     //   max: 5,
     //   score: Number((Math.random() * 4 + 1).toFixed(1)),
@@ -95,7 +91,6 @@ export default {
     //const {generateSourceUrl} = useRandomAvatar();
 
     return {
-      hostUrl,
       // rating,
       clickSelectMaster,
       clickReserveMaster,

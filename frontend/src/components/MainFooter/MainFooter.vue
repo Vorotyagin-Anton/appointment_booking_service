@@ -11,11 +11,11 @@
 
           <div class="main-footer-info__apps app-links">
             <a class="app-links__a app-links__ios" href="#">
-              <img class="app-links__img" src="~assets/img/ios.svg" alt="ios">
+              <img class="app-links__img" src="/img/ios.svg" alt="ios">
             </a>
 
             <a class="app-links__a app-links__and" href="#">
-              <img class="app-links__img" src="~assets/img/and.svg" alt="and">
+              <img class="app-links__img" src="/img/and.svg" alt="and">
             </a>
           </div>
         </div>
