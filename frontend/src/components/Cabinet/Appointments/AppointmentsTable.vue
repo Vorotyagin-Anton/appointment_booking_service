@@ -46,12 +46,12 @@ const changeStatus = (status, appointmentId) => {
         </q-td>
 
         <q-td class="appointments-table__name" key="client" :props="props">
-          {{ props.row.client.name + ' ' + props.row.client.surname }}
+          {{ props.row.clientName ?? props.row.client.name + ' ' + props.row.client.surname }}
           <span class="material-icons appointments-table__icon">info</span>
 
           <q-popup-edit
             class="appointments-table__popup"
-            v-model="props.row.client"
+            v-model="props.row"
             v-slot="scope"
           >
             <appointments-client :data="scope.initialValue"/>

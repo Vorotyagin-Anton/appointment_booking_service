@@ -8,32 +8,34 @@ const props = defineProps({
 </script>
 
 <template>
-    <q-list class="appointments-client">
-      <q-item class="appointments-client__item" dense>
-        <q-item-section class="appointments-client__label">ID:</q-item-section>
-        <q-item-section class="appointments-client__value">{{ data.id }}</q-item-section>
-      </q-item>
+  <q-list class="appointments-client">
+    <q-item class="appointments-client__item" dense>
+      <q-item-section class="appointments-client__label">ID:</q-item-section>
+      <q-item-section class="appointments-client__value">{{ data.client?.id }}</q-item-section>
+    </q-item>
 
-      <q-item class="appointments-client__item" dense>
-        <q-item-section class="appointments-client__label">Name:</q-item-section>
-        <q-item-section class="appointments-client__value">{{ data.name }} {{ data.surname }}</q-item-section>
-      </q-item>
+    <q-item class="appointments-client__item" dense>
+      <q-item-section class="appointments-client__label">Name:</q-item-section>
+      <q-item-section class="appointments-client__value">
+        {{ data.clientName ?? data.client?.name + ' ' + data.client?.surname }}
+      </q-item-section>
+    </q-item>
 
-      <q-item class="appointments-client__item" dense>
-        <q-item-section class="appointments-client__label">Phone:</q-item-section>
-        <q-item-section class="appointments-client__value">{{ data.mobilePhoneNumber }}</q-item-section>
-      </q-item>
+    <q-item class="appointments-client__item" dense>
+      <q-item-section class="appointments-client__label">Phone:</q-item-section>
+      <q-item-section class="appointments-client__value">{{ data.clientPhone ?? data.client?.mobilePhoneNumber }}</q-item-section>
+    </q-item>
 
-      <q-item class="appointments-client__item" dense>
-        <q-item-section class="appointments-client__label">Email:</q-item-section>
-        <q-item-section class="appointments-client__value">{{ data.email }}</q-item-section>
-      </q-item>
+    <q-item class="appointments-client__item" dense>
+      <q-item-section class="appointments-client__label">Email:</q-item-section>
+      <q-item-section class="appointments-client__value">{{ data.clientEmail ?? data.client?.email}}</q-item-section>
+    </q-item>
 
-      <q-item class="appointments-client__item" dense>
-        <q-item-section class="appointments-client__label">Telegram:</q-item-section>
-        <q-item-section class="appointments-client__value">{{ data.telegram }}</q-item-section>
-      </q-item>
-    </q-list>
+    <q-item class="appointments-client__item" dense>
+      <q-item-section class="appointments-client__label">Telegram:</q-item-section>
+      <q-item-section class="appointments-client__value">{{ data.clientTelegram ?? data.client?.telegram }}</q-item-section>
+    </q-item>
+  </q-list>
 </template>
 
 <style lang="scss">

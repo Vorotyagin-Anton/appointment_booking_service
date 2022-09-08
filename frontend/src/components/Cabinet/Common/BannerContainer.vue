@@ -8,7 +8,6 @@
 .banner-container {
   padding: 25px;
   border-radius: 8px;
-  background-color: $grey-2;
   box-shadow: 0 1px 2px rgb(0 0 0 / 10%), 0 0 4px rgb(0 0 0 / 10%);
 }
 </style>
