@@ -7,5 +7,5 @@ GB final project
 ### Development host
 - `http://abs.local`
 
-### Api prefix
-- `http://abs.local/api` - for requests from the frontend
+### Production host
+- `http://a.vorotyagin.fvds.ru/`
