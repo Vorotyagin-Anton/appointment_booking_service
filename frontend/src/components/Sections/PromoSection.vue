@@ -10,9 +10,9 @@
       :transition-duration="4000"
       height="800px"
     >
-      <q-carousel-slide :name="1" img-src="~assets/img/S-Barbershop.png"/>
-      <q-carousel-slide :name="2" img-src="~assets/img/S-Nail-Salon.png"/>
-      <q-carousel-slide :name="3" img-src="~assets/img/S-Hair-Salon.png"/>
+      <q-carousel-slide :name="1" img-src="/img/S-Barbershop.png"/>
+      <q-carousel-slide :name="2" img-src="/img/S-Nail-Salon.png"/>
+      <q-carousel-slide :name="3" img-src="/img/S-Hair-Salon.png"/>
     </q-carousel>
 
     <div class="slider-overview__row">

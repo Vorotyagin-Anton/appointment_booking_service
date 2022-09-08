@@ -36,7 +36,7 @@ import AppSectionHeader from "components/Common/AppSectionHeader";
 import OffersSectionItem from "components/Sections/OffersSectionItem";
 import AppSectionLink from "components/Common/AppSectionLink";
 
-const data = [
+const offers = [
   {
     id: 1,
     heading: 'Simplify scheduling',
@@ -51,7 +51,7 @@ const data = [
       'Cancellation and no-show fees',
       'Let clients book multiple services with different providers online',
     ],
-    image: 'offer-feature-001.png',
+    image: '/img/offer-feature-001.png',
   },
   {
     id: 2,
@@ -67,7 +67,7 @@ const data = [
       'eGift Cards and plastic gift cards',
       'LData security (PCI) compliance',
     ],
-    image: 'offer-feature-002.png',
+    image: '/img/offer-feature-002.png',
   },
   {
     id: 3,
@@ -83,7 +83,7 @@ const data = [
       'Attach contracts and files with key information',
       'Customer loyalty program',
     ],
-    image: 'offer-feature-003.png',
+    image: '/img/offer-feature-003.png',
   },
   {
     id: 4,
@@ -99,7 +99,7 @@ const data = [
       'Attach contracts and files with key information',
       'Customer loyalty program',
     ],
-    image: 'offer-feature-004.png',
+    image: '/img/offer-feature-004.png',
   },
 ];
 
@@ -114,11 +114,6 @@ export default {
   },
 
   setup() {
-    const offers = data.map(offer => ({
-      ...offer,
-      image: require('assets/img/' + offer.image),
-    }));
-
     const cardId = ref(null);
     const openCard = (id) => cardId.value = id;
     const closeCard = () => cardId.value = null;
