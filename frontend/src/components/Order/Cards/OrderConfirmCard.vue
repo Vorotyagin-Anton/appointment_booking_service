@@ -115,8 +115,6 @@ const responseModalData = ref({
 
 const {date, time, service} = orderInfo.value
 
-const hostUrl = process.env.HOST;
-
 //форматировние даты для вывода в карточку
 const dateToString = (string) => {
   const date = new Date(string)

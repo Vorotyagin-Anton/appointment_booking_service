@@ -5,7 +5,7 @@
         class="master-review__avatar"
         :size="50"
         :name="data.reviewer.name"
-        :image="hostUrl + data.reviewer.pathToPhoto"
+        :image="data.reviewer.pathToPhoto"
       />
 
       <div class="master-review__info">
@@ -46,12 +46,10 @@ export default {
   },
 
   setup(props) {
-    const hostUrl = process.env.HOST;
     const data = toRef(props, 'review');
 
     return {
       data,
-      hostUrl
     }
   },
 }

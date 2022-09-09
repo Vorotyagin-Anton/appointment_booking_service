@@ -16,7 +16,7 @@
           <master-info
             :class-name="'master-profile__info'"
             :name="master.name"
-            :image="hostUrl + master.pathToPhoto"
+            :image="master.pathToPhoto"
             :speciality="master.speciality"
             :info="master.story"
             :avatar-size="140"
@@ -81,13 +81,7 @@ export default {
   },
 
   setup(props){
-    const hostUrl = process.env.HOST
-
     console.log('MasterProfile', props.master)
-
-    return{
-      hostUrl,
-    }
   }
 }
 </script>
