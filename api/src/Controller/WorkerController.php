@@ -165,6 +165,7 @@ class WorkerController extends AbstractController
                     'orderShort',
                     'order_client',
                     'order_time',
+                    'order_service',
                     'workerAvailableTimeShort'
                 ],
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'
