@@ -21,12 +21,12 @@ class Order
     #[Groups(['orderShort'])]
     private $id;
 
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['orderShort'])]
+    #[ORM\ManyToOne(targetEntity: ContactType::class)]
+    #[Groups(['order_clientContactType'])]
     private $clientContactType;
 
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['orderShort'])]
+    #[ORM\ManyToOne(targetEntity: OrderStatus::class)]
+    #[Groups(['order_status'])]
     private $status;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -96,24 +96,24 @@ class Order
         return $this;
     }
 
-    public function getClientContactType(): ?int
+    public function getClientContactType(): ?ContactType
     {
         return $this->clientContactType;
     }
 
-    public function setClientContactType(int $clientContactType): self
+    public function setClientContactType(ContactType $clientContactType): self
     {
         $this->clientContactType = $clientContactType;
 
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?OrderStatus
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(OrderStatus $status): self
     {
         $this->status = $status;
 

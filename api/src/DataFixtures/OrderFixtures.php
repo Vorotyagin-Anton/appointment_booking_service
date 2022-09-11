@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ContactType;
 use App\Entity\Order;
+use App\Entity\OrderStatus;
 use App\Entity\User\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -26,6 +28,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixture::class,
+            AppFixtures::class
         ];
     }
 
@@ -41,6 +44,8 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
     {
         $clients = $this->em->getRepository(User::class)->findBy(['isClient' => true]);
         $workers = $this->em->getRepository(User::class)->findBy(['isWorker' => true]);
+        $orderStatuses = $this->em->getRepository(OrderStatus::class)->findAll();
+        $clientContactType = $this->em->getRepository(ContactType::class)->findOneBy(['id' => 1]);
 
         $randomClient = $clients[array_rand($clients)];
         $randomWorker = $workers[array_rand($workers)];
@@ -57,14 +62,14 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         $order->setClientEmail($randomClient->getEmail());
         $order->setClientPhone($randomClient->getMobilePhoneNumber());
         $order->setClientTelegram($randomClient->getTelegram());
-        $order->setClientContactType($this->faker->numberBetween(1, 3));
+        $order->setClientContactType($clientContactType);
 
         $order->setWorker($randomWorker);
         $order->setService($randomService);
         $order->addTime($randomTime);
 
         $order->setDetails($this->faker->text(100));
-        $order->setStatus($this->faker->numberBetween(1, 10));
+        $order->setStatus($orderStatuses[array_rand($orderStatuses)]);
 
         return $order;
     }

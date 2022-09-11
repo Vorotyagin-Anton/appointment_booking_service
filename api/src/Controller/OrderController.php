@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\ContactType;
 use App\Entity\Order;
+use App\Entity\OrderStatus;
 use App\Entity\User\Worker;
 use App\Entity\WorkerAvailableTime;
 use App\Entity\WorkerService;
@@ -30,6 +32,10 @@ class OrderController extends AbstractController
         $orders = $orderRepository->findAll();
         return $this->json($orders, Response::HTTP_OK, [], ['groups' => [
             'orderShort',
+            'order_clientContactType',
+            'contactTypeShort',
+            'order_status',
+            'orderStatusShort',
             'order_client',
             'order_worker',
             'userShort'
@@ -54,6 +60,8 @@ class OrderController extends AbstractController
             $worker = $em->getRepository(Worker::class)->findOneBy(['id' => $data['master_id']]);
             $service = $em->getRepository(WorkerService::class)->findOneBy(['id' => $data['service_id']]);
             $time = $em->getRepository(WorkerAvailableTime::class)->findOneBy(['id' => $data['time_id']]);
+            $clientContactType = $em->getRepository(ContactType::class)->findOneBy(['id' => 1]);
+            $orderStatus = $em->getRepository(OrderStatus::class)->findOneBy(['id' => 1]);
 
             if (!$worker) {
                 return $this->json('master not found', Response::HTTP_BAD_REQUEST);
@@ -76,14 +84,14 @@ class OrderController extends AbstractController
             $order->setClientEmail($data['email']);
             $order->setClientPhone($data['phone'] ?? null);
             $order->setClientTelegram($data['telegram'] ?? null);
-            $order->setClientContactType($data['notification_type'] ?? 1);
+            $order->setClientContactType($clientContactType);
 
             $order->setWorker($worker);
             $order->setService($service);
             $order->addTime($time);
             $time->setIsTimeFree(false);
 
-            $order->setStatus(1);
+            $order->setStatus($orderStatus);
 
             $em->persist($order);
             $em->flush();
@@ -115,7 +123,11 @@ class OrderController extends AbstractController
             }
 
             return $this->json($order, Response::HTTP_CREATED, [], ['groups' => [
-                'orderShort'
+                'orderShort',
+                'order_clientContactType',
+                'contactTypeShort',
+                'order_status',
+                'orderStatusShort'
             ]]);
         }
 
