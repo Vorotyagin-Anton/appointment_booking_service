@@ -14,17 +14,9 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: docker/frontend/nginx/dev
-    depends_on:
-      - node
-
-  node:
-    container_name: node
-    build:
-      context: docker/frontend/node
+      context: docker/frontend/nginx/prod
     volumes:
-      - ./frontend:/app
-    tty: true
+      - ./frontend/dist:/app
 
   frontend-cli:
     container_name: frontend-cli

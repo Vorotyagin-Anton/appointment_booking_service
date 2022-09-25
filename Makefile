@@ -3,7 +3,9 @@
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-rebuild: down build up api-install api-migrate-up api-set-rights frontend-install frontend-serve ## rebuild docker containers with dependencies and run frontend
+dev: down build up api-install api-migrate-up api-set-rights frontend-install frontend-serve ## rebuild docker containers with dependencies and run frontend
+
+prod: down build up api-install api-migrate-up api-set-rights frontend-install frontend-build
 
 start: up frontend-serve ## start docker containers and run frontend
 
@@ -46,7 +48,10 @@ frontend-cli: ## frontend cli access
 	docker-compose exec -T frontend-cli /bin/sh
 
 frontend-install: ## install frontend dependencies
-	docker-compose exec -T node npm install
+	docker-compose exec -T frontend-cli npm install
 
 frontend-serve:
 	docker-compose exec -T node npm run dev
+
+frontend-build:
+	docker-compose exec -T frontend-cli npm run build
